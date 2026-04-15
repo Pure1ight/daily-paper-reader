@@ -25,3 +25,60 @@ subscriptions:
     stage: A
     diff_threshold_pct: 15
   keyword_recall_mode: or
+  intent_profiles:
+    - tag: PDE Discovery
+      description: 偏微分方程发现
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: LLM
+          keyword_cn: 大语言模型
+          query: L
+        - keyword: Generative Model
+          keyword_cn: 生成式模型
+          query: G
+        - keyword: Deep Reinforcement Learning
+          keyword_cn: 强化学习
+          query: D
+        - keyword: Genetic Programming
+          keyword_cn: 遗传编程
+          query: 'y'
+        - keyword: PDE Discovery
+          keyword_cn: 偏微分方程发现
+          query: P
+        - keyword: Symbolic Regression
+          keyword_cn: 符号回归
+          query: S
+      intent_queries:
+        - query: 偏微分方程发现的最新研究进展
+          query_cn: The state of art research for PDE discovery
+          enabled: true
+          source: manual
+          note: ''
+        - query: The hybridization methods combining Genetic Programming with LLM, Generative Model or DRL for PDE Discovery
+          query_cn: 基于GP与大语言模型，生成式模型，强化学习的结合，用于发现偏微分方程
+          enabled: true
+          source: manual
+          note: ''
+        - query: PDE Discovery based on genetic programming
+          query_cn: 基于遗传编程的偏微分方程符号回归问题
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-04-15T23:33:51.747Z'
+source_backends:
+  arxiv:
+    papers_table: arxiv_papers
+    use_vector_rpc: true
+    vector_rpc: match_arxiv_papers
+    vector_rpc_exact: match_arxiv_papers_exact
+    use_bm25_rpc: true
+    bm25_rpc: match_arxiv_papers_bm25
+    sync_table: arxiv_sync_status
+    sync_success_value: success
+    schema: public
+    kind: supabase
+    enabled: true
+    url: https://lyucdwgefyfbmaiopjbk.supabase.co
+    anon_key: sb_publishable_lX-oi64Uxyd7SIVv3_w2Uw_MTOojeKq
