@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2603.20474v1/fig-001.webp",
+      "caption": "Table 4: Ablation study: F1 score (DR / FDR) for each variant. “full” is the complete NGCG pipeline; other variants disable the indicated component. The diversity filter is essential for avoiding false positives on the chaotic Lorenz system.",
+      "page": 15,
+      "index": 1,
+      "width": 952,
+      "height": 219
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20474v1/fig-002.webp",
+      "caption": "Table 3: Summary of additional experiments.",
+      "page": 14,
+      "index": 2,
+      "width": 977,
+      "height": 394
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20474v1/fig-003.webp",
+      "caption": "Figure 3: Pareto frontier of test constancy versus expression complexity for the four systems with true conservation laws. Each point represents a candidate symbolic expression discovered by the pipeline. The frontier (dashed black line) shows the trade-off: simpler expressions (lower complexity) have slightly higher constancy, while more complex expressions can achieve near-zero constancy. The true energy (mass-spring), the exact Hamiltonian (Hénon-Heiles), and the logarithmic invariant (Lotka-Volterra) lie on or near the frontier, demonstrating that the method recovers both simple and highly accurate forms. The user can select any expression on the frontier according to their preference for interpretability versus precision.",
+      "page": 18,
+      "index": 3,
+      "width": 882,
+      "height": 504
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20474v1/fig-004.webp",
+      "caption": "Table 2: Comparison of conservation-law discovery methods. NGCG consistently discovers valid invariants on systems with conservation laws and produces no false positives on systems without.",
+      "page": 13,
+      "index": 4,
+      "width": 822,
+      "height": 332
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20474v1/fig-005.webp",
+      "caption": "Table 1: Overview of the nine dynamical systems.",
+      "page": 8,
+      "index": 5,
+      "width": 977,
+      "height": 316
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20474v1/fig-006.webp",
+      "caption": "Figure 2: Architecture of the Neural-Guided Conservation-law Generator (NGCG). The pipeline consists of four decoupled stages. Stage 1 trains a neural dynamics model (frozen after convergence) to serve as a baseline for prediction. Stage 2 runs 10 independent restarts of a variance-minimising network ϕ and selects the one with the lowest validation constancy. Stage 3 extracts symbolic expressions using system-specific methods: polynomial Lasso (eigenvector of mean trajectory covariance), log-basis Lasso for Lotka–Volterra, explicit candidates for PDEs, and a PySR fallback. Stage 4 applies a strict constancy gate (τ = 0.01) and a diversity filter (ρ > 10) to accept only genuine conservation laws. Arrows indicate the flow of frozen weights, the best ϕ network, candidate expressions, and final accepted laws.",
+      "page": 9,
+      "index": 6,
+      "width": 882,
+      "height": 1126
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20474v1/fig-007.webp",
+      "caption": "Figure 1: Overview of the nine dynamical systems used in the benchmark. Each panel shows a representative trajectory in phase space (or in the reduced summary space for PDEs) illustrating the diversity of dynamics: linear (mass-spring), non-linear Hamiltonian (Hénon-Heiles), chaotic (Lorenz, double pendulum), and partial differential equations (Burgers, Kuramoto–Sivashinsky). Parameter variation is applied to mass-spring, Lotka-Volterra, and coupled springs to test generalization across system parameters. The datasets are split into training, validation, and test sets with fixed random seeds to ensure reproducible evaluation.",
+      "page": 5,
+      "index": 7,
+      "width": 882,
+      "height": 684
+    }
+  ]
+}

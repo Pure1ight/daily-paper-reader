@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.01335v1/fig-001.webp",
+      "caption": "Table 3: Representative symbolic compression summary. The symbolic stage stays close to the neural surrogate and the bias inheritance ratios remain near one, especially on the mismatch stress test.",
+      "page": 15,
+      "index": 1,
+      "width": 810,
+      "height": 234
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01335v1/fig-002.webp",
+      "caption": "Figure 1: Stage 1 noise-sensitivity sweep across the three 1D benchmark cases. Mean±standard deviation over three seeds for the neural Stage 1 closure errors. In all cases, both diffusion and reaction recovery deteriorate sharply between 1% and 3% observation noise and then flatten toward saturated high-error regimes by 5%.",
+      "page": 14,
+      "index": 2,
+      "width": 814,
+      "height": 466
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01335v1/fig-003.webp",
+      "caption": "Figure 3: Rollout preservation and bias inheritance. Top: symbolic unseen rollout closely follows neural unseen rollout. Bottom: the bias inheritance ratios remain near one, showing that symbolic compression preserves rather than repairs Stage 1 constitutive bias.",
+      "page": 18,
+      "index": 3,
+      "width": 814,
+      "height": 473
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01335v1/fig-004.webp",
+      "caption": "Figure A.4: Case Exp observation-degradation breakdown. Left: representative clean, 1%, and 5% noise checkpoints for the neural closure errors, together with the symbolic unseen rollout error. Right: temporal stride 2 alone leaves the mismatch benchmark almost unchanged, while spatial stride 2 accounts for nearly all of the sparse-setting degradation.",
+      "page": 28,
+      "index": 4,
+      "width": 814,
+      "height": 348
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01335v1/fig-005.webp",
+      "caption": "Table 1: Representative baseline comparison. In matched-library settings, polynomial baselines are exceptionally strong. In mismatch settings, the neural surrogate serves as a flexible numerical constitutive approximator, while the symbolic stage largely preserves its behavior.",
+      "page": 13,
+      "index": 5,
+      "width": 810,
+      "height": 305
+    },
+    {
+      "url": "assets/figures/arxiv/2604.01335v1/fig-006.webp",
+      "caption": "Figure 2: Neural-to-symbolic error propagation. Stage 2 compression error remains small, while Stage 3 true symbolic error tracks the Stage 1 neural true error. This is the empirical signature of bias preservation.",
+      "page": 16,
+      "index": 6,
+      "width": 814,
+      "height": 469
+    }
+  ]
+}

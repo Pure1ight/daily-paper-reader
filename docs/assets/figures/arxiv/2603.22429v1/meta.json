@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2603.22429v1/fig-001.webp",
+      "caption": "Figure 3: Average per-equation equation-evaluation time on the test split (seconds; lower is better), averaged over six settings (2 benchmarks × 3 tiers: Feynman–synthetic/real-world × easy/medium/hard). SRCO achieves the fastest evaluation (0.00649 s), essentially tied with EFS (0.00651 s) and outperforming DSO (2.6× slower), FFX (6.1×), and gplearn (38.5×), while maintaining strong accuracy (Tables 1–2).",
+      "page": 7,
+      "index": 1,
+      "width": 493,
+      "height": 288
+    },
+    {
+      "url": "assets/figures/arxiv/2603.22429v1/fig-002.webp",
+      "caption": "Figure 4: Pearson correlation 𝜌 for max_term. Accuracy improves monotonically and saturates around 18–22 terms.",
+      "page": 8,
+      "index": 2,
+      "width": 434,
+      "height": 318
+    },
+    {
+      "url": "assets/figures/arxiv/2603.22429v1/fig-003.webp",
+      "caption": "Figure 5: 𝑅2 for max_term. Results mirror Pearson correlation 𝜌 , with diminishing returns after 18–22 terms.",
+      "page": 8,
+      "index": 3,
+      "width": 434,
+      "height": 318
+    },
+    {
+      "url": "assets/figures/arxiv/2603.22429v1/fig-004.webp",
+      "caption": "Figure 6: Pearson correlation 𝜌 for max_trig_vars. Most gains accrue by about 3–4 trig variables; larger budgets provide marginal change.",
+      "page": 8,
+      "index": 4,
+      "width": 434,
+      "height": 338
+    },
+    {
+      "url": "assets/figures/arxiv/2603.22429v1/fig-005.webp",
+      "caption": "Figure 7: 𝑅2 for max_trig_vars. Performance improves quickly at small budgets and largely saturates by about 3–4, with only incremental differences through 6–10.",
+      "page": 8,
+      "index": 5,
+      "width": 434,
+      "height": 337
+    },
+    {
+      "url": "assets/figures/arxiv/2603.22429v1/fig-006.webp",
+      "caption": "Figure 1: Framework Overview of SRCO. Structure Embedding: A GP-based SR system generates diverse candidate equations, which are converted into postfix sequences with abstracted coefficients (COF) to train a Transformer-based structural prior; Continuous Structure Search: The learned prior guides constrained sampling in postfix space, followed by syntactic, semantic, and complexity filtering to obtain valid symbolic templates; Coefficient Optimization: For each selected template, COF tokens are instantiated as learnable parameters and optimized via gradient-based regression to produce the final symbolic equation.",
+      "page": 2,
+      "index": 6,
+      "width": 990,
+      "height": 623
+    }
+  ]
+}

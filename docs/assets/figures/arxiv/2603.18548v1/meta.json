@@ -1,0 +1,134 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-001.webp",
+      "caption": "Figure 3: Results for Sec. 4.1. (a) The final trained SINDy-KAN correctly learns the target equation. (b) The loss terms show two plateaus for the L1 regularization term λ1||Λ||1.",
+      "page": 6,
+      "index": 1,
+      "width": 954,
+      "height": 336
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-002.webp",
+      "caption": "Figure 9: The SINDy-KAN learns the dynamics of the ABC flow problem in Sec. 4.2.3 well.",
+      "page": 11,
+      "index": 2,
+      "width": 686,
+      "height": 587
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-003.webp",
+      "caption": "Figure 10: The Lorenz system in Eqs. 28–30 and the system learned by the SINDy-KAN in Eqs. 32–34 for Sec. 4.2.4. Both the true system and the learned system are evaluated numerically. We note that only data from t ∈ [0, 10] is used for training.",
+      "page": 11,
+      "index": 3,
+      "width": 786,
+      "height": 385
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-004.webp",
+      "caption": "Figure 4: Trained SINDy-KAN for Sec. 4.2.1.",
+      "page": 7,
+      "index": 4,
+      "width": 444,
+      "height": 433
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-005.webp",
+      "caption": "Figure 5: Trained SINDy-KAN for Sec. 4.2.1. The SINDy-KAN results agree well with the data.",
+      "page": 7,
+      "index": 5,
+      "width": 882,
+      "height": 225
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-006.webp",
+      "caption": "Table 5: Hyperparameters used for training the results in section 4.2. g is the number of grid points used. The grid is refined at the schedule denoted by the boundaries, and the learning rate is scaled at the same boundaries. k is the polynomial degree for the B-splines used.",
+      "page": 22,
+      "index": 6,
+      "width": 840,
+      "height": 286
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-007.webp",
+      "caption": "Figure 8: The SINDy-KAN for ABC flow problem in Sec. 4.2.3. For clarity, only the non-zero activation functions are shown.",
+      "page": 10,
+      "index": 7,
+      "width": 686,
+      "height": 509
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-008.webp",
+      "caption": "Figure 12: The trained SINDy-KAN for the Kuramoto system in Sec. 4.2.5. Multiplication nodes are denoted by “×” and addition nodes are denoted by “+”. For clarity, only non-zero nodes are shown.",
+      "page": 13,
+      "index": 8,
+      "width": 786,
+      "height": 467
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-009.webp",
+      "caption": "Figure 6: Trained SINDy-KANs for the pendulum in Sec. 4.2.2 with one (a) and two (b) hidden layers.",
+      "page": 8,
+      "index": 9,
+      "width": 885,
+      "height": 273
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-010.webp",
+      "caption": "Figure 1: Pictorial representation of a SINDy-KAN for a function f(x, y) = sin(x+y2). Each KAN activation function has an associated least squares regression as given in Eq. 13. The learned coefficients are then combined in Ξ.",
+      "page": 4,
+      "index": 10,
+      "width": 882,
+      "height": 511
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-011.webp",
+      "caption": "Table 3: Relative errors and learned equations for the ODE case from section 4.2.1 with noise added to the training data. Errors are computed by the relative mean squared error (MSE).",
+      "page": 19,
+      "index": 11,
+      "width": 940,
+      "height": 263
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-012.webp",
+      "caption": "Figure 13: An illustration of SINDy-KANs for dynamical systems. When training with data, the derivatives can either come from a pre-trained “forward KAN” or be found through finite differences or other methods.",
+      "page": 19,
+      "index": 12,
+      "width": 733,
+      "height": 450
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-013.webp",
+      "caption": "Figure 11: The trained SINDy-KAN for the Lorenz system in Sec. 4.2.4. Multiplication nodes are denoted by “×” and addition nodes are denoted by “+”.",
+      "page": 12,
+      "index": 13,
+      "width": 786,
+      "height": 579
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-014.webp",
+      "caption": "Figure 7: SINDy-KAN results for Sec. 4.2.2. (a-b) Results for the SINDy-KANs, compared with the numerical derivatives. (c) Loss for the SINDy-KAN.",
+      "page": 9,
+      "index": 14,
+      "width": 976,
+      "height": 396
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-015.webp",
+      "caption": "Figure 14: Results for the test case from section 4.2.1 with 31.37% relative noise added to the training data (a-c). Although the derivatives used to train the SINDy-KAN are noisy (d-f), the SINDy-KAN is able to recover most of the equation.",
+      "page": 20,
+      "index": 15,
+      "width": 979,
+      "height": 427
+    },
+    {
+      "url": "assets/figures/arxiv/2603.18548v1/fig-016.webp",
+      "caption": "Figure 2: Example of a trained SINDy-KAN for the system of equations f1(x, y) = sin(2x + x2), f2(x, y) = cos(x) + y − 2x− x2.",
+      "page": 5,
+      "index": 16,
+      "width": 686,
+      "height": 279
+    }
+  ]
+}

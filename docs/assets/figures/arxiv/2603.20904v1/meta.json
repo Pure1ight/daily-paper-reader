@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2603.20904v1/fig-001.webp",
+      "caption": "Figure 4: Autocorrelation check: true SDE vs. recovered model. Empirical autocorrelation functions computed from 200,000-step simulations of both the true dynamics and the recovered model. Light blue solid lines show the true SDE; red dashed lines show the recovered model. Left (OU): Recovered relaxation rate θ̂ = 0.980 (err. 2.0%) closely matches the analytical e−τ (black dotted). The recovered autocorrelation is nearly indistinguishable from both the true SDE and the analytic reference. Centre (double-well): True and recovered autocorrelations agree closely across both the fast intra-well relaxation (τ ≲ 0.2) and the slower inter-well mixing regime. No closed-form analytic reference is available. Right (multiplicative): The recovered state-dependent diffusion faithfully reproduces the mixing rate of the true SDE across the full range of displayed lags.",
+      "page": 15,
+      "index": 1,
+      "width": 966,
+      "height": 227
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20904v1/fig-002.webp",
+      "caption": "Figure 3: Stationary density: true SDE vs. recovered model. Densities are computed analytically using the Fokker–Planck formula π(x) ∝ a(x)−1 exp ( 2 ∫ x 0 b(y)/a(y) dy ) . Blue solid lines show the true SDE density; red dashed lines show the recovered model density. The shaded region between the two curves quantifies the pointwise discrepancy. Left (OU): Gaussian stationary distribution reproduced with total variation TV = 0.0050. Centre (double-well): Bimodal distribution with peaks at x ≈ ±1 faithfully captured; TV = 0.0092. The small discrepancy in peak heights is consistent with the 2.9% error in the cubic drift coefficient. Right (multiplicative): Unimodal heavy-tailed distribution reproduced with TV = 0.0093, demonstrating the effectiveness of the bias correction for state-dependent diffusion. In all panels, the shaded discrepancy regions are visually negligible compared to the density scale.",
+      "page": 15,
+      "index": 2,
+      "width": 966,
+      "height": 212
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20904v1/fig-003.webp",
+      "caption": "Figure 2: LassoCV regularisation paths for all six sub-problems. Each panel plots the mean crossvalidated MSE (averaged over five trajectory folds) as a function of the regularisation strength α, shown with α decreasing from left to right. Red dashed vertical lines mark the selected α∗. Top row (drift): OU (α∗ ≈ 1.6× 10−3), double-well (≈ 4.9× 10−5), multiplicative (≈ 2.1× 10−4). Bottom row (diffusion): OU (≈ 4.5× 10−7), double-well (≈ 1.0× 10−8), multiplicative (≈ 1.1× 10−5). In every panel the sharp elbow separates the over-regularised regime (to the left of the selected α∗, where active terms are forced to zero and the CV MSE rises sharply) from the under-regularised regime (to the right, where inactive terms are admitted and CV MSE increases due to over-fitting). The clean elbow structure confirms that grouped CV reliably identifies the correct sparsity level in all six cases.",
+      "page": 14,
+      "index": 3,
+      "width": 967,
+      "height": 506
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20904v1/fig-004.webp",
+      "caption": "Table 2: Comparison of SDE and Equation Identification Methods. Ticks and crosses indicate presence or absence of each capability.",
+      "page": 18,
+      "index": 4,
+      "width": 636,
+      "height": 313
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20904v1/fig-005.webp",
+      "caption": "Figure 1: Recovered vs. true drift and diffusion functions for all three benchmark systems. Blue solid lines show the ground truth; red dashed lines show the weak SINDy estimates from Algorithm 1. Top row (drift functions): OU process, b(x) = −θx, mean relative error 2.0%; double-well Langevin system, b(x) = x − x3, mean rel. err. 2.7%; multiplicative diffusion, b(x) = −2x, mean rel. err. 3.9%. Bottom row (diffusion functions): OU process, a(x) = σ20 = 0.490, mean rel. err. 0.0%; double-well system, a(x) = σ20 = 0.250, mean rel. err. 0.1%; multiplicative system, a(x) = 0.25(1 + x2), mean rel. err. 0.4% (after drift-bias correction). M = 50 spatial Gaussian kernels with h = 0.22 (OU and double-well) or h = 0.27 (multiplicative). All recovered curves are visually indistinguishable from ground truth at the displayed scale.",
+      "page": 13,
+      "index": 5,
+      "width": 966,
+      "height": 542
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20904v1/fig-006.webp",
+      "caption": "Figure 5: Theoretical noise scaling: Weak Form vs Kramers–Moyal. All curves are purely analytical; no regression is performed. Left: KM noise magnitude σobs/∆t as a function of ∆t for three SNR levels. The noise diverges as ∆t→ 0. Centre: WF effective noise σobs/ √ Nheff for the same SNR levels, where N = T/∆t and heff = √ π/2h. The noise grows only as √ ∆t and remains bounded as ∆t → 0. Right: Ratio of KM noise to WF noise (SNR advantage), which grows as ∆t−3/2 (dotted reference line). At the experimental setting ∆t = 0.002 (vertical dotted line), the advantage exceeds 104 for SNR=10. T = 100, heff = √ π/2× 0.22 ≈ 0.276.",
+      "page": 17,
+      "index": 6,
+      "width": 967,
+      "height": 293
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20904v1/fig-007.webp",
+      "caption": "Table 1: Complete Summary of Recovered Drift and Diffusion Coefficients. All scientifically significant parameters pass a 15% tolerance (✓). Zero entries are set exactly to zero by LassoCV + STLSQ; no false positives appear in any of the six sub-problems.",
+      "page": 16,
+      "index": 7,
+      "width": 782,
+      "height": 650
+    }
+  ]
+}

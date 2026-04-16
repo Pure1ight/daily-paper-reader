@@ -1,0 +1,468 @@
+{
+  "mode": "skims",
+  "generated_at": "2026-04-16T02:03:54.550064+00:00",
+  "stats": {
+    "mode": "skims",
+    "forced_all_quick": true,
+    "min_score": 8.0,
+    "deep_divecandidates": 12,
+    "deep_cap": null,
+    "deep_selected": 0,
+    "quick_candidates": 12,
+    "quick_skim_target": null,
+    "quick_selected": 12
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2603.20474v1",
+      "source": "arxiv",
+      "title": "From Data to Laws: Neural Discovery of Conservation Laws Without False Positives",
+      "abstract": "Conservation laws are fundamental to understanding dynamical systems, but discovering them from data remains challenging due to parameter variation, non-polynomial invariants, local minima, and false positives on chaotic systems. We introduce NGCG, a neural-symbolic pipeline that decouples dynamics learning from invariant discovery and systematically addresses these challenges. A multi-restart variance minimiser learns a near-constant latent representation; system-specific symbolic extraction (polynomial Lasso, log-basis Lasso, explicit PDE candidates, and PySR) yields closed-form expressions; a strict constancy gate and diversity filter eliminate spurious laws. On a benchmark of nine diverse systems including Hamiltonian and dissipative ODEs, chaos, and PDEs, NGCG achieves consistent discovery (DR=1.0, FDR=0.0, F1=1.0) on all four systems with true conservation laws, with constancy two to three orders of magnitude lower than the best baseline. It is the only method that succeeds on the Lotka--Volterra system, and it correctly outputs no law on all five systems without invariants. Extensive experiments demonstrate robustness to noise ($σ= 0.1$), sample efficiency (50--100 trajectories), insensitivity to hyperparameters, and runtime under one minute per system. A Pareto analysis shows that the method provides a range of candidate expressions, allowing users to trade complexity for constancy. NGCG achieves strong performance relative to prior methods for data-driven conservation-law discovery, combining high accuracy with interpretability.",
+      "authors": [
+        "Rahul D Ray"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "physics.data-an"
+      ],
+      "published": "2026-03-20T20:06:34+00:00",
+      "link": "https://arxiv.org/pdf/2603.20474v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Neural-symbolic pipeline for discovering laws and explicit PDE candidates from data",
+      "llm_evidence_cn": "从数据中发现规律和显式PDE候选者的神经符号流水线",
+      "llm_evidence": "从数据中发现规律和显式PDE候选者的神经符号流水线",
+      "canonical_evidence": "从数据中发现规律和显式PDE候选者的神经符号流水线",
+      "llm_tldr_en": "Introduces a neural-symbolic pipeline to discover conservation laws and PDE expressions from dynamical data.",
+      "llm_tldr_cn": "引入了一种神经符号流水线，用于从动力学数据中发现守恒定律和偏微分方程表达式。",
+      "llm_tldr": "引入了一种神经符号流水线，用于从动力学数据中发现守恒定律和偏微分方程表达式。",
+      "llm_tags": [
+        "query:pde-discovery:composite"
+      ],
+      "matched_query_tag": "query:pde-discovery:composite",
+      "matched_query_text": "Papers central to 偏微分方程发现, especially work that connects or combines: D; y; methods and algorithms for partial differential equation discovery from data; PDE Discovery based on genetic programming; state of the art algorithms for data driven PDE discovery.",
+      "matched_requirement_id": "req-composite-pde-discovery",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.22380v1",
+      "source": "arxiv",
+      "title": "Symbolic Graph Networks for Robust PDE Discovery from Noisy Sparse Data",
+      "abstract": "Data-driven discovery of partial differential equations (PDEs) offers a promising paradigm for uncovering governing physical laws from observational data. However, in practical scenarios, measurements are often contaminated by noise and limited by sparse sampling, which poses significant challenges to existing approaches based on numerical differentiation or integral formulations. In this work, we propose a Symbolic Graph Network (SGN) framework for PDE discovery under noisy and sparse conditions. Instead of relying on local differential approximations, SGN leverages graph message passing to model spatial interactions, providing a non-local representation that is less sensitive to high frequency noise. Based on this representation, the learned latent features are further processed by a symbolic regression module to extract interpretable mathematical expressions. We evaluate the proposed method on several benchmark systems, including the wave equation, convection-diffusion equation, and incompressible Navier-Stokes equations. Experimental results show that SGN can recover meaningful governing relations or solution forms under varying noise levels, and demonstrates improved robustness compared to baseline methods in sparse and noisy settings. These results suggest that combining graph-based representations with symbolic regression provides a viable direction for robust data-driven discovery of physical laws from imperfect observations. The code is available at https://github.com/CXY0112/SGN",
+      "authors": [
+        "Xingyu Chen",
+        "Junxiu An",
+        "Jun Guo",
+        "Yuqian Zhou"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-03-23T13:53:44+00:00",
+      "link": "https://arxiv.org/pdf/2603.22380v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Symbolic Graph Networks for robust PDE discovery from noisy sparse data",
+      "llm_evidence_cn": "用于从噪声稀疏数据中稳健发现偏微分方程的符号图网络",
+      "llm_evidence": "用于从噪声稀疏数据中稳健发现偏微分方程的符号图网络",
+      "canonical_evidence": "用于从噪声稀疏数据中稳健发现偏微分方程的符号图网络",
+      "llm_tldr_en": "Proposes a Symbolic Graph Network for robust PDE discovery under noisy and sparse data conditions.",
+      "llm_tldr_cn": "提出了一种符号图网络框架，用于在噪声和稀疏条件下稳健地发现偏微分方程。",
+      "llm_tldr": "提出了一种符号图网络框架，用于在噪声和稀疏条件下稳健地发现偏微分方程。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.22951v1",
+      "source": "arxiv",
+      "title": "Weak-PDE-Net: Discovering Open-Form PDEs via Differentiable Symbolic Networks and Weak Formulation",
+      "abstract": "Discovering governing Partial Differential Equations (PDEs) from sparse and noisy data is a challenging issue in data-driven scientific computing. Conventional sparse regression methods often suffer from two major limitations: (i) the instability of numerical differentiation under sparse and noisy data, and (ii) the restricted flexibility of a pre-defined candidate library. We propose Weak-PDE-Net, an end-to-end differentiable framework that can robustly identify open-form PDEs. Weak-PDE-Net consists of two interconnected modules: a forward response learner and a weak-form PDE generator. The learner embeds learnable Gaussian kernels within a lightweight MLP, serving as a surrogate model that adaptively captures system dynamics from sparse observations. Meanwhile, the generator integrates a symbolic network with an integral module to construct weak-form PDEs, avoiding explicit numerical differentiation and improving robustness to noise. To relax the constraints of the pre-defined library, we leverage Differentiable Neural Architecture Search strategy during training to explore the functional space, which enables the efficient discovery of open-form PDEs. The capability of Weak-PDE-Net in multivariable systems discovery is further enhanced by incorporating Galilean Invariance constraints and symmetry equivariance hypotheses to ensure physical consistency. Experiments on several challenging PDE benchmarks demonstrate that Weak-PDE-Net accurately recovers governing equations, even under highly sparse and noisy observations.",
+      "authors": [
+        "Xinxin Li",
+        "Xingyu Cui",
+        "Jin Qi",
+        "Juan Zhang",
+        "Da Li",
+        "Junping Yin"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-24T08:47:01+00:00",
+      "link": "https://arxiv.org/pdf/2603.22951v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Discovering open-form PDEs via differentiable symbolic networks and weak formulation",
+      "llm_evidence_cn": "通过微分符号网络和弱形式发现开放式PDE",
+      "llm_evidence": "通过微分符号网络和弱形式发现开放式PDE",
+      "canonical_evidence": "通过微分符号网络和弱形式发现开放式PDE",
+      "llm_tldr_en": "Introduces Weak-PDE-Net for robustly discovering governing PDEs from sparse and noisy data.",
+      "llm_tldr_cn": "引入Weak-PDE-Net，用于从稀疏且有噪声的数据中稳健地发现控制方程。",
+      "llm_tldr": "引入Weak-PDE-Net，用于从稀疏且有噪声的数据中稳健地发现控制方程。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.01335v1",
+      "source": "arxiv",
+      "title": "Bias Inheritance in Neural-Symbolic Discovery of Constitutive Closures Under Function-Class Mismatch",
+      "abstract": "We investigate the data-driven discovery of constitutive closures in nonlinear reaction-diffusion systems with known governing PDE structures. Our objective is to robustly recover diffusion and reaction laws from spatiotemporal observations while avoiding the common pitfall where low residuals or short-horizon predictions are conflated with physical recovery. We propose a three-stage neural-symbolic framework: (1) learning numerical surrogates under physical constraints using a noise-robust weak-form-driven objective; (2) compressing these surrogates into restricted interpretable symbolic families (e.g., polynomial, rational, and saturation forms); and (3) validating the symbolic closures through explicit forward re-simulation on unseen initial conditions. Extensive numerical experiments reveal two distinct regimes. Under matched-library settings, weak polynomial baselines behave as correctly specified reference estimators, showing that neural surrogates do not uniformly outperform classical bases. Conversely, under function-class mismatch, neural surrogates provide necessary flexibility and can be compressed into compact symbolic laws with minimal rollout degradation. However, we identify a critical \"bias inheritance\" mechanism where symbolic compression does not automatically repair constitutive bias. Across various observation regimes, the true error of the symbolic closure closely tracks that of the neural surrogate, yielding a bias inheritance ratio near one. These findings demonstrate that the primary bottleneck in neural-symbolic modeling lies in the initial numerical inverse problem rather than the subsequent symbolic compression. We underscore that constitutive claims must be rigorously supported by forward validation rather than residual minimization alone.",
+      "authors": [
+        "Hanbing Liang",
+        "Ze Tao",
+        "Fujun Liu"
+      ],
+      "primary_category": "cs.CE",
+      "categories": [
+        "cs.CE",
+        "cs.LG"
+      ],
+      "published": "2026-04-01T19:39:04+00:00",
+      "link": "https://arxiv.org/pdf/2604.01335v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "data-driven discovery of constitutive closures in nonlinear reaction-diffusion systems",
+      "llm_evidence_cn": "非线性反应扩散系统中本构闭合关系的驱动发现",
+      "llm_evidence": "非线性反应扩散系统中本构闭合关系的驱动发现",
+      "canonical_evidence": "非线性反应扩散系统中本构闭合关系的驱动发现",
+      "llm_tldr_en": "Proposes a neural-symbolic framework for robust data-driven discovery of physical laws in PDE systems.",
+      "llm_tldr_cn": "提出了一种神经符号框架，用于从数据中稳健地发现偏微分方程系统中的物理定律。",
+      "llm_tldr": "提出了一种神经符号框架，用于从数据中稳健地发现偏微分方程系统中的物理定律。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "state of the art algorithms for data driven PDE discovery",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.20904v2",
+      "source": "arxiv",
+      "title": "Sparse Weak-Form Discovery of Stochastic Generators",
+      "abstract": "The proposed algorithm seeks to provide a novel data-driven framework for the discovery of stochastic differential equations (SDEs) by application of the Weak-formulation to stochastic SINDy. This Weak formulation of the algorithm provides a noise-robust methodology that avoids traditional noisy derivative computation using finite differences. An additional novelty is the adoption of spatial Gaussian test functions in place of temporal test functions, wherein, the use of the kernel weight $K_j(X_{t_n})$ guarantees unbiasedness in expectation and prevents the structural regression bias that is otherwise pertinent temporal test functions. The proposed framework converts the SDE identification problem into two SINDy based linear sparse identification problems. We validate the algorithm on three SDEs, for which we recover all active non-linear terms with coefficient errors below 4\\%, stationary-density total-variation distances below 0.01, and autocorrelation functions that reproduce true relaxation timescales across all three benchmarks faithfully.",
+      "authors": [
+        "Eshwar R A",
+        "Gajanan V. Honnavar"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME",
+        "math-ph",
+        "math.DS",
+        "nlin.CD",
+        "physics.data-an",
+        "stat.ML"
+      ],
+      "published": "2026-03-21T18:28:10+00:00",
+      "link": "https://arxiv.org/pdf/2603.20904v2",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 9.5,
+      "llm_evidence_en": "data-driven framework for the discovery of stochastic differential equations",
+      "llm_evidence_cn": "随机微分方程发现的数据驱动框架",
+      "llm_evidence": "随机微分方程发现的数据驱动框架",
+      "canonical_evidence": "随机微分方程发现的数据驱动框架",
+      "llm_tldr_en": "Introduces a noise-robust weak-formulation for the sparse identification of stochastic differential equations.",
+      "llm_tldr_cn": "引入了一种用于随机微分方程稀疏识别的鲁棒弱形式化方法。",
+      "llm_tldr": "引入了一种用于随机微分方程稀疏识别的鲁棒弱形式化方法。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.18548v1",
+      "source": "arxiv",
+      "title": "SINDy-KANs: Sparse identification of non-linear dynamics through Kolmogorov-Arnold networks",
+      "abstract": "Kolmogorov-Arnold networks (KANs) have arisen as a potential way to enhance the interpretability of machine learning. However, solutions learned by KANs are not necessarily interpretable, in the sense of being sparse or parsimonious. Sparse identification of nonlinear dynamics (SINDy) is a complementary approach that allows for learning sparse equations for dynamical systems from data; however, learned equations are limited by the library. In this work, we present SINDy-KANs, which simultaneously train a KAN and a SINDy-like representation to increase interpretability of KAN representations with SINDy applied at the level of each activation function, while maintaining the function compositions possible through deep KANs. We apply our method to a number of symbolic regression tasks, including dynamical systems, to show accurate equation discovery across a range of systems.",
+      "authors": [
+        "Amanda A. Howard",
+        "Nicholas Zolman",
+        "Bruno Jacob",
+        "Steven L. Brunton",
+        "Panos Stinis"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-19T07:03:21+00:00",
+      "link": "https://arxiv.org/pdf/2603.18548v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Sparse identification of non-linear dynamics through Kolmogorov-Arnold networks",
+      "llm_evidence_cn": "通过Kolmogorov-Arnold网络进行非线性动力学的稀疏识别",
+      "llm_evidence": "通过Kolmogorov-Arnold网络进行非线性动力学的稀疏识别",
+      "canonical_evidence": "通过Kolmogorov-Arnold网络进行非线性动力学的稀疏识别",
+      "llm_tldr_en": "Combines SINDy with KANs to enhance the interpretability and flexibility of data-driven equation discovery.",
+      "llm_tldr_cn": "将SINDy与KAN结合，增强了数据驱动方程发现的可解释性和灵活性。",
+      "llm_tldr": "将SINDy与KAN结合，增强了数据驱动方程发现的可解释性和灵活性。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "state of the art algorithms for data driven PDE discovery",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.20904v3",
+      "source": "arxiv",
+      "title": "Sparse Weak-Form Discovery of Stochastic Generators",
+      "abstract": "The proposed algorithm seeks to provide a novel data-driven framework for the discovery of stochastic differential equations (SDEs) by application of the Weak-formulation to stochastic SINDy. This Weak formulation of the algorithm provides a noise-robust methodology that avoids traditional noisy derivative computation using finite differences. An additional novelty is the adoption of spatial Gaussian test functions in place of temporal test functions, wherein the use of the kernel weight $K_j(X_{t_n})$ guarantees unbiasedness in expectation and prevents the structural regression bias that is otherwise pertinent with temporal test functions. The proposed framework converts the SDE identification problem into two SINDy based linear sparse identification problems. We validate the algorithm on three SDEs, for which we recover all active non-linear terms with coefficient errors below 4%, stationary-density total-variation distances below 0.01, and autocorrelation functions that reproduce true relaxation timescales across all three benchmarks faithfully.",
+      "authors": [
+        "Eshwar R A",
+        "Gajanan V. Honnavar"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME",
+        "math-ph",
+        "math.DS",
+        "nlin.CD",
+        "physics.data-an",
+        "stat.ML"
+      ],
+      "published": "2026-03-21T18:28:10+00:00",
+      "link": "https://arxiv.org/pdf/2603.20904v3",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Sparse weak-form discovery of stochastic generators and SDE identification",
+      "llm_evidence_cn": "随机生成器的稀疏弱形式发现与随机微分方程识别",
+      "llm_evidence": "随机生成器的稀疏弱形式发现与随机微分方程识别",
+      "canonical_evidence": "随机生成器的稀疏弱形式发现与随机微分方程识别",
+      "llm_tldr_en": "Presents a noise-robust weak-formulation framework for the discovery of stochastic differential equations.",
+      "llm_tldr_cn": "提出了一种用于发现随机微分方程的噪声鲁棒弱形式化框架。",
+      "llm_tldr": "提出了一种用于发现随机微分方程的噪声鲁棒弱形式化框架。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.20910v1",
+      "source": "arxiv",
+      "title": "LLM-ODE: Data-driven Discovery of Dynamical Systems with Large Language Models",
+      "abstract": "Discovering the governing equations of dynamical systems is a central problem across many scientific disciplines. As experimental data become increasingly available, automated equation discovery methods offer a promising data-driven approach to accelerate scientific discovery. Among these methods, genetic programming (GP) has been widely adopted due to its flexibility and interpretability. However, GP-based approaches often suffer from inefficient exploration of the symbolic search space, leading to slow convergence and suboptimal solutions. To address these limitations, we propose LLM-ODE, a large language model-aided model discovery framework that guides symbolic evolution using patterns extracted from elite candidate equations. By leveraging the generative prior of large language models, LLM-ODE produces more informed search trajectories while preserving the exploratory strengths of evolutionary algorithms. Empirical results on 91 dynamical systems show that LLM-ODE variants consistently outperform classical GP methods in terms of search efficiency and Pareto-front quality. Overall, our results demonstrate that LLM-ODE improves both efficiency and accuracy over traditional GP-based discovery and offers greater scalability to higher-dimensional systems compared to linear and Transformer-only model discovery methods.",
+      "authors": [
+        "Amirmohammad Ziaei Bideh",
+        "Jonathan Gryak"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-21T18:46:38+00:00",
+      "link": "https://arxiv.org/pdf/2603.20910v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "LLM-aided model discovery framework for dynamical systems using genetic programming",
+      "llm_evidence_cn": "利用大语言模型辅助遗传规划进行动力系统模型发现",
+      "llm_evidence": "利用大语言模型辅助遗传规划进行动力系统模型发现",
+      "canonical_evidence": "利用大语言模型辅助遗传规划进行动力系统模型发现",
+      "llm_tldr_en": "Proposes LLM-ODE to improve genetic programming for data-driven discovery of governing equations.",
+      "llm_tldr_cn": "提出LLM-ODE框架，利用大模型优化遗传规划以实现数据驱动的控制方程发现。",
+      "llm_tldr": "提出LLM-ODE框架，利用大模型优化遗传规划以实现数据驱动的控制方程发现。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "PDE Discovery based on genetic programming",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.22429v1",
+      "source": "arxiv",
+      "title": "Neural Structure Embedding for Symbolic Regression via Continuous Structure Search and Coefficient Optimization",
+      "abstract": "Symbolic regression aims to discover human-interpretable equations that explain observational data. However, existing approaches rely heavily on discrete structure search (e.g., genetic programming), which often leads to high computational cost, unstable performance, and limited scalability to large equation spaces. To address these challenges, we propose SRCO, a unified embedding-driven framework for symbolic regression that transforms symbolic structures into a continuous, optimizable representation space. The framework consists of three key components: (1) structure embedding: we first generate a large pool of exploratory equations using traditional symbolic regression algorithms and train a Transformer model to compress symbolic structures into a continuous embedding space; (2) continuous structure search: the embedding space enables efficient exploration using gradient-based or sampling-based optimization, significantly reducing the cost of navigating the combinatorial structure space; and (3) coefficient optimization: for each discovered structure, we treat symbolic coefficients as learnable parameters and apply gradient optimization to obtain accurate numerical values. Experiments on synthetic and real-world datasets show that our approach consistently outperforms state-of-the-art methods in equation accuracy, robustness, and search efficiency. This work introduces a new paradigm for symbolic regression by bridging symbolic equation discovery with continuous embedding learning and optimization.",
+      "authors": [
+        "Fateme Memar",
+        "Tao Zhe",
+        "Dongjie Wang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-23T18:04:03+00:00",
+      "link": "https://arxiv.org/pdf/2603.22429v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 8.5,
+      "llm_evidence_en": "Symbolic regression framework addressing limitations of genetic programming for equation discovery",
+      "llm_evidence_cn": "针对方程发现中遗传算法局限性的符号回归框架",
+      "llm_evidence": "针对方程发现中遗传算法局限性的符号回归框架",
+      "canonical_evidence": "针对方程发现中遗传算法局限性的符号回归框架",
+      "llm_tldr_en": "Proposes an embedding-driven symbolic regression framework to improve upon traditional genetic programming methods.",
+      "llm_tldr_cn": "提出一种嵌入驱动的符号回归框架，旨在改进传统的遗传算法方程发现方法。",
+      "llm_tldr": "提出一种嵌入驱动的符号回归框架，旨在改进传统的遗传算法方程发现方法。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "PDE Discovery based on genetic programming",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.20904v1",
+      "source": "arxiv",
+      "title": "Sparse Weak-Form Discovery of Stochastic Generators",
+      "abstract": "We introduce a framework for the data-driven discovery of stochastic differential equations (SDEs) that unifies, for the first time, the weak-form integration-by-parts approach of Weak SINDy with the stochastic system identification goal of stochastic SINDy. The central novelty is the adoption of spatial Gaussian test functions $K_j(x)=\\exp(-|x-x_j|^2/2h^2)$ in place of temporal test functions. Because the kernel weight $K_j(X_{t_n})$ is $\\mathcal{F}_{t_n}$-measurable and the Brownian innovation $ξ_n$ is independent of $\\mathcal{F}_{t_n}$, every noise term in the projected response has zero conditional mean given the current state -- a property that guarantees unbiasedness in expectation and prevents the structural regression bias that afflicts temporal test functions in the stochastic setting. This design choice converts the SDE identification problem into two sparse linear systems -- one for the drift $b(x)$ and one for the diffusion tensor $a(x)$ -- that share a single design matrix and are solved jointly via $\\ell_1$-regularised regression with grouped cross-validation. A two-step bias-correction procedure handles state-dependent diffusion. Validated on the Ornstein--Uhlenbeck process, the double-well Langevin system, and a multiplicative diffusion process, the method recovers all active polynomial generators with coefficient errors below 4\\%, stationary-density total-variation distances below 0.01, and autocorrelation functions that faithfully reproduce true relaxation timescales across all three benchmarks.",
+      "authors": [
+        "Eshwar R A",
+        "Gajanan V. Honnavar"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME",
+        "math-ph",
+        "math.DS",
+        "nlin.CD",
+        "physics.data-an",
+        "stat.ML"
+      ],
+      "published": "2026-03-21T18:28:10+00:00",
+      "link": "https://arxiv.org/pdf/2603.20904v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Data-driven discovery of stochastic differential equations using weak-form SINDy",
+      "llm_evidence_cn": "利用弱形式SINDy进行随机微分方程的数据驱动发现",
+      "llm_evidence": "利用弱形式SINDy进行随机微分方程的数据驱动发现",
+      "canonical_evidence": "利用弱形式SINDy进行随机微分方程的数据驱动发现",
+      "llm_tldr_en": "Introduces a framework for discovering stochastic differential equations using spatial Gaussian test functions.",
+      "llm_tldr_cn": "引入了一种利用空间高斯测试函数发现随机微分方程的框架。",
+      "llm_tldr": "引入了一种利用空间高斯测试函数发现随机微分方程的框架。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.07611v1",
+      "source": "arxiv",
+      "title": "Learning interpretable and stable dynamical models via mixed-integer Lyapunov-constrained optimization",
+      "abstract": "In this paper, we consider the data-driven discovery of stable dynamical models with a single equilibrium. The proposed approach uses a basis-function parameterization of the differential equations and the associated Lyapunov function. This modeling approach enables the discovery of both the dynamical model and a Lyapunov function in an interpretable form. The Lyapunov conditions for stability are enforced as constraints on the training data. The resulting learning task is a mixed-integer quadratically constrained optimization problem that can be solved to optimality using current state-of-the-art global optimization solvers. Application to two case studies shows that the proposed approach can discover the true model of the system and the associated Lyapunov function. Moreover, in the presence of noise, the model learned with the proposed approach achieves higher predictive accuracy than models learned with baselines that do not consider Lyapunov-related constraints.",
+      "authors": [
+        "Zhe Li",
+        "Ilias Mitrai"
+      ],
+      "primary_category": "eess.SY",
+      "categories": [
+        "eess.SY"
+      ],
+      "published": "2026-04-08T21:28:38+00:00",
+      "link": "https://arxiv.org/pdf/2604.07611v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "data-driven discovery of stable dynamical models using basis-function parameterization",
+      "llm_evidence_cn": "使用基函数参数化的数据驱动稳定动力学模型发现",
+      "llm_evidence": "使用基函数参数化的数据驱动稳定动力学模型发现",
+      "canonical_evidence": "使用基函数参数化的数据驱动稳定动力学模型发现",
+      "llm_tldr_en": "Presents a mixed-integer optimization approach for the data-driven discovery of interpretable dynamical models.",
+      "llm_tldr_cn": "提出了一种混合整数优化方法，用于从数据中发现可解释的稳定动力学模型。",
+      "llm_tldr": "提出了一种混合整数优化方法，用于从数据中发现可解释的稳定动力学模型。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.08324v2",
+      "source": "arxiv",
+      "title": "Multi-Modal Learning meets Genetic Programming: Analyzing Alignment in Latent Space Optimization",
+      "abstract": "Symbolic regression (SR) aims to discover mathematical expressions from data, a task traditionally tackled using Genetic Programming (GP) through combinatorial search over symbolic structures. Latent Space Optimization (LSO) methods use neural encoders to map symbolic expressions into continuous spaces, transforming the combinatorial search into continuous optimization. SNIP (Meidani et al., 2024), a contrastive pre-training model inspired by CLIP, advances LSO by introducing a multi-modal approach: aligning symbolic and numeric encoders in a shared latent space to learn the phenotype-genotype mapping, enabling optimization in the numeric space to implicitly guide symbolic search. However, this relies on fine-grained cross-modal alignment, whereas literature on similar models like CLIP reveals that such an alignment is typically coarse-grained. In this paper, we investigate whether SNIP delivers on its promise of effective bi-modal optimization for SR. Our experiments show that: (1) cross-modal alignment does not improve during optimization, even as fitness increases, and (2) the alignment learned by SNIP is too coarse to efficiently conduct principled search in the symbolic space. These findings reveal that while multi-modal LSO holds significant potential for SR, effective alignment-guided optimization remains unrealized in practice, highlighting fine-grained alignment as a critical direction for future work.",
+      "authors": [
+        "Benjamin Léger",
+        "Kazem Meidani",
+        "Christian Gagné"
+      ],
+      "primary_category": "cs.NE",
+      "categories": [
+        "cs.NE",
+        "cs.AI"
+      ],
+      "published": "2026-04-09T14:55:36+00:00",
+      "link": "https://arxiv.org/pdf/2604.08324v2",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Genetic Programming for symbolic regression and latent space optimization",
+      "llm_evidence_cn": "用于符号回归和潜空间优化的遗传规划",
+      "llm_evidence": "用于符号回归和潜空间优化的遗传规划",
+      "canonical_evidence": "用于符号回归和潜空间优化的遗传规划",
+      "llm_tldr_en": "Analyzes alignment in latent space optimization for symbolic regression using Genetic Programming.",
+      "llm_tldr_cn": "分析了使用遗传规划进行符号回归的潜空间优化中的对齐问题。",
+      "llm_tldr": "分析了使用遗传规划进行符号回归的潜空间优化中的对齐问题。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "PDE Discovery based on genetic programming",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ]
+}

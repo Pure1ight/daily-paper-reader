@@ -1,0 +1,102 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2603.20910v1/fig-001.webp",
+      "caption": "Figure 1: Schematic overview of LLM-ODE. (1) Given trajectory data from an unknown dynamical system, the observations are decomposed into state variables. (2) A large language model acts as an evolutionary operator, guiding the evolution of symbolic equation populations toward higherfitness candidates. (3) The final system of equations is selected from the Cartesian product of equation-level Pareto fronts.",
+      "page": 1,
+      "index": 1,
+      "width": 504,
+      "height": 379
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20910v1/fig-002.webp",
+      "caption": "Table 1: Number of discovered systems by method based on test trajectory accuracy. A successful discovery corresponds to a system with test trajectory NMSE below 𝜆. The dataset is stratified with respect to the number of state variables 𝐷 , followed by the number of relevant systems. In almost all cases, LLM-ODE methods achieve a higher or equal discovery rate compared to PySR, suggesting the superiority of LLM-based search to uninformed search.",
+      "page": 6,
+      "index": 2,
+      "width": 1056,
+      "height": 439
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20910v1/fig-003.webp",
+      "caption": "Figure 2: System discovery rate as a function of search iterations across various NMSE thresholds 𝜆. Overall, LLM-ODE methods achieve higher discovery rates across all iteration limits. LLM-ODE methods enjoy a faster convergence rate than PySR.",
+      "page": 6,
+      "index": 3,
+      "width": 1042,
+      "height": 316
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20910v1/fig-004.webp",
+      "caption": "Table 4: The governing equations and the initial values of two-dimensional (𝐷 = 2) dynamical systems.",
+      "page": 11,
+      "index": 4,
+      "width": 740,
+      "height": 1225
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20910v1/fig-005.webp",
+      "caption": "Figure 5: The training trajectories of dynamical systems with 𝐷 = 2 state variables.",
+      "page": 15,
+      "index": 5,
+      "width": 1041,
+      "height": 874
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20910v1/fig-006.webp",
+      "caption": "Table 3: The governing equations and the initial values of one-dimensional (𝐷 = 1) dynamical systems.",
+      "page": 10,
+      "index": 6,
+      "width": 890,
+      "height": 806
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20910v1/fig-007.webp",
+      "caption": "Figure 4: The training trajectories of dynamical systems with 𝐷 = 1 state variables.",
+      "page": 14,
+      "index": 7,
+      "width": 1041,
+      "height": 699
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20910v1/fig-008.webp",
+      "caption": "Table 6: The governing equations and the initial values of four-dimensional (𝐷 = 4) dynamical systems.",
+      "page": 13,
+      "index": 8,
+      "width": 972,
+      "height": 879
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20910v1/fig-009.webp",
+      "caption": "Figure 7: The training trajectories of dynamical systems with 𝐷 = 4 state variables.",
+      "page": 17,
+      "index": 9,
+      "width": 1041,
+      "height": 520
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20910v1/fig-010.webp",
+      "caption": "Table 5: The governing equations and the initial values of three-dimensional (𝐷 = 3) dynamical systems.",
+      "page": 12,
+      "index": 10,
+      "width": 844,
+      "height": 1229
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20910v1/fig-011.webp",
+      "caption": "Table 2: Hyperparameter search space of SINDy.",
+      "page": 9,
+      "index": 11,
+      "width": 503,
+      "height": 309
+    },
+    {
+      "url": "assets/figures/arxiv/2603.20910v1/fig-012.webp",
+      "caption": "Figure 6: The training trajectories of dynamical systems with 𝐷 = 3 state variables.",
+      "page": 16,
+      "index": 12,
+      "width": 1041,
+      "height": 697
+    }
+  ]
+}
