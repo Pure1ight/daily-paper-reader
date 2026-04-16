@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.11829v1/fig-001.webp",
+      "caption": "Figure 1. Structural architecture of the Physics-Informed Time Derivative Network (PITDN). The workflow shifts the learning paradigm to the temporal tangent bundle, where a neural network approximates the time derivative 𝑣𝜃 ≈ 𝜕𝑡𝑢. The state variable 𝑢𝜃 is reconstructed via a differentiable Volterra integral operator I𝑢0 , ensuring the initial condition is satisfied by construction. The model is optimized using a composite loss function J comprising the time-differentiated PDE residual, the initial consistency condition, and boundary constraints.",
+      "page": 25,
+      "index": 1,
+      "width": 950,
+      "height": 521
+    },
+    {
+      "url": "assets/figures/arxiv/2604.11829v1/fig-002.webp",
+      "caption": "Table 1. Hyperparameter configuration for all experiments.",
+      "page": 26,
+      "index": 2,
+      "width": 689,
+      "height": 467
+    },
+    {
+      "url": "assets/figures/arxiv/2604.11829v1/fig-003.webp",
+      "caption": "Figure 4. Experimental results for the Nonlinear Klein-Gordon equation using secondorder reconstruction. Top Row: The PITDN accurately predicts the high-amplitude acceleration field 𝜕𝑡𝑡𝑢. Middle Row: Reconstruction via Cauchy’s double integration formula yields a precise solution with minimal error (1.4%). Bottom Row: The PINN baseline exhibits higher residual errors and phase inaccuracies. Despite a lower training loss, the PINN’s generalization error is worse, confirming that PITDN’s integral constraint enforces better physical validity.",
+      "page": 30,
+      "index": 3,
+      "width": 950,
+      "height": 648
+    },
+    {
+      "url": "assets/figures/arxiv/2604.11829v1/fig-004.webp",
+      "caption": "Figure 3. Experimental results for the Viscous Burgers’ equation (𝜈 = 0.01/𝜋). Top Row: The learned temporal derivative accurately captures the gradient steepening. The training loss shows PITDN converging better than PINN. Middle Row: The PITDN reconstructed solution faithfully resolves the sharp shock at 𝑥 = 0, with negligible error. Bottom Row: The standard PINN fails to capture the shock, resulting in a smoothed solution with high error (36%). The metrics table confirms the superior shock-capturing capability of PITDN.",
+      "page": 28,
+      "index": 4,
+      "width": 950,
+      "height": 637
+    },
+    {
+      "url": "assets/figures/arxiv/2604.11829v1/fig-005.webp",
+      "caption": "Figure 2. Experimental results for the Linear Advection equation (𝑐 = 1.0). Top Row: Comparison of the learned time derivative 𝜕𝑢/𝜕𝑡 against the exact field, absolute error of the derivative, and training loss convergence history. Middle Row: The reconstructed PITDN solution 𝑢 (𝑥, 𝑡), its corresponding absolute error map, and 3D isometric slices showing perfect phase alignment. Bottom Row: The baseline PINN solution and its error map, highlighting significant phase drift. The summary table (bottom right) confirms that PITDN outperforms PINN by two orders of magnitude in 𝐿2 and 𝐿∞ norms.",
+      "page": 27,
+      "index": 5,
+      "width": 950,
+      "height": 652
+    }
+  ]
+}

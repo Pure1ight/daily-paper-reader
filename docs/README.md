@@ -6,59 +6,61 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-03-18 ~ 2026-04-16
-- 运行时间：2026-04-16 02:05:49 UTC
+- 最新运行日期：2026-04-16
+- 运行时间：2026-04-16 19:58:39 UTC
 - 运行状态：成功
-- 本次总论文数：12
-- 精读区：0
-- 速读区：12
+- 本次总论文数：13
+- 精读区：4
+- 速读区：9
 
 ### 今日简报（AI）
-今日速读 12 篇前沿论文，聚焦利用 AI 自动挖掘物理守恒律与偏微分方程（PDE）的科学发现新范式。
-重点关注结合符号网络与弱形式（Weak Formulation）的方法，其在噪声和稀疏数据下依然能稳健地发现复杂的物理规律。
-建议深入了解“符号-神经网络”混合模型，这是提升 AI 建模可解释性与物理鲁棒性的关键路径。
-- 详情：[/20260318-20260416/README](/20260318-20260416/README)
+今日聚焦动力系统建模的稳定性与可解释性，深度解析 Lyapunov 约束优化与 Koopman 算子计算新进展。
+重点推荐通过混合整数规划构建稳定模型，以及利用张量化算子对数提升复杂动力学捕捉精度。
+建议读者关注物理启发式架构在长时 PDE 预测中的潜力，并探索多模态优化与遗传编程的跨界融合。
+- 详情：[/202604/16/README](/202604/16/README)
 
 ### 精读区论文标签
-- 本次无精读推荐。
+1. [Learning interpretable and stable dynamical models via mixed-integer Lyapunov-constrained optimization](/202604/16/2604.07611v1-learning-interpretable-and-stable-dynamical-models-via-mixed-integer-lyapunov-constrained-optimization)  
+   标签：评分：9.0/10、query:pde-discovery
+   evidence：使用基函数参数化的数据驱动稳定动力学模型发现
+2. [Tensor-based computation of the Koopman generator via operator logarithm](/202604/16/2604.07685v1-tensor-based-computation-of-the-koopman-generator-via-operator-logarithm)  
+   标签：评分：9.0/10、query:pde-discovery
+   evidence：利用Koopman生成器从数据中识别非线性动力系统的控制方程
+3. [Multi-Modal Learning meets Genetic Programming: Analyzing Alignment in Latent Space Optimization](/202604/16/2604.08324v2-multi-modal-learning-meets-genetic-programming-analyzing-alignment-in-latent-space-optimization)  
+   标签：评分：8.0/10、query:pde-discovery
+   evidence：使用遗传规划和潜空间优化的符号回归
+4. [A monotone iterative reconstruction method for an inverse drift problem in a two-dimensional parabolic equation](/202604/16/2604.13506v1-a-monotone-iterative-reconstruction-method-for-an-inverse-drift-problem-in-a-two-dimensional-parabolic-equation)  
+   标签：评分：8.0/10、query:pde-discovery
+   evidence：从数据中恢复漂移系数的逆漂移问题
 
 ### 速读区论文标签
-1. [From Data to Laws: Neural Discovery of Conservation Laws Without False Positives](/20260318-20260416/2603.20474v1-from-data-to-laws-neural-discovery-of-conservation-laws-without-false-positives)  
-   标签：评分：10.0/10、query:pde-discovery
-   evidence：从数据中发现规律和显式PDE候选者的神经符号流水线
-2. [Symbolic Graph Networks for Robust PDE Discovery from Noisy Sparse Data](/20260318-20260416/2603.22380v1-symbolic-graph-networks-for-robust-pde-discovery-from-noisy-sparse-data)  
-   标签：评分：10.0/10、query:pde-discovery
-   evidence：用于从噪声稀疏数据中稳健发现偏微分方程的符号图网络
-3. [Weak-PDE-Net: Discovering Open-Form PDEs via Differentiable Symbolic Networks and Weak Formulation](/20260318-20260416/2603.22951v1-weak-pde-net-discovering-open-form-pdes-via-differentiable-symbolic-networks-and-weak-formulation)  
-   标签：评分：10.0/10、query:pde-discovery
-   evidence：通过微分符号网络和弱形式发现开放式PDE
-4. [Bias Inheritance in Neural-Symbolic Discovery of Constitutive Closures Under Function-Class Mismatch](/20260318-20260416/2604.01335v1-bias-inheritance-in-neural-symbolic-discovery-of-constitutive-closures-under-function-class-mismatch)  
-   标签：评分：10.0/10、query:pde-discovery
-   evidence：非线性反应扩散系统中本构闭合关系的驱动发现
-5. [Sparse Weak-Form Discovery of Stochastic Generators](/20260318-20260416/2603.20904v2-sparse-weak-form-discovery-of-stochastic-generators)  
-   标签：评分：9.5/10、query:pde-discovery
-   evidence：随机微分方程发现的数据驱动框架
-6. [SINDy-KANs: Sparse identification of non-linear dynamics through Kolmogorov-Arnold networks](/20260318-20260416/2603.18548v1-sindy-kans-sparse-identification-of-non-linear-dynamics-through-kolmogorov-arnold-networks)  
-   标签：评分：9.0/10、query:pde-discovery
-   evidence：通过Kolmogorov-Arnold网络进行非线性动力学的稀疏识别
-7. [Sparse Weak-Form Discovery of Stochastic Generators](/20260318-20260416/2603.20904v3-sparse-weak-form-discovery-of-stochastic-generators)  
-   标签：评分：9.0/10、query:pde-discovery
-   evidence：随机生成器的稀疏弱形式发现与随机微分方程识别
-8. [LLM-ODE: Data-driven Discovery of Dynamical Systems with Large Language Models](/20260318-20260416/2603.20910v1-llm-ode-data-driven-discovery-of-dynamical-systems-with-large-language-models)  
-   标签：评分：9.0/10、query:pde-discovery
-   evidence：利用大语言模型辅助遗传规划进行动力系统模型发现
-9. [Neural Structure Embedding for Symbolic Regression via Continuous Structure Search and Coefficient Optimization](/20260318-20260416/2603.22429v1-neural-structure-embedding-for-symbolic-regression-via-continuous-structure-search-and-coefficient-optimization)  
-   标签：评分：8.5/10、query:pde-discovery
-   evidence：针对方程发现中遗传算法局限性的符号回归框架
-10. [Sparse Weak-Form Discovery of Stochastic Generators](/20260318-20260416/2603.20904v1-sparse-weak-form-discovery-of-stochastic-generators)  
-   标签：评分：8.0/10、query:pde-discovery
-   evidence：利用弱形式SINDy进行随机微分方程的数据驱动发现
-11. [Learning interpretable and stable dynamical models via mixed-integer Lyapunov-constrained optimization](/20260318-20260416/2604.07611v1-learning-interpretable-and-stable-dynamical-models-via-mixed-integer-lyapunov-constrained-optimization)  
-   标签：评分：8.0/10、query:pde-discovery
-   evidence：使用基函数参数化的数据驱动稳定动力学模型发现
-12. [Multi-Modal Learning meets Genetic Programming: Analyzing Alignment in Latent Space Optimization](/20260318-20260416/2604.08324v2-multi-modal-learning-meets-genetic-programming-analyzing-alignment-in-latent-space-optimization)  
-   标签：评分：8.0/10、query:pde-discovery
-   evidence：用于符号回归和潜空间优化的遗传规划
+1. [AE-ViT: Stable Long-Horizon Parametric Partial Differential Equations Modeling](/202604/16/2604.06475v1-ae-vit-stable-long-horizon-parametric-partial-differential-equations-modeling)  
+   标签：评分：7.5/10、query:pde-discovery
+   evidence：使用深度学习和自动编码器进行参数化偏微分方程的代理建模
+2. [On the Unique Recovery of Transport Maps and Vector Fields from Finite Measure-Valued Data](/202604/16/2604.07671v1-on-the-unique-recovery-of-transport-maps-and-vector-fields-from-finite-measure-valued-data)  
+   标签：评分：7.0/10、query:pde-discovery
+   evidence：从数据中唯一恢复向量场和传输映射，与偏微分方程反问题相关
+3. [Multi-Modal Learning meets Genetic Programming: Analyzing Alignment in Latent Space Optimization](/202604/16/2604.08324v1-multi-modal-learning-meets-genetic-programming-analyzing-alignment-in-latent-space-optimization)  
+   标签：评分：7.0/10、query:pde-discovery
+   evidence：传统上使用遗传规划解决的符号回归问题
+4. [Bias-Constrained Diffusion Schedules for PDE Emulations: Reconstruction Error Minimization and Efficient Unrolled Training](/202604/16/2604.08357v2-bias-constrained-diffusion-schedules-for-pde-emulations-reconstruction-error-minimization-and-efficient-unrolled-training)  
+   标签：评分：7.0/10、query:pde-discovery
+   evidence：用于模拟复杂偏微分方程动力学的扩散模型
+5. [Learning on the Temporal Tangent Bundle for Physics-Informed Neural Networks](/202604/16/2604.11829v1-learning-on-the-temporal-tangent-bundle-for-physics-informed-neural-networks)  
+   标签：评分：7.0/10、query:pde-discovery
+   evidence：通过最小化微分残差来求解偏微分方程
+6. [Bias-Constrained Diffusion Schedules for PDE Emulations: Reconstruction Error Minimization and Efficient Unrolled Training](/202604/16/2604.08357v1-bias-constrained-diffusion-schedules-for-pde-emulations-reconstruction-error-minimization-and-efficient-unrolled-training)  
+   标签：评分：6.0/10、query:pde-discovery
+   evidence：用于模拟复杂时空偏微分方程动力学的扩散模型
+7. [Hard-constrained Physics-informed Neural Networks for Interface Problems](/202604/16/2604.08453v1-hard-constrained-physics-informed-neural-networks-for-interface-problems)  
+   标签：评分：6.0/10、query:pde-discovery
+   evidence：用于求解偏微分方程的物理信息神经网络
+8. [Meta-Learned Basis Adaptation for Parametric Linear PDEs](/202604/16/2604.09289v1-meta-learned-basis-adaptation-for-parametric-linear-pdes)  
+   标签：评分：6.0/10、query:pde-discovery
+   evidence：用于求解参数化线性偏微分方程的混合物理信息框架
+9. [Physics-Informed Neural Networks for Solving Derivative-Constrained PDEs](/202604/16/2604.13723v1-physics-informed-neural-networks-for-solving-derivative-constrained-pdes)  
+   标签：评分：6.0/10、query:pde-discovery
+   evidence：用于求解带导数约束偏微分方程的物理信息神经网络
 
 
 <div class="dpr-home-promo-card">
