@@ -653,7 +653,7 @@ class BltClient(LLMClient):
         for attempt_idx, req_base in enumerate(request_bases, start=1):
             request_url = f"{req_base.rstrip('/')}/rerank"
             try:
-                response = requests.post(request_url, headers=headers, json=payload, timeout=120)
+                response = requests.post(request_url, headers=headers, json=payload, timeout=300)
                 response.raise_for_status()
                 try:
                     response_data = response.json()
