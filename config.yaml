@@ -44,18 +44,13 @@ subscriptions:
         - keyword: Genetic Programming
           keyword_cn: 遗传编程
           query: 'y'
-        - keyword: PDE Discovery
+        - keyword: PDE discovery
           keyword_cn: 偏微分方程发现
-          query: P
-        - keyword: Symbolic Regression
+          query: methods and algorithms for partial differential equation discovery from data
+        - keyword: symbolic regression
           keyword_cn: 符号回归
-          query: S
+          query: symbolic regression techniques for identifying physical laws and governing equations
       intent_queries:
-        - query: 偏微分方程发现的最新研究进展
-          query_cn: The state of art research for PDE discovery
-          enabled: true
-          source: manual
-          note: ''
         - query: The hybridization methods combining Genetic Programming with LLM, Generative Model or DRL for PDE Discovery
           query_cn: 基于GP与大语言模型，生成式模型，强化学习的结合，用于发现偏微分方程
           enabled: true
@@ -66,7 +61,12 @@ subscriptions:
           enabled: true
           source: manual
           note: ''
-      updated_at: '2026-04-15T23:33:51.747Z'
+        - query: state of the art methods for data driven PDE discovery
+          query_cn: 数据驱动偏微分方程发现的前沿方法
+          enabled: true
+          source: generated
+          note: ''
+      updated_at: '2026-04-16T00:50:35.396Z'
       paused: false
 source_backends:
   arxiv:
