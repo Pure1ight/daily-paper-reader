@@ -1,0 +1,498 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-04-17T19:49:15.282140+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 5,
+    "deep_cap": 6,
+    "deep_selected": 5,
+    "quick_candidates": 8,
+    "quick_skim_target": 11,
+    "quick_selected": 8
+  },
+  "deep_dive": [
+    {
+      "id": "2604.07611v1",
+      "source": "arxiv",
+      "title": "Learning interpretable and stable dynamical models via mixed-integer Lyapunov-constrained optimization",
+      "abstract": "In this paper, we consider the data-driven discovery of stable dynamical models with a single equilibrium. The proposed approach uses a basis-function parameterization of the differential equations and the associated Lyapunov function. This modeling approach enables the discovery of both the dynamical model and a Lyapunov function in an interpretable form. The Lyapunov conditions for stability are enforced as constraints on the training data. The resulting learning task is a mixed-integer quadratically constrained optimization problem that can be solved to optimality using current state-of-the-art global optimization solvers. Application to two case studies shows that the proposed approach can discover the true model of the system and the associated Lyapunov function. Moreover, in the presence of noise, the model learned with the proposed approach achieves higher predictive accuracy than models learned with baselines that do not consider Lyapunov-related constraints.",
+      "authors": [
+        "Zhe Li",
+        "Ilias Mitrai"
+      ],
+      "primary_category": "eess.SY",
+      "categories": [
+        "eess.SY"
+      ],
+      "published": "2026-04-08T21:28:38+00:00",
+      "link": "https://arxiv.org/pdf/2604.07611v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "data-driven discovery of stable dynamical models via basis-function parameterization",
+      "llm_evidence_cn": "通过基函数参数化进行数据驱动的稳定动力学模型发现",
+      "llm_evidence": "通过基函数参数化进行数据驱动的稳定动力学模型发现",
+      "canonical_evidence": "通过基函数参数化进行数据驱动的稳定动力学模型发现",
+      "llm_tldr_en": "Presents a mixed-integer optimization approach for the data-driven discovery of interpretable dynamical models.",
+      "llm_tldr_cn": "提出了一种用于数据驱动发现可解释动力学模型的混合整数优化方法。",
+      "llm_tldr": "提出了一种用于数据驱动发现可解释动力学模型的混合整数优化方法。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "state of the art algorithms for data driven PDE discovery",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.07685v1",
+      "source": "arxiv",
+      "title": "Tensor-based computation of the Koopman generator via operator logarithm",
+      "abstract": "Identifying governing equations of nonlinear dynamical systems from data is challenging. While sparse identification of nonlinear dynamics (SINDy) and its extensions are widely used for system identification, operator-logarithm approaches use the logarithm to avoid time differentiation, enabling larger sampling intervals. However, they still suffer from the curse of dimensionality. Then, we propose a data-driven method to compute the Koopman generator in a low-rank tensor train (TT) format by taking logarithms of Koopman eigenvalues while preserving the TT format. Experiments on 4-dimensional Lotka-Volterra and 10-dimensional Lorenz-96 systems show accurate recovery of vector field coefficients and scalability to higher-dimensional systems.",
+      "authors": [
+        "Tatsuya Kishimoto",
+        "Jun Ohkubo"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-09T01:15:03+00:00",
+      "link": "https://arxiv.org/pdf/2604.07685v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "identifying governing equations of nonlinear dynamical systems from data",
+      "llm_evidence_cn": "从数据中识别非线性动力系统的控制方程",
+      "llm_evidence": "从数据中识别非线性动力系统的控制方程",
+      "canonical_evidence": "从数据中识别非线性动力系统的控制方程",
+      "llm_tldr_en": "Proposes a tensor-based method to identify governing equations of dynamical systems, directly relevant to PDE discovery.",
+      "llm_tldr_cn": "提出一种基于张量的方法来识别动力系统的控制方程，与偏微分方程发现直接相关。",
+      "llm_tldr": "提出一种基于张量的方法来识别动力系统的控制方程，与偏微分方程发现直接相关。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.08324v2",
+      "source": "arxiv",
+      "title": "Multi-Modal Learning meets Genetic Programming: Analyzing Alignment in Latent Space Optimization",
+      "abstract": "Symbolic regression (SR) aims to discover mathematical expressions from data, a task traditionally tackled using Genetic Programming (GP) through combinatorial search over symbolic structures. Latent Space Optimization (LSO) methods use neural encoders to map symbolic expressions into continuous spaces, transforming the combinatorial search into continuous optimization. SNIP (Meidani et al., 2024), a contrastive pre-training model inspired by CLIP, advances LSO by introducing a multi-modal approach: aligning symbolic and numeric encoders in a shared latent space to learn the phenotype-genotype mapping, enabling optimization in the numeric space to implicitly guide symbolic search. However, this relies on fine-grained cross-modal alignment, whereas literature on similar models like CLIP reveals that such an alignment is typically coarse-grained. In this paper, we investigate whether SNIP delivers on its promise of effective bi-modal optimization for SR. Our experiments show that: (1) cross-modal alignment does not improve during optimization, even as fitness increases, and (2) the alignment learned by SNIP is too coarse to efficiently conduct principled search in the symbolic space. These findings reveal that while multi-modal LSO holds significant potential for SR, effective alignment-guided optimization remains unrealized in practice, highlighting fine-grained alignment as a critical direction for future work.",
+      "authors": [
+        "Benjamin Léger",
+        "Kazem Meidani",
+        "Christian Gagné"
+      ],
+      "primary_category": "cs.NE",
+      "categories": [
+        "cs.NE",
+        "cs.AI"
+      ],
+      "published": "2026-04-09T14:55:36+00:00",
+      "link": "https://arxiv.org/pdf/2604.08324v2",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Symbolic regression traditionally tackled using Genetic Programming",
+      "llm_evidence_cn": "传统上使用遗传编程解决的符号回归",
+      "llm_evidence": "传统上使用遗传编程解决的符号回归",
+      "canonical_evidence": "传统上使用遗传编程解决的符号回归",
+      "llm_tldr_en": "Analyzes latent space optimization in genetic programming for symbolic regression, a core method for PDE discovery.",
+      "llm_tldr_cn": "分析了用于符号回归的遗传编程中的潜空间优化，这是偏微分方程发现的核心方法。",
+      "llm_tldr": "分析了用于符号回归的遗传编程中的潜空间优化，这是偏微分方程发现的核心方法。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "PDE Discovery based on genetic programming",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.08324v1",
+      "source": "arxiv",
+      "title": "Multi-Modal Learning meets Genetic Programming: Analyzing Alignment in Latent Space Optimization",
+      "abstract": "Symbolic regression (SR) aims to discover mathematical expressions from data, a task traditionally tackled using Genetic Programming (GP) through combinatorial search over symbolic structures. Latent Space Optimization (LSO) methods use neural encoders to map symbolic expressions into continuous spaces, transforming the combinatorial search into continuous optimization. SNIP (Meidani et al., 2024), a contrastive pre-training model inspired by CLIP, advances LSO by introducing a multi-modal approach: aligning symbolic and numeric encoders in a shared latent space to learn the phenotype-genotype mapping, enabling optimization in the numeric space to implicitly guide symbolic search. However, this relies on fine-grained cross-modal alignment, whereas literature on similar models like CLIP reveals that such an alignment is typically coarse-grained. In this paper, we investigate whether SNIP delivers on its promise of effective bi-modal optimization for SR. Our experiments show that: (1) cross-modal alignment does not improve during optimization, even as fitness increases, and (2) the alignment learned by SNIP is too coarse to efficiently conduct principled search in the symbolic space. These findings reveal that while multi-modal LSO holds significant potential for SR, effective alignment-guided optimization remains unrealized in practice, highlighting fine-grained alignment as a critical direction for future work.",
+      "authors": [
+        "Benjamin Léger",
+        "Kazem Meidani",
+        "Christian Gagné"
+      ],
+      "primary_category": "cs.NE",
+      "categories": [
+        "cs.NE",
+        "cs.AI"
+      ],
+      "published": "2026-04-09T14:55:36+00:00",
+      "link": "https://arxiv.org/pdf/2604.08324v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Symbolic regression to discover mathematical expressions using Genetic Programming and Latent Space Optimization",
+      "llm_evidence_cn": "利用遗传规划和潜空间优化进行符号回归以发现数学表达式",
+      "llm_evidence": "利用遗传规划和潜空间优化进行符号回归以发现数学表达式",
+      "canonical_evidence": "利用遗传规划和潜空间优化进行符号回归以发现数学表达式",
+      "llm_tldr_en": "Analyzes multi-modal alignment in latent space to improve symbolic regression via genetic programming.",
+      "llm_tldr_cn": "分析潜空间优化中的多模态对齐，以改进基于遗传规划的符号回归任务。",
+      "llm_tldr": "分析潜空间优化中的多模态对齐，以改进基于遗传规划的符号回归任务。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "PDE Discovery based on genetic programming",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.13506v1",
+      "source": "arxiv",
+      "title": "A monotone iterative reconstruction method for an inverse drift problem in a two-dimensional parabolic equation",
+      "abstract": "We study an inverse drift problem for a two-dimensional parabolic equation on the unit square with mixed boundary conditions, where the drift coefficient is recovered from terminal observation data $g=u(\\cdot,T)$. A monotone operator is constructed whose fixed point coincides with the unknown drift, yielding uniqueness in an admissible class and a constructive iterative reconstruction scheme. Numerical experiments illustrate the monotone convergence and the effectiveness of the proposed method, and show that it remains effective for noisy terminal data under the denoising strategy.",
+      "authors": [
+        "Liuying Zhang",
+        "Wenlong Zhang",
+        "Zhidong Zhang"
+      ],
+      "primary_category": "math.NA",
+      "categories": [
+        "math.NA"
+      ],
+      "published": "2026-04-15T05:50:07+00:00",
+      "link": "https://arxiv.org/pdf/2604.13506v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "inverse drift problem in parabolic equation recovered from data",
+      "llm_evidence_cn": "从数据中恢复抛物线方程中的逆漂移问题",
+      "llm_evidence": "从数据中恢复抛物线方程中的逆漂移问题",
+      "canonical_evidence": "从数据中恢复抛物线方程中的逆漂移问题",
+      "llm_tldr_en": "Develops a monotone iterative method to reconstruct drift coefficients in parabolic PDEs from observation data.",
+      "llm_tldr_cn": "开发了一种从观测数据中重建抛物型偏微分方程漂移系数的单调迭代方法。",
+      "llm_tldr": "开发了一种从观测数据中重建抛物型偏微分方程漂移系数的单调迭代方法。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2604.07671v1",
+      "source": "arxiv",
+      "title": "On the Unique Recovery of Transport Maps and Vector Fields from Finite Measure-Valued Data",
+      "abstract": "We establish guarantees for the unique recovery of vector fields and transport maps from finite measure-valued data, yielding new insights into generative models, data-driven dynamical systems, and PDE inverse problems. In particular, we provide general conditions under which a diffeomorphism can be uniquely identified from its pushforward action on finitely many densities, i.e., when the data $\\{(ρ_j,f_\\#ρ_j)\\}_{j=1}^m$ uniquely determines $f$. As a corollary, we introduce a new metric which compares diffeomorphisms by measuring the discrepancy between finitely many pushforward densities in the space of probability measures. We also prove analogous results in an infinitesimal setting, where derivatives of the densities along a smooth vector field are observed, i.e., when $\\{(ρ_j,\\text{div} (ρ_j v))\\}_{j=1}^m$ uniquely determines $v$. Our analysis makes use of the Whitney and Takens embedding theorems, which provide estimates on the required number of densities $m$, depending only on the intrinsic dimension of the problem. We additionally interpret our results through the lens of Perron--Frobenius and Koopman operators and demonstrate how our techniques lead to new guarantees for the well-posedness of certain PDE inverse problems related to continuity, advection, Fokker--Planck, and advection-diffusion-reaction equations. Finally, we present illustrative numerical experiments demonstrating the unique identification of transport maps from finitely many pushforward densities, and of vector fields from finitely many weighted divergence observations.",
+      "authors": [
+        "Jonah Botvinick-Greenhouse",
+        "Yunan Yang"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.LG",
+        "math.DS",
+        "math.NA"
+      ],
+      "published": "2026-04-09T00:26:30+00:00",
+      "link": "https://arxiv.org/pdf/2604.07671v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "recovery of vector fields and transport maps from data for PDE inverse problems",
+      "llm_evidence_cn": "从偏微分方程反问题的观测数据中恢复向量场和传输映射",
+      "llm_evidence": "从偏微分方程反问题的观测数据中恢复向量场和传输映射",
+      "canonical_evidence": "从偏微分方程反问题的观测数据中恢复向量场和传输映射",
+      "llm_tldr_en": "Provides theoretical guarantees for recovering dynamical systems and vector fields from finite measure-valued data.",
+      "llm_tldr_cn": "为从有限测度值数据中恢复动力系统和向量场提供了理论保证。",
+      "llm_tldr": "为从有限测度值数据中恢复动力系统和向量场提供了理论保证。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.08357v1",
+      "source": "arxiv",
+      "title": "Bias-Constrained Diffusion Schedules for PDE Emulations: Reconstruction Error Minimization and Efficient Unrolled Training",
+      "abstract": "Conditional Diffusion Models are powerful surrogates for emulating complex spatiotemporal dynamics, yet they often fail to match the accuracy of deterministic neural emulators for high-precision tasks. In this work, we address two critical limitations of autoregressive PDE diffusion models: their sub-optimal single-step accuracy and the prohibitive computational cost of unrolled training. First, we characterize the relationship between the noise schedule, the reconstruction error reduction rate and the diffusion exposure bias, demonstrating that standard schedules lead to suboptimal reconstruction error. Leveraging this insight, we propose an \\textit{Adaptive Noise Schedule} framework that minimizes inference reconstruction error by dynamically constraining the model's exposure bias. We further show that this optimized schedule enables a fast \\textit{Proxy Unrolled Training} method to stabilize long-term rollouts without the cost of full Markov Chain sampling. Both proposed methods enable significant improvements in short-term accuracy and long-term stability over diffusion and deterministic baselines on diverse benchmarks, including forced Navier-Stokes, Kuramoto-Sivashinsky and Transonic Flow.",
+      "authors": [
+        "Constantin Le Cleï",
+        "Nils Thürey",
+        "Xiaoxiang Zhu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-09T15:21:31+00:00",
+      "link": "https://arxiv.org/pdf/2604.08357v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "conditional diffusion models for emulating complex spatiotemporal PDE dynamics",
+      "llm_evidence_cn": "用于模拟复杂时空PDE动力学的条件扩散模型",
+      "llm_evidence": "用于模拟复杂时空PDE动力学的条件扩散模型",
+      "canonical_evidence": "用于模拟复杂时空PDE动力学的条件扩散模型",
+      "llm_tldr_en": "Introduces an Adaptive Noise Schedule to improve accuracy and efficiency in autoregressive PDE emulation.",
+      "llm_tldr_cn": "引入自适应噪声调度，以提高自回归PDE模拟的准确性和效率。",
+      "llm_tldr": "引入自适应噪声调度，以提高自回归PDE模拟的准确性和效率。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.08357v2",
+      "source": "arxiv",
+      "title": "Bias-Constrained Diffusion Schedules for PDE Emulations: Reconstruction Error Minimization and Efficient Unrolled Training",
+      "abstract": "Conditional Diffusion Models are powerful surrogates for emulating complex spatiotemporal dynamics, yet they often fail to match the accuracy of deterministic neural emulators for high-precision tasks. In this work, we address two critical limitations of autoregressive PDE diffusion models: their sub-optimal single-step accuracy and the prohibitive computational cost of unrolled training. First, we characterize the relationship between the noise schedule, the reconstruction error reduction rate and the diffusion exposure bias, demonstrating that standard schedules lead to suboptimal reconstruction error. Leveraging this insight, we propose an \\textit{Adaptive Noise Schedule} framework that minimizes inference reconstruction error by dynamically constraining the model's exposure bias. We further show that this optimized schedule enables a fast \\textit{Proxy Unrolled Training} method to stabilize long-term rollouts without the cost of full Markov Chain sampling. Both proposed methods enable significant improvements in short-term accuracy and long-term stability over diffusion and deterministic baselines on diverse benchmarks, including forced Navier-Stokes, Kuramoto-Sivashinsky and Transonic Flow.",
+      "authors": [
+        "Constantin Le Cleï",
+        "Nils Thuerey",
+        "Xiaoxiang Zhu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-09T15:21:31+00:00",
+      "link": "https://arxiv.org/pdf/2604.08357v2",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Diffusion models for PDE emulation and spatiotemporal dynamics",
+      "llm_evidence_cn": "用于偏微分方程仿真和时空动力学的扩散模型",
+      "llm_evidence": "用于偏微分方程仿真和时空动力学的扩散模型",
+      "canonical_evidence": "用于偏微分方程仿真和时空动力学的扩散模型",
+      "llm_tldr_en": "Proposes an Adaptive Noise Schedule to improve accuracy and efficiency in autoregressive PDE diffusion models.",
+      "llm_tldr_cn": "提出自适应噪声调度框架，提高了自回归偏微分方程扩散模型的精度与训练效率。",
+      "llm_tldr": "提出自适应噪声调度框架，提高了自回归偏微分方程扩散模型的精度与训练效率。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.09838v1",
+      "source": "arxiv",
+      "title": "Vector Field Synthesis with Sparse Streamlines Using Diffusion Model",
+      "abstract": "We present a novel diffusion-based framework for synthesizing 2D vector fields from sparse, coherent inputs (i.e., streamlines) while maintaining physical plausibility. Our method employs a conditional denoising diffusion probabilistic model with classifier-free guidance, enabling progressive reconstruction that preserves both geometric and physical constraints. Experimental results demonstrate our method's ability to synthesize plausible vector fields that adhere to physical laws while maintaining fidelity to sparse input observations, outperforming traditional optimization-based approaches in terms of flexibility and physical consistency.",
+      "authors": [
+        "Nguyen K. Phan",
+        "Ricardo Morales",
+        "Sebastian D. Espriella",
+        "Guoning Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-04-10T19:10:24+00:00",
+      "link": "https://arxiv.org/pdf/2604.09838v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Synthesizing vector fields while maintaining physical plausibility and laws",
+      "llm_evidence_cn": "在保持物理合理性和规律的同时合成向量场",
+      "llm_evidence": "在保持物理合理性和规律的同时合成向量场",
+      "canonical_evidence": "在保持物理合理性和规律的同时合成向量场",
+      "llm_tldr_en": "Uses a diffusion framework to reconstruct 2D vector fields from sparse data while preserving physical constraints.",
+      "llm_tldr_cn": "利用扩散框架从稀疏数据中重建二维向量场，同时保持物理约束和规律。",
+      "llm_tldr": "利用扩散框架从稀疏数据中重建二维向量场，同时保持物理约束和规律。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.09289v1",
+      "source": "arxiv",
+      "title": "Meta-Learned Basis Adaptation for Parametric Linear PDEs",
+      "abstract": "We propose a hybrid physics-informed framework for solving families of parametric linear partial differential equations (PDEs) by combining a meta-learned predictor with a least-squares corrector. The predictor, termed \\textbf{KAPI} (Kernel-Adaptive Physics-Informed meta-learner), is a shallow task-conditioned model that maps query coordinates and PDE parameters to solution values while internally generating an interpretable, task-adaptive Gaussian basis geometry. A lightweight meta-network maps PDE parameters to basis centers, widths, and activity patterns, thereby learning how the approximation space should adapt across the parametric family. This predictor-generated geometry is transferred to a second-stage corrector, which augments it with a background basis and computes the final solution through a one-shot physics-informed Extreme Learning Machine (PIELM)-style least-squares solve. We evaluate the method on four linear PDE families spanning diffusion, transport, mixed advection--diffusion, and variable-speed transport. Across these cases, the predictor captures meaningful physics through localized and transport-aligned basis placement, while the corrector further improves accuracy, often by one or more orders of magnitude. Comparisons with parametric PINNs, physics-informed DeepONet, and uniform-grid PIELM correctors highlight the value of predictor-guided basis adaptation as an interpretable and efficient strategy for parametric PDE solving.",
+      "authors": [
+        "Vikas Dwivedi",
+        "Monica Sigovan",
+        "Bruno Sixou"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-10T13:00:03+00:00",
+      "link": "https://arxiv.org/pdf/2604.09289v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "physics-informed framework for solving parametric linear PDEs using meta-learning",
+      "llm_evidence_cn": "利用元学习求解参数化线性PDE的物理信息框架",
+      "llm_evidence": "利用元学习求解参数化线性PDE的物理信息框架",
+      "canonical_evidence": "利用元学习求解参数化线性PDE的物理信息框架",
+      "llm_tldr_en": "Combines meta-learned predictors with least-squares correctors to solve parametric linear PDE families.",
+      "llm_tldr_cn": "结合元学习预测器和最小二乘校正器，用于求解参数化线性偏微分方程族。",
+      "llm_tldr": "结合元学习预测器和最小二乘校正器，用于求解参数化线性偏微分方程族。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.11519v1",
+      "source": "arxiv",
+      "title": "Generative Path-Finding Method for Wasserstein Gradient Flow",
+      "abstract": "Wasserstein gradient flows (WGFs) describe the evolution of probability distributions in Wasserstein space as steepest descent dynamics for a free energy functional. Computing the full path from an arbitrary initial distribution to equilibrium is challenging, especially in high dimensions. Eulerian methods suffer from the curse of dimensionality, while existing Lagrangian approaches based on particles or generative maps do not naturally improve efficiency through time step tuning. We propose GenWGP, a generative path finding framework for Wasserstein gradient paths. GenWGP learns a generative flow that transports mass from an initial density to an unknown equilibrium distribution by minimizing a path loss that encodes the full trajectory and its terminal equilibrium condition. The loss is derived from a geometric action functional motivated by Dawson Gartner large deviation theory for empirical distributions of interacting diffusion systems. We formulate both a finite horizon action under physical time parametrization and a reparameterization invariant geometric action based on Wasserstein arclength. Using normalizing flows, GenWGP computes a geometric curve toward equilibrium while enforcing approximately constant intrinsic speed between adjacent network layers, so that discretized distributions remain nearly equidistant in the Wasserstein metric along the path. This avoids delicate time stepping constraints and enables stable training that is largely independent of temporal or geometric discretization. Experiments on Fokker Planck and aggregation type problems show that GenWGP matches or exceeds high fidelity reference solutions with only about a dozen discretization points while capturing complex dynamics.",
+      "authors": [
+        "Chengyu Liu",
+        "Xiang Zhou"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "math-ph"
+      ],
+      "published": "2026-04-13T14:22:20+00:00",
+      "link": "https://arxiv.org/pdf/2604.11519v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "generative path-finding for Wasserstein gradient flow dynamics",
+      "llm_evidence_cn": "Wasserstein 梯度流动力学的生成式路径寻找",
+      "llm_evidence": "Wasserstein 梯度流动力学的生成式路径寻找",
+      "canonical_evidence": "Wasserstein 梯度流动力学的生成式路径寻找",
+      "llm_tldr_en": "Proposes a generative framework to compute the evolution of probability distributions in gradient flows.",
+      "llm_tldr_cn": "提出了一种生成式框架来计算梯度流中概率分布的演化。",
+      "llm_tldr": "提出了一种生成式框架来计算梯度流中概率分布的演化。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.13723v1",
+      "source": "arxiv",
+      "title": "Physics-Informed Neural Networks for Solving Derivative-Constrained PDEs",
+      "abstract": "Physics-Informed Neural Networks (PINNs) recast PDE solving as an optimisation problem in function space by minimising a residual-based objective, yet many applications require additional derivative-based relations that are just as fundamental as the governing equations. In this paper, we present Derivative-Constrained PINNs (DC-PINNs), a general framework that treats constrained PDE solving as an optimisation guided by a minimum objective function criterion where the physics resides in the minimum principle. DC-PINNs embed general nonlinear constraints on states and derivatives, e.g., bounds, monotonicity, convexity, incompressibility, computed efficiently via automatic differentiation, and they employ self-adaptive loss balancing to tune the influence of each objective, reducing reliance on manual hyperparameters and problem-specific architectures. DC-PINNs consistently reduce constraint violations and improve physical fidelity versus baseline PINN variants, representative hard-constraint formulations on benchmarks, including heat diffusion with bounds, financial volatilities with arbitrage-free, and fluid flow with vortices shed. Explicitly encoding derivative constraints stabilises training and steers optimisation toward physically admissible minima even when the PDE residual alone is small, providing reliable solutions of constrained PDEs grounded in energy minimum principles.",
+      "authors": [
+        "Kentaro Hoshisashi",
+        "Carolyn E Phelan",
+        "Paolo Barucca"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "physics.comp-ph"
+      ],
+      "published": "2026-04-15T10:57:22+00:00",
+      "link": "https://arxiv.org/pdf/2604.13723v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Physics-Informed Neural Networks for solving derivative-constrained PDEs",
+      "llm_evidence_cn": "用于求解导数约束偏微分方程的物理信息神经网络",
+      "llm_evidence": "用于求解导数约束偏微分方程的物理信息神经网络",
+      "canonical_evidence": "用于求解导数约束偏微分方程的物理信息神经网络",
+      "llm_tldr_en": "Introduces DC-PINNs to solve PDEs with nonlinear derivative constraints using automatic differentiation.",
+      "llm_tldr_cn": "引入 DC-PINNs，利用自动微分求解具有非线性导数约束的偏微分方程。",
+      "llm_tldr": "引入 DC-PINNs，利用自动微分求解具有非线性导数约束的偏微分方程。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.14424v1",
+      "source": "arxiv",
+      "title": "Non-intrusive Learning of Physics-Informed Spatio-temporal Surrogate for Accelerating Design",
+      "abstract": "Most practical engineering design problems involve nonlinear spatio-temporal dynamical systems. Multi-physics simulations are often performed to capture the fine spatio-temporal scales which govern the evolution of these systems. However, these simulations are often high-fidelity in nature, and can be computationally very expensive. Hence, generating data from these expensive simulations becomes a bottleneck in an end-to-end engineering design process. Spatio-temporal surrogate modeling of these dynamical systems has been a popular data-driven solution to tackle this computational bottleneck. This is because accurate machine learning models emulating the dynamical systems can be orders of magnitude faster than the actual simulations. However, one key limitation of purely data-driven approaches is their lack of generalizability to inputs outside the training distribution. In this paper, we propose a physics-informed spatio-temporal surrogate modeling (PISTM) framework constrained by the physics of the underlying dynamical system. The framework leverages state-of-the-art advancements in the field of Koopman autoencoders to learn the underlying spatio-temporal dynamics in a non-intrusive manner, coupled with a spatio-temporal surrogate model which predicts the behavior of the Koopman operator in a specified time window for unknown operating conditions. We evaluate our framework on a prototypical fluid flow problem of interest: two-dimensional incompressible flow around a cylinder.",
+      "authors": [
+        "Sudeepta Mondal",
+        "Soumalya Sarkar"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "physics.flu-dyn"
+      ],
+      "published": "2026-04-15T21:13:05+00:00",
+      "link": "https://arxiv.org/pdf/2604.14424v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "data-driven spatio-temporal surrogate modeling for dynamical systems",
+      "llm_evidence_cn": "动力系统的数据驱动时空代理模型",
+      "llm_evidence": "动力系统的数据驱动时空代理模型",
+      "canonical_evidence": "动力系统的数据驱动时空代理模型",
+      "llm_tldr_en": "Learns physics-informed surrogates to accelerate engineering design by emulating nonlinear dynamical systems.",
+      "llm_tldr_cn": "通过模拟非线性动力系统，学习物理信息代理模型以加速工程设计。",
+      "llm_tldr": "通过模拟非线性动力系统，学习物理信息代理模型以加速工程设计。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "state of the art algorithms for data driven PDE discovery",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

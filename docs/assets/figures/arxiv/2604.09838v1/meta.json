@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.09838v1/fig-001.webp",
+      "caption": "Figure 3: Qualitative comparison across all three datasets: (A) Synthetic, (B) Red Sea, and (C) CFD, with two examples per dataset. Top row: Ground truth vector fields with sparse streamline inputs overlaid that the model hasn’t seen. Middle row: Vector fields synthesized by our diffusion model. Bottom row: Vector fields synthesized by the baseline optimization method. Our approach consistently outperforms the baseline, better capturing complex flow patterns and maintaining physical consistency throughout the domain.",
+      "page": 3,
+      "index": 1,
+      "width": 1032,
+      "height": 444
+    },
+    {
+      "url": "assets/figures/arxiv/2604.09838v1/fig-002.webp",
+      "caption": "Figure 4: Vector field synthesis from hand-drawn streamlines. Each column shows a different input pattern: a simple vortex (left), a simple saddle (middle), and a complex S-shaped streamline (right). Top row: Results from our diffusion model with low CFG values and different random seeds, exhibiting more varied fields despite simple input streamlines. Note how the first column shows a vortex with near-parallel streamlines and the second column displays a more complex saddle pattern. Middle row: Results from our diffusion model with CFG ≥ 1, showing standard expected features that perfectly adhere to the input streamlines: a large simple vortex (left) and large simple saddle (middle). Bottom row: Results from the SVD method, which produces single, simple flows with physical properties concentrated around constraints for each set of constraints. The thick black lines with arrows are the hand-drawn input streamlines. The dashed black arrow signifies sparser sampling of a long hand-drawn streamline to smooth out artifacts like jitter or sharp angles from the drawing process. The thin white lines are streamlines depicting the synthesized flow.",
+      "page": 4,
+      "index": 2,
+      "width": 494,
+      "height": 398
+    }
+  ]
+}
