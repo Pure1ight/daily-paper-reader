@@ -1,0 +1,935 @@
+Title: A monotone iterative reconstruction method for an inverse drift problem in a two-dimensional parabolic equation
+
+URL Source: https://arxiv.org/pdf/2604.13506v1
+
+Published Time: Thu, 16 Apr 2026 00:32:47 GMT
+
+Number of Pages: 19
+
+Markdown Content:
+A monotone iterative reconstruction method for an inverse drift problem in a two-dimensional parabolic equation 
+
+Liuying Zhang ∗1, Wenlong Zhang †1, and Zhidong Zhang ‡2,3 1Department of Mathematics, Southern University of Science and Technology, Shenzhen, 518055, China 
+
+> 2
+
+School of Mathematics (Zhuhai), Sun Yat-sen University, Zhuhai 519082, Guangdong, China 
+
+> 3
+
+Guangdong Province Key Laboratory of Computational Science, Sun Yat-sen University, Guangzhou 510000, Guangdong, China 
+
+April 16, 2026 
+
+Abstract 
+
+We study an inverse drift problem for a two-dimensional parabolic equation on the unit square with mixed boundary conditions, where the drift coefficient is recovered from terminal observation data g = u(·, T ). A monotone operator is constructed whose fixed point coincides with the unknown drift, yielding uniqueness in an admissible class and a constructive iterative reconstruction scheme. Numerical experiments illustrate the monotone convergence and the effectiveness of the proposed method, and show that it remains effective for noisy terminal data under the denoising strategy. Keywords: inverse drift problem, uniqueness, monoticity, iterative algorithm. AMS Subject Classifications: 35R30, 35K20, 65M32 
+
+# 1 Introduction. 
+
+1.1 Mathematical statement. 
+
+We consider an inverse drift problem associated with the following parabolic equation: 
+
+
+
+(∂t − ∆ + q(x)∂x1 + Cp)u(x, t ) = f (x), (x, t ) ∈ Ω × (0 , T ]; 
+
+Bu(x, t ) = b(x, t ), (x, t ) ∈ ∂Ω × (0 , T ]; 
+
+u(x, 0) = u0(x), x ∈ Ω.
+
+(1.1) The domain Ω is the unit square (0 , 1) × (0 , 1) in R2 and x ∈ Ω could be denoted by (x1, x 2).For the boundary ∂Ω, we denote 
+
+l1 = [0 , 1] × { 0}, l2 = {1} × (0 , 1) , l3 = [0 , 1] × { 1}, l4 = {0} × (0 , 1) .
+
+> ∗
+
+zhangly8@sustech.edu.cn 
+
+> †
+
+zhangwl@sustech.edu.cn 
+
+> ‡
+
+zhangzhidong@mail.sysu.edu.cn 
+
+1
+
+> arXiv:2604.13506v1 [math.NA] 15 Apr 2026
+
+Then the boundary condition Bu(x, t ) = b(x, t ) is set as 
+
+u = b1(x, t ) on l1, u = b3(x, t ) on l3,∂u ∂−→n = b2(x, t ) on l2, ∂u ∂−→n = b4 on l4, (1.2) where b4 is a constant. Moreover, the source f , the initial condition u0 and the poten-tial constant Cp are given; the space dependent drift coefficient q(x) w.r.t x1 direction is unknown. In the inverse problem of this work, the used measurement is the final time data of the solution, stated as 
+
+g(x) := u(x, T ). (1.3) Hence, the inverse problem investigated in this article could be described as follows: using data (1.3) to recover the drift q(x) in equation (1.1) . (1.4) 
+
+1.2 Background and literature. 
+
+Parabolic equations with drift terms arise naturally in mathematical models describing combined transport and diffusion processes. In statistical physics, such equations appear in Fokker-Planck models, where the drift represents deterministic transport induced by ex-ternal forces and governs the evolution of probability densities [21]. In fluid mechanics and mass transfer theory, convection-diffusion equations describe the interplay between molec-ular diffusion and advective transport caused by fluid motion [6]. Drift-driven diffusion models also arise in population dynamics and chemotaxis, where directed movement of organisms is influenced by environmental signals. Furthermore, in financial mathematics, transformed parabolic equations such as the Black-Scholes model contain drift terms rep-resenting deterministic trends in asset price dynamics [2]. In these applications, the drift coefficient plays a crucial role in the system dynamics but is often not directly measurable. This naturally leads to inverse problems concerned with reconstructing the drift from avail-able measurement data. Inverse problems for convection-diffusion equations, including drift identification problems, have been widely investigated under various observation settings, for example, [15, 5, 18]. From an analytical perspective, inverse drift reconstruction is challenging due to the nonlin-ear dependence of the solution on the unknown coefficient and the instability of the problem with respect to data perturbations. To overcome these difficulties, monotonicity-based op-erator methods provide a natural framework for inverse drift problems: one constructs a forward operator whose fixed points coincide with the unknown coefficient, and mono-tonicity derived from maximum principles yields both uniqueness and a natural iterative reconstruction scheme. For parabolic inverse problems, early uniqueness results with final-time overdetermination can be traced back to classical works such as [16, 13, 22, 14], while the monotonicity-based framework was surveyed in [11, 26]. A fixed-point monotonicity formulation was further developed for time-dependent coefficients in fractional diffusion equations in [27, 29, 28], where the unknown coefficient is characterized as a fixed point of a monotone operator, and the same structure leads to an iterative reconstruction scheme. For inverse drift reconstruction, related terminal-observation results for one dimensional coefficients were obtained in [3]. Other inverse problems for drift or convection terms in 2parabolic equations have also been studied under various observation settings; see, for ex-ample, [8, 7, 1, 23]. The present work extends this direction to a two-dimensional parabolic equation with mixed boundary conditions. 
+
+1.3 Main results and outline. 
+
+In this work we first construct an operator K (see (3.1)) whose one of fixed points is the unknown drift q(x). Then we prove several properties for this operator, such as the well-definedness, equivalence and monotonicity. The uniqueness of inverse problem (1.4) is established by showing the uniqueness of fixed points of K, and stated by Theorem 1. The proof of Theorem 1 contains a specific iteration converging to the solution of inverse problem, which could be regarded as one advantage of such monotone operator method. From this it is natural to deduce the iterative algorithm to solve inverse problem (1.4) numerically. The numerical results in Section 4 demonstrate that the proposed method is effective and yields satisfactory reconstructions. The remainder of this article is structured as follows. In Section 2, some preliminary results are collected and proved. For instance, the well-posedness of the forward problem of equation (1.1), the maximum principles of elliptic and parabolic equations and the positivity results of equation (1.1). We prove the uniqueness of inverse problem (1.4) in Section 3, using the operator K defined in (3.1). Finally, several numerical experiments are taken in Section 4 and the related numerical results are presented. 
+
+# 2 Preliminaries. 
+
+2.1 Well-posedness of the forward problem. 
+
+We now establish the well-posedness of equation (1.1), including existence, uniqueness, and regularity of the solution. Our analysis follows the well-posedness framework of Theorem 2.1 in [25], which is based on the classical parabolic theory developed in [24]. In contrast to [25], where a mixed boundary value problem with time-dependent boundaries is considered under the divergence-free condition ∇ · (q(x), 0) = 0 , we restrict ourselves to a fixed spatial domain with time-independent boundary data and assume only q ∈ L∞(Ω) . Under these assumptions, the well-posedness result remains valid. For completeness, we sketch the standard lifting and energy argument adapted to the present setting. For a boundary segment Γ ⊂ ∂Ω, we write 
+
+ΓT := Γ × (0 , T ), Hr,s (Γ T ) := L2(0 , T ; Hr(Γ)) ∩ Hs(0 , T ; L2(Γ)) ,
+
+with r, s ∈ R.
+
+Lemma 2.1. Let QT = Ω × (0 , T ]. Assume that the source term satisfies f ∈ L2(Ω) , the initial data u0 ∈ H1(Ω) , and the drift coefficient q ∈ L∞(Ω) . The boundary data satisfy: 
+
+• b1, b 3 ∈ H3/2, 3/4(Σ D), where ΣD = ( l1 ∪ l3) × (0 , T );
+
+• b2, b 4 ∈ H1/2, 1/4(Σ N ), where ΣN = ( l2 ∪ l4) × (0 , T ),together with the compatibility conditions u0(x) = b1(x, 0) on l1 and u0(x) = b3(x, 0) on l3.Then the forward problem of equation (1.1) admits a unique solution u such that: 
+
+∂tu ∈ L2(QT ), u ∈ C([0 , T ]; H1(Ω)) .
+
+3Proof. We establish the well-posedness via a lifting argument and energy estimates. To handle the non-homogeneous Dirichlet boundary conditions, we introduce a lifting function 
+
+UD that satisfies the prescribed boundary data and define w = u − UD. More precisely, let 
+
+UD be a function such that 
+
+• UD = b1 on l1 and UD = b3 on l3,
+
+• UD = 0 on l2 ∪ l4,
+
+• UD ∈ L2(0 , T ; H2(Ω)) ∩ H1(0 , T ; L2(Ω)) .The existence of such a lifting function follows from standard trace and extension results for parabolic problems; see, for instance, [17]. Then w satisfies homogeneous Dirichlet boundary conditions on l1 ∪ l3 and 
+
+∂tw − ∆w + q(x)∂x1 w + Cpw = F in Ω × (0 , T ],
+
+where 
+
+F = f − ∂tUD + ∆ UD − q(x)∂x1 UD − CpUD.
+
+On l2 ∪ l4, w satisfies the Neumann condition 
+
+∂w ∂−→n = bN − ∂U D
+
+∂−→n , bN = b2 on l2, b N = b4 on l4.
+
+Multiplying the equation for w by w and integrating over Ω yields 
+
+∫
+
+> Ω
+
+w∂ tw dx −
+
+∫
+
+> Ω
+
+w∆w dx +
+
+∫
+
+> Ω
+
+q(x)w∂ x1 w dx + Cp
+
+∫
+
+> Ω
+
+w2 dx =
+
+∫
+
+> Ω
+
+F w dx. 
+
+Using integration by parts, the boundary condition, we obtain 
+
+12
+
+ddt ∥w∥2
+
+> L2(Ω)
+
++∥∇ w∥2
+
+> L2(Ω)
+
++Cp∥w∥2 
+
+> L2(Ω)
+
+=
+
+∫
+
+> Ω
+
+F w dx −
+
+∫
+
+> Ω
+
+q(x)w∂ x1 w dx +
+
+∫
+
+> l2∪l4
+
+(
+
+bN − ∂U D
+
+∂−→n
+
+)
+
+w dS. 
+
+The source term is estimated using Young’s inequality: 
+
+∣∣∣∣∫
+
+> Ω
+
+F w dx 
+
+∣∣∣∣ ≤ 12 ∥F ∥2 
+
+> L2(Ω)
+
++ 12 ∥w∥2
+
+> L2(Ω)
+
+.
+
+Since q ∈ L∞(Ω) , the drift term satisfies 
+
+∣∣∣∣∫
+
+> Ω
+
+q(x)w∂ x1 w dx 
+
+∣∣∣∣ ≤ 12 ∥∇ w∥2 
+
+> L2(Ω)
+
++ ∥q∥2
+
+> L∞(Ω)
+
+2 ∥w∥2
+
+> L2(Ω)
+
+.
+
+The boundary term on l2 ∪ l4 is estimated by the trace theorem and Young’s inequality: For any ε > 0
+
+∣∣∣∣∫
+
+> l2∪l4
+
+(
+
+bN − ∂U D
+
+∂−→n
+
+)
+
+w dS 
+
+∣∣∣∣ ≤ ε∥∇ w∥2 
+
+> L2(Ω)
+
++ Cε
+
+(
+
+∥bN ∥2  
+
+> H1/2,1/4(Σ N)
+
++ ∥UD∥2 
+
+> L2(0 ,T ;H2(Ω))
+
+)
+
+,
+
+4Combining the above estimates yields 
+
+ddt ∥w∥2 
+
+> L2(Ω)
+
++ ∥∇ w∥2 
+
+> L2(Ω)
+
+≤ C1∥w∥2 
+
+> L2(Ω)
+
++ ∥F ∥2
+
+> L2(Ω)
+
+,
+
+where C1 > 0 depends on ∥q∥L∞(Ω) and Cp. By Gronwall’s inequality, 
+
+∥w(t)∥2 
+
+> L2(Ω)
+
+≤ eC1t
+
+(
+
+∥w(0) ∥2 
+
+> L2(Ω)
+
++
+
+∫ t
+
+> 0
+
+∥F (s)∥2 
+
+> L2(Ω)
+
+ds 
+
+)
+
+,
+
+with w(0) = u0 − UD(0) .Higher regularity, in particular ∂tw ∈ L2(QT ), follows by testing the equation with ∂tw
+
+and applying standard energy arguments for parabolic equations. Consequently, w ∈
+
+C([0 , T ]; H1(Ω)) and ∂tw ∈ L2(QT ). Since u = w + UD, the asserted regularity for u
+
+follows. Uniqueness is a direct consequence of linearity and the energy estimate. The proof is complete. In addition to the fundamental well-posedness result in Lemma 2.1, we next investigate the continuity of spatial derivatives of the solution, which plays a crucial role in the subsequent analysis of the inverse problem. Differentiating equation (1.1) with respect to x1 leads to the equation for w = ∂x1 u as 
+
+
+
+(∂t − ∆ + q(x)∂x1 + ( Cp + ∂x1 q)) w(x, t ) = ∂x1 f, (x, t ) ∈ Ω × (0 , T ]; 
+
+w(x, t ) = ∂x1 b1, (x, t ) ∈ l1 × (0 , T ]; 
+
+w(x, t ) = b2, (x, t ) ∈ l2 × (0 , T ]; 
+
+w(x, t ) = ∂x1 b3, (x, t ) ∈ l3 × (0 , T ]; 
+
+w(x, t ) = −b4, (x, t ) ∈ l4 × (0 , T ]; 
+
+w(x, 0) = ∂x1 u0(x), x ∈ Ω.
+
+(2.1) The regularity of w is established using the boundary De Giorgi theory for parabolic equa-tions with Dirichlet boundary conditions. Although the original problem (1.1) is subject to mixed boundary conditions, the differentiated problem (2.1) is equipped with Dirichlet boundary data for the new unknown w on the whole lateral boundary. In particular, we use the qualitative consequence of the boundary continuity theorem, namely that functions in a boundary De Giorgi class with continuous Dirichlet data are continuous up to the lateral boundary. A representative statement of this type is given by [10, Theorem 7.1, Chapter 10]; see also the corresponding parabolic boundary continuity results in [20, 19, 9]. Under the assumptions stated below, Since Ω = (0 , 1) 2 automatically satisfies the required geometric density condition, and the differentiated equations below are linear parabolic equations with bounded coefficients and continuous Dirichlet boundary data, their weak solutions belong to the corresponding parabolic boundary De Giorgi classes. Therefore the boundary continuity theory applies. 
+
+Lemma 2.2. Let w = ∂x1 u satisfy equation (2.1). Assume that q ∈ W 1,∞(Ω) , f ∈
+
+W 1,∞(Ω) with ∂x1 f ≥ 0, and u0 ∈ H1(Ω) with ∂x1 u0 ≥ 0. Assume further that the Dirichlet boundary data in (2.1) are continuous on the corresponding portions of ∂Ω. Then w belongs to the boundary De Giorgi class and consequently 
+
+w ∈ C(Ω × (0 , T ]) ,
+
+and in particular w(·, T ) ∈ C(Ω) .
+
+5Having established the continuity of the spatial derivative ∂x1 u in Lemma 2.2, we next consider the mixed derivative ∂2
+
+> x1t
+
+u, which is crucial for the convergence analysis of the fixed point iteration. The model of w = ∂2
+
+> x1t
+
+u is written as 
+
+
+
+(∂t − ∆ + q(x)∂x1 + (( Cp + ∂x1 q))) w(x, t ) = 0 , (x, t ) ∈ Ω × (0 , T ]; 
+
+w(x, t ) = ∂2
+
+> x1t
+
+b1, (x, t ) ∈ l1 × (0 , T ]; 
+
+w(x, t ) = ∂tb2, (x, t ) ∈ l2 × (0 , T ]; 
+
+w(x, t ) = ∂2
+
+> x1t
+
+b3, (x, t ) ∈ l3 × (0 , T ]; 
+
+w(x, t ) = 0 , (x, t ) ∈ l4 × (0 , T ],
+
+(2.2) with 
+
+w(x, 0) = ∂x1 f + ∆( ∂x1 u0) − q(x)∂2 
+
+> x1x1
+
+u0 − (Cp + ∂x1 q)∂x1 u0, x ∈ Ω.
+
+As in the previous case, the regularity of w follows from the boundary De Giorgi class theory for parabolic equations with Dirichlet data. The corresponding continuity result is stated below. 
+
+Lemma 2.3. Let w = ∂2
+
+> x1t
+
+u satisfy equation (2.2) Assume that q ∈ W 1,∞(Ω) and Cp ≥ 0.Assume further that 
+
+∂2
+
+> x1t
+
+b1 ∈ C(l1 × (0 , T ]) , ∂tb2 ∈ C(l2 × (0 , T ]) , ∂2
+
+> x1t
+
+b3 ∈ C(l3 × (0 , T ]) .
+
+Then w belongs to the boundary De Giorgi class associated with the Dirichlet data in (2.2). Consequently, 
+
+w ∈ C(Ω × (0 , T ]) .
+
+In particular, there exists a constant M > 0, depending only on Ω, T , ∥q∥W 1,∞(Ω) , Cp and the boundary data, such that 
+
+∥w(·, T )∥L∞(Ω) ≤ M. 
+
+From Lemmas 2.1–2.3, we could summarize some required assumptions as follows. 
+
+Assumption 2.1. Throughout this paper, we impose the regularity and compatibility as-sumptions on the data required to ensure the well-posedness and regularity results established in Lemmas 2.1–2.3. In particular, the drift coefficient satisfies q ∈ W 1,∞(Ω) , the initial da-tum satisfies u0 ∈ H1(Ω) , the source term and boundary data possess sufficient regularity and compatibility at t = 0 . These assumptions guarantee that all derivatives appearing in the differentiated problems are well defined. 
+
+2.2 Positivity results. 
+
+For the subsequent analysis, we recall the strong maximum principles for elliptic and parabolic equations, together with Hopf’s lemma for elliptic equations, from Evans[12, Chapter 6]. 
+
+Lemma 2.4. [Strong maximum principle for elliptic equations] Let U ⊂ Rn be a connected, open and bounded domain. Suppose u ∈ C2(U ) ∩ C(U ) satisfies 
+
+Lu := −
+
+> n
+
+∑
+
+> i,j =1
+
+aij (x)∂ij u +
+
+> n
+
+∑
+
+> i=1
+
+bi(x)∂iu + c(x)u
+
+where (aij ) is uniformly elliptic and c ≥ 0.
+
+6(i) If Lu ≤ 0 in U and u attains a nonnegative maximum over U at an interior point of 
+
+U , then u is constant in U .(ii) If Lu ≥ 0 in U and u attains a nonpositive minimum over U at an interior point of 
+
+U , then u is constant in U .
+
+Lemma 2.5. [Strong maximum principles for parabolic equations] Let U ⊂ Rn be a con-nected domain and T > 0. Define UT := U × (0 , T ] and U T := U × [0 , T ]. Suppose 
+
+u ∈ C2,1(UT ) ∩ C(U T ) and L is a uniformly elliptic operator of the same form as in Lemma2.4 with c ≥ 0 in UT .(i) If ut + Lu ≤ 0 in UT and u attains a nonnegative maximum over U T at a point 
+
+(x0, t 0) ∈ UT , then u is constant in U × [0 , t 0].(ii) If ut + Lu ≥ 0 in UT and u attains a nonpositive minimum over U T at a point 
+
+(x0, t 0) ∈ UT , then u is constant in U × [0 , t 0].
+
+Lemma 2.6. [Hopf’s lemma] Let U ⊂ Rn be a bounded domain and let L is a uniformly elliptic operator of the same form as in Lemma2.4 with c ≥ 0 in U . Assume that u ∈
+
+C2(U ) ∩ C1(U ) satisfies Lu ≤ 0 in U . If u attains a strict positive maximum at some boundary point x0 ∈ ∂U where the interior ball condition holds, then 
+
+∂u (x0)
+
+∂−→n > 0.
+
+Before proving the positivity results of solution u, we state several assumptions as follows. 
+
+Assumption 2.2. For equation (1.1) we assume that Assumption 2.1 be valid. Moreover, the source f , initial condition u0, boundary conditions b1, b 2, b 3, b 4, the exact drift q and the potential constant Cp satisfy the following assumptions. 
+
+(a) q ∈ C1(Ω) and ∥q∥C1(Ω) ≤ M , where M is a sufficiently large constant. 
+
+(b) Cp > M , where M is given by (a).
+
+(c) ∂x1 bj ≥ 0, ∂ 2
+
+> x1t
+
+bj ≥ 0, ∂ tbj ≥ 0 on lj × (0 , T ], j = 1 , 3.
+
+(d) b2 ≥ 0, ∂ tb2 ≥ 0, ∂ tb2 > 0 on l2 × (0 , T ], and the constant b4 is strictly negative. 
+
+(e) u0 ∈ C3(Ω) , ∂x1 u0(x) ≥ 0 on Ω and C0 := max 0≤j≤3{∥ u0∥Cj (Ω) } < ∞.
+
+(f ) f ≥ (1 + M + Cp)C0 and ∂x1 f ≥ (1 + 2 M + Cp)C0 on Ω.
+
+Lemma 2.7. Under Assumptions 2.2 and 2.1, we have the next positivity results for equa-tion (1.1). 
+
+(a) ∂x1 u ≥ 0 on Ω × (0 , T ].
+
+(b) ∃Cm > 0 such that ∂x1 u(x, T ) > C m on Ω.
+
+(c) ∂tu(x, t ) ≥ 0 on Ω × (0 , T ].
+
+(d) ∂2
+
+> x1t
+
+u(x, t ) ≥ 0 on Ω × (0 , T ].Proof. For (a), with Assumption 2.2 the model of w = ∂x1 u is given as (2.1). Assumption 2.2 gives the nonnegativity of (Cp + ∂x1 q), which together with Lemma 2.5 generates the statement (a).7For (b), the boundary condition of equation (2.1) and Lemma 2.5 yield that w(x, T ) > 0 on 
+
+Ω. Otherwise, if w(x∗, T ) = 0 with x∗ ∈ Ω, it would be the interior nonpositive minimum. Then by Lemma 2.5 we have that w ≡ 0, which contradicts with the strict positive boundary condition. The result w(x, T ) > 0 on Ω and the continuity of w ensured by Lemma 2.2 give the conclusion (b).For (c), we could give the model of w = ∂tu as 
+
+
+
+(∂t − ∆ + q(x)∂x1 + Cp)w(x, t ) = 0 , (x, t ) ∈ Ω × (0 , T ]; 
+
+w(x, t ) = ∂tb1 ≥ 0, (x, t ) ∈ l1 × (0 , T ]; 
+
+∂w ∂−→n (x, t ) = ∂tb2 > 0, (x, t ) ∈ l2 × (0 , T ]; 
+
+w(x, t ) = ∂tb3 ≥ 0, (x, t ) ∈ l3 × (0 , T ]; 
+
+∂w ∂−→n (x, t ) = 0 , (x, t ) ∈ l4 × (0 , T ]; 
+
+w(x, 0) = f + (∆ − q(x)∂x1 − Cp)u0(x) ≥ 0, x ∈ Ω.
+
+(2.3) Assume that 
+
+w(x∗, t ∗) := min {w(x, t ) : ( x, t ) ∈ Ω × [0 , T ]} < 0.
+
+Lemma 2.5 implies that (x∗, t ∗) ∈ ∂Ω × [0 , T ] ∪ Ω × { 0}; while the initial and boundary conditions give that x∗ ∈ l2 ∪ l4 and t∗ > 0. For the case of x∗ ∈ l2, with the result 
+
+∂tb2 > 0, we could find x† ∈ Ω such that x† has the same x2−coordinate with x∗ and 
+
+w(x†, t ∗) < w (x∗, t ∗), which contradicts with the minimal assumption. For the case that 
+
+x∗ ∈ l4, the minimal assumption and the boundary condition ∂w ∂−→n (x, t ) = 0 on l4 ensure that 
+
+(∂t − ∆ + q(x)∂x1 )w ≤ 0 on (x∗, t ∗); while we could have Cpw(x∗, t ∗) < 0 from the strict positivity of Cp. These gives that 
+
+(∂t − ∆ + q(x)∂x1 + Cp)w(x∗, t ∗) < 0,
+
+which contradicts with equation (2.3). Hence, we could deduce the nonnegativity of w = ∂tu.For (d), the model of w = ∂2
+
+> x1t
+
+u is written as 2.2 With the result (Cp + ∂x1 q) ≥ 0, Lemma 2.5 gives the nonnegativity of w = ∂2
+
+> x1t
+
+u. The proof is complete. 
+
+# 3 Analysis of inverse problem (1.4). 
+
+Next we would display how to solve inverse problem (1.4) by the monotone operator method. 
+
+3.1 Operator K.
+
+From equation (1.1) and data (1.3), we define the operator K as 
+
+Kψ = f (x) − ∂tu(x, T ; ψ) + ∆ g(x) − Cpg(x)
+
+∂x1 g(x) , (3.1) with domain 
+
+DK := 
+
+{
+
+ψ ∈ C1(Ω) : ψ ≤ f (x) + ∆ g(x) − Cpg(x)
+
+∂x1 g(x)
+
+}
+
+. (3.2) 8Here the notation u(x, T ; ψ) means the solution u of equation (1.1) with drift term ψ. The well-definedness of K is ensured by Lemma 2.7, from which the denominator ∂x1 g(x) is strictly positive. From the next lemma, we could solve inverse problem (1.4) by considering the fixed point problem of K.
+
+Lemma 3.1. With (3.1) and (3.2), for q ∈ D K , u(x, T ; q) = g(x) is valid if and only if 
+
+Kq = q.Proof. If u(x, T ; q) = g(x), it is obvious that q is a fixed point of K from (1.1) and (3.1). Given a fixed point q ∈ D K of K, now we need to show it satisfies u(x, T ; q) = g(x). Setting 
+
+w(x) = u(x, T ; q) − g(x), we have that 
+
+{(−∆ + q(x)∂x1 + Cp)w(x) = 0 , x ∈ Ω; 
+
+Bw(x) = 0 , x ∈ ∂Ω.
+
+Assume that w̸ ≡ 0. By Lemma 2.4, w cannot attain a positive maximum in the interior of 
+
+Ω. Since w = 0 on l1 ∪ l3, any positive maximum must be attained at some point of l2 ∪ l4.Then Lemma 2.6 implies ∂w ∂−→n > 0 at that point, contradicting ∂w ∂−→n = 0 on l2 ∪ l4. Hence 
+
+w ≤ 0 in Ω. Applying the same argument to −w, we obtain w ≥ 0 in Ω. Therefore w ≡ 0
+
+in Ω and hence u(x, T ; q) = g(x). This completes the proof. 
+
+3.2 Monotonicity. 
+
+The monotonicity of operator K means that K could keep the monotone relation on DK ,which is stated by the next lemma. 
+
+Lemma 3.2. With operator K in (3.1) and domain DK in (3.2), for ψ1, ψ 2 ∈ D K , the result ψ1 ≤ ψ2 leads to Kψ 1 ≤ Kψ 2 on Ω.Proof. Setting w = ∂tu(x, t ; ψ1) − ∂tu(x, t ; ψ2), it satisfies 
+
+
+
+(∂t − ∆ + ψ1(x)∂x1 + Cp)w(x, t ) = ( ψ2 − ψ1)∂2
+
+> x1t
+
+u(x, t ; ψ2), (x, t ) ∈ Ω × (0 , T ]; 
+
+Bw(x, t ) = 0 , (x, t ) ∈ ∂Ω × (0 , T ]; 
+
+w(x, 0) = ( ψ2 − ψ1)∂x1 u0(x), x ∈ Ω.
+
+From the definition of operator K, it is sufficient to show the nonnegativity of w. Assume that 
+
+w(x∗, t ∗) := min {w(x, t ) : ( x, t ) ∈ Ω × [0 , T ]}.
+
+From Lemma 2.5 and Assumption 2.2, we have that 
+
+(x∗, t ∗) ∈ { 0, 1} × (0 , 1) × (0 , T ].
+
+For the case of x∗ ∈ { 0} × (0 , 1) , the minimum result and the strict negativity yield that 
+
+(∂t − ∂2 
+
+> x2x2
+
+u + Cp)w(x∗, t ∗) < 0; 
+
+while the boundary condition on {0} × (0 , 1) together with the minimum gives that 
+
+(−∂2 
+
+> x1x1
+
++ ψ1(x)∂x1 )w(x∗, t ∗) ≤ 0.
+
+9The above two inequalities lead to the result that (ψ2 − ψ1)∂2
+
+> x1t
+
+u(x, t ; ψ2) < 0, which contradicts with Lemma 2.7 and the fact ψ1 ≤ ψ2. The proofs for the case of x∗ ∈ { 1}× (0 , 1) 
+
+could be deduced analogously. Hence we have that w ≥ 0 on Ω × (0 , T ], which leads to the desired result. The proof is complete. 
+
+3.3 The specific iteration and uniqueness theorem. 
+
+First we build a uniqueness result under monotone relation. 
+
+Lemma 3.3. Recalling K and DK in (3.1) and (3.2), given q1, q 2 ∈ D K with q1 ≤ q2, if q1
+
+and q2 are both fixed points of K, then q1 = q2 on Ω.Proof. The model for w = u(x, t ; ψ1) − u(x, t ; ψ2) could be given as 
+
+
+
+(∂t − ∆ + ψ1(x)∂x1 + Cp)w(x, t ) = ( ψ2 − ψ1)∂x1 u(x, t ; ψ2), (x, t ) ∈ Ω × (0 , T ]; 
+
+Bw(x, t ) = 0 , (x, t ) ∈ ∂Ω × (0 , T ]; 
+
+w(x, 0) = w(x, T ) = 0 , x ∈ Ω.
+
+The equality w(x, T ) = 0 follows from Lemma 3.1. The proof of Lemma 3.2 gives the nonnegativity of ∂tw, which together with w(x, 0) = w(x, T ) = 0 yields that w ≡ 0 on 
+
+Ω × (0 , T ]. Then we obtain that (ψ2 − ψ1)∂x1 u(x, t ; ψ2) ≡ 0, which leads to ψ1 = ψ2 since Lemma 2.7 ensures the strict positivity of ∂x1 u. The proof is complete. Next we define the iteration from upper bound of DK as follows: 
+
+q0 = f (x) + ∆ g(x) − Cpg(x)
+
+∂x1 g(x) , qn+1 = Kq n, n ∈ N. (3.3) Now we could state the uniqueness theorem of inverse problem (1.4). 
+
+Theorem 1. With (3.1) and (3.2), fixing a fixed point q ∈ D K of K, the sequence {qn}∞
+
+> n=1
+
+generated by (3.3) would converge to q decreasingly. Therefore, there is at most one fixed point of K in DK . By Lemma 3.1, we could obtain the uniqueness of inverse problem (1.4). Proof. If q ∈ D K is the solution of inverse problem (1.4), it should be one fixed point of 
+
+K by Lemma 3.1. From (3.3), with the fact that the initial guess q0 ∈ D K is the upper bound of the domain DK , we have q ≤ q0, which leads to q = Kq ≤ Kq 0 = q1 by Lemma 3.2. Also, the nonnegativity of ∂tu(x, T ; q0) ensured by Lemma 2.7 leads to q1 ≤ q0, and Lemmas 2.2-2.3 guarantee the required smoothness of q1. To sum up, we have q1 ∈ D K and 
+
+q ≤ q1 ≤ q0. Using Lemma 3.2 again, it holds that 
+
+q = Kq ≤ Kq 1 = q2 ≤ Kq 0 = q1 ≤ q0.
+
+Continuing this argument, it gives that {qn}∞ 
+
+> n=0
+
+is a decreasing sequence and has a lower bound q, which yields the pointwise convergence of {qn}∞
+
+> n=0
+
+. The limit is denoted by ˜q and obviously q ≤ ˜q ≤ q0.Now the task is to show that q = ˜ q. From the monotone convergence theorem, we have that 
+
+∥qn − ˜q∥L2(0 ,1) → 0. With triangle inequality, we have 
+
+∥K ˜q − ˜q∥L2(0 ,1) ≤ ∥ K ˜q − Kq n∥L2(0 ,1) + ∥Kq n − ˜q∥L2(0 ,1) 
+
+10 = ∥K ˜q − Kq n∥L2(0 ,1) + ∥qn+1 − ˜q∥L2(0 ,1) 
+
+=: I1 + I2.
+
+It is obvious that I2 → 0 as n → ∞ . For I1, with Lemma 2.7 we have 
+
+I1 = ∥[∂tu(x, T ; ˜ q) − ∂tu(x, T ; qn)] /∂ x1 g(x)∥L2(0 ,1) ≤ C∥∂tu(x, T ; ˜ q) − ∂tu(x, T ; qn)∥L2(0 ,1) ,
+
+where the constant C depends on m. Setting w = ∂tu(x, t ; ˜ q) − ∂tu(x, t ; qn), the proof of Lemma 3.2 gives the model of w as 
+
+
+
+(∂t − ∆ + ˜ q(x)∂x1 + Cp)w(x, t ) = ( qn − ˜q)∂2
+
+> x1t
+
+u(x, t ; ψ2), (x, t ) ∈ Ω × (0 , T ]; 
+
+Bw(x, t ) = 0 , (x, t ) ∈ ∂Ω × (0 , T ]; 
+
+w(x, 0) = ( qn − ˜q)∂x1 u0(x), x ∈ Ω.
+
+Testing the equation for w with w and integrating over Ω, an application of Young’s in-equality and Grönwall’s lemma yields the energy estimate 
+
+∥w(·, T )∥L2(Ω) ≤ C
+
+(
+
+∥w(·, 0) ∥L2(Ω) + ∥(qn − ˜q) ∂2
+
+> x1t
+
+u(·; ˜ q)∥L2(QT )
+
+)
+
+, (3.4) where C > 0 is a constant. By the well-posedness and regularity result stated in Lemma 2.1, estimate (3.4) yields 
+
+∥w(·, T )∥L2(Ω) ≤ C
+
+(
+
+∥w(·, 0) ∥L2(Ω) + ∥(qn − ˜q) ∂2
+
+> x1t
+
+u(·; ˜ q)∥L2(QT )
+
+)
+
+≤ C
+
+(
+
+∥∂x1 u0∥L∞(Ω) + T 1/2∥∂2
+
+> x1t
+
+u∥L∞(QT )
+
+)
+
+∥qn − ˜q∥L2(Ω) . (3.5) By Lemma 2.3 and Assumption 2.2, both ∂x1 u0 and the mixed derivative ∂2
+
+> x1t
+
+u are bounded. Consequently, estimate (3.5) simplifies to 
+
+∥w(·, T )∥L2(Ω) ≤ C ∥qn − ˜q∥L2(Ω) , (3.6) where the constant C > 0 depends only on the a priori data of the problem. So I1 ≤ C∥qn − ˜q∥L2(Ω) , which converges to zero as n → ∞ . To sum up, we could deduce that ∥K ˜q − ˜q∥L2(0 ,1) = 0 , which gives that ˜q is a fixed point of K. Note that the pointwise convergence only ensures that ˜q ∈ L∞(0 , 1) . We further rely on the interior and boundary regularity results established in Lemmas 2.2 and 2.3, which imply 
+
+∂tu(·, T ; ψ) ∈ C1(Ω) .
+
+Consequently, K ˜q ∈ C1(Ω) . With ∥K ˜q − ˜q∥L2(0 ,1) = 0 , we could pick the smooth version of 
+
+˜q to make sure ˜q ∈ C1. Now we have proved that q and ˜q are both fixed points of K in DK
+
+and they satisfy q ≤ ˜q. Applying Lemma 3.3, we have q = ˜ q.The uniqueness could be deduced straightforwardly. For two solutions q and ˆq in DK of inverse problem (1.4), Lemma 3.1 implies that they are both the fixed points of K. With the above proofs, we obtain that qn → q and qn → ˆq simultaneously. This gives q = ˆ q and completes the proof. 11 4 Numerical experiments 
+
+In this section, We report numerical experiments for the proposed reconstruction method. All computations use uniform Cartesian grids and finite differences for the forward solver in Algorithm 1. Let Ω = (0 , 1) 2 be discretized by a uniform grid with steps hx, h y, where (x, y ) denotes the spatial variable. Let tn = nτ , n = 0 , 1, . . . , N t, partition [0 , T ]. For a given drift coefficient 
+
+q, the forward problem 
+
+∂tu − ∆u + q(x, y ) ∂xu + Cpu = f (x, y ) (4.1) is discretized in time by backward Euler, 
+
+un+1 − un
+
+τ − ∆un+1 + q(x, y ) ∂xun+1 + Cpun+1 = f (x, y ), n = 0 , 1, . . . , N t − 1. (4.2) In space, we use centered finite differences for ∆ and ∂x1 u at interior grid points. Dirichlet conditions are imposed on y = 0 and y = 1 by directly enforcing the boundary values at the corresponding nodes. Neumann conditions on x = 0 and x = 1 are enforced by replacing the corresponding boundary rows with second-order one-sided finite difference approximations. Each time step solves 
+
+( 1
+
+τ I − ∆h + Q D x,h + CpI
+
+)
+
+un+1 = 1
+
+τ un + f, (4.3) where ∆h and Dx,h are the discrete Laplace and first-order operators, and Q = diag( q). The solver is called each iteration to compute the forward solution u and a backward-difference approximation of ∂tu(·, T ).
+
+Algorithm 1 An iterative algorithm for recovering the drift term q
+
+Require: Source term f , terminal observation g = u(·, T ), initial data u0, potential con-stant Cp.
+
+Ensure: Approximate drift term qN 
+
+> 1:
+
+Set the initial guess 
+
+q0 = f + ∆ g − Cpg∂xg . 
+
+> 2:
+
+for k = 1 , 2, . . . , N do  
+
+> 3:
+
+Compute the solution u(·, t ; qk−1) by solving the forward problem (1.1) with qk−1; 
+
+> 4:
+
+Update the drift term by 
+
+qk = Kq k−1 = f − ∂tu(·, T ; qk−1) + ∆ g − Cpg∂x1 g . 
+
+> 5:
+
+Check the stopping criterion ∥qk − qk−1∥L2(Ω) ≤ ε0 for some ε0 > 0. 
+
+> 6:
+
+end for  
+
+> 7:
+
+Output the recovered drift term qN .The experiments are used to show three main points: (i) the convergence of the proposed iteration for noise-free data, (ii) its stability under noisy terminal measurements, and (iii) the monotone improvement of the iterates in the first few steps. The detailed examples are given as follows. 12 (a) The smooth coefficient is chosen as 
+
+q1(x, y ) = 1 + sin( πx ) sin( πy ).
+
+(b) The piecewise constant coefficient is given by 
+
+q2(x, y ) = 
+
+{
+
+1.4, |x − 0.6| ≤ 0.18 , |y − 0.4| ≤ 0.18 ,
+
+1, otherwise .
+
+(c) A binary coefficient supported on a Chinese-character-shaped region, namely 
+
+q3(x, y ) = 1 + 0 .4 χDchar (x, y ),
+
+where Dchar ⊂ (0 , 1) 2 denotes the region shown in the corresponding figure. The potential constant is fixed as Cp = 5 , the final time is T = 1 , and the stopping tolerance is set to 10 −13 . The initial and boundary data are chosen in a compatible way. Let a(t) = eβt , β = 1 . The Dirichlet boundary conditions are prescribed by 
+
+b1(x, t ) = a(t)ex, b3(x, t ) = a(t)ex,
+
+on y = 0 and y = 1 , respectively. The Neumann boundary conditions are given by 
+
+b2(y, t ) = a(t)e, b4(y, t ) = −a(t),
+
+on x = 1 and x = 0 , respectively, where b4 is defined with respect to the outward normal derivative. The initial value is taken as 
+
+u0(x, y ) = a(0) ex = ex,
+
+and is further corrected at the boundary nodes so that the discrete Dirichlet and Neumann compatibility conditions at t = 0 are satisfied. The source term is given by 
+
+f (x, y ) = 5 sin( πx ) sin( πy ).
+
+To avoid an inverse crime, the terminal data are generated on a finer 100 × 100 grid, while the inverse reconstruction is solved on a coarser grid 60 × 60 . All figures are displayed on the reconstruction grid used in the corresponding experiment. For noisy-data experiments, the terminal data are perturbed by 
+
+gδ = g + δ∥g∥L∞(Ω) ξ, 
+
+where ξ is a random function with values in [− 12 , 12 ]. In the implementation, δ = 2 ×
+
+10 −2, 2 × 10 −3, 2 × 10 −4 correspond to noise levels 1% , 0.1% , 0.01% , respectively, and δ =6 × 10 −2 corresponds to 3% noise. Since the reconstruction formula involves differentiated quantities, direct use of noisy terminal data may cause severe instability. Therefore, in the noisy experiments, we first smooth the terminal observation gδ. To this end, we employ a smoothing strategy related to [4] to denoise gδ and obtain a stable approximation of ∆g.In all noisy-data figures, the reconstructions in the first row are shown after 10 iterations, while the second row displays the first three iterates under 3% noise. The reconstruction error at iteration k is measured by the relative L2-error 
+
+RelErr( k) = ∥q(k) − qtrue ∥L2(Ω) 
+
+∥qtrue ∥L2(Ω) 
+
+.
+
+13 4.1 Smooth Example 
+
+Figure 1 shows the noise-free results for the smooth example. The reconstructed coefficient agrees very well with the exact one, and the relative error decreases rapidly in the first few iterations. This indicates that for a smooth drift field the proposed fixed-point iteration converges fast and gives an accurate reconstruction. Figure 2 shows the results for noisy terminal data. The first row gives the reconstructions after 10 iterations for noise levels 1% , 0.1% , and 0.01% . As the noise level decreases, the reconstructed profile becomes closer to the exact one, and the level sets become smoother and more symmetric. The second row shows the initial guess and the next two iterates for the case of 3% noise. Although the noise is relatively large, the global shape is already captured by the initial guess, and the iterates improve step by step. This agrees with the monotone behavior predicted by the theory.             
+
+> (a) Exact coefficient (b) Reconstructed coefficient 012345678910
+> 10 -4
+> 10 -3
+> 10 -2
+> 10 -1
+> 10 0(c) Relative error Figure 1: Noise-free reconstruction for the smooth example.
+
+14 (a) 1% noise, k = 10 (b) 0.1% noise, k = 10 (c) 0.01% noise, k = 10                  
+
+> (d) 3% noise, k= 0 (e) 3% noise, k= 1 (f) 3% noise, k= 2
+> Figure 2: Reconstructions for the smooth example with noisy data. The first row shows the results after 10
+> iterations for three noise levels; the second row shows the first three iterates for 3% noise.
+
+4.2 Piecewise Constant Example 
+
+Figure 3 presents the noise-free results for the square example. The method correctly recovers the location and contrast of the inclusion, and the relative error decreases mono-tonically with the iteration number. Although the exact coefficient is discontinuous, the reconstructed interface remains sharp, with only mild smoothing near the corners caused by the coarse inversion grid and the discrete solver. Figure 4 reports the reconstructions for noisy data. The first row shows the results after 
+
+10 iterations for noise levels 1% , 0.1% , and 0.01% . The support of the square inclusion is clearly identified in all three cases, and the reconstruction becomes more accurate as the noise level decreases. The second row displays the first three iterates for 3% noise. One can see that the background distortion is reduced from one step to the next, while the shape of the square becomes clearer. This provides a direct numerical illustration of the monotone improvement of the iteration. 15 (a) Exact coefficient (b) Reconstructed coefficient 0 1 2 3 4 5 6 7 8 9 10  
+
+> 10 -4
+> 10 -3
+> 10 -2
+> 10 -1
+> 10 0
+
+(c) Relative error Figure 3: Noise-free reconstruction for the piecewise constant example. 
+
+(a) 1% noise, k = 10 (b) 0.1% noise, k = 10 (c) 0.01% noise, k = 10 
+
+(d) 3% noise, k = 0 (e) 3% noise, k = 1 (f) 3% noise, k = 2 
+
+Figure 4: Reconstructions for the piecewise constant example with noisy data. The first row shows the results after 10 iterations for three noise levels; the second row shows the first three iterates for 3% noise. 
+
+4.3 Chinese Character Example 
+
+The third example is more complicated because the exact coefficient contains several corners, thin structures, and two inner holes. Figure 5 shows the noise-free reconstruction. The main geometry of the target is well recovered, including the two inner holes and the central vertical bar. The relative error decreases rapidly in the first few iterations and then becomes nearly flat. Figure 6 shows the results for noisy terminal data. The first row gives the reconstructions after 10 iterations for noise levels 1% , 0.1% , and 0.01% . Even in the presence of noise, the main topological features remain visible, and the reconstruction improves as the noise level decreases. The second row shows the first three iterates for 3% noise. Although some 16 background variation is still visible, the main character-shaped structure is already well captured at the initial step. As the iteration proceeds from k = 0 to k = 2 , the background becomes more uniform and the coefficient is recovered more clearly, showing a step-by-step improvement of the reconstruction. This suggests that the proposed method remains stable even for nonsmooth coefficients with more complicated geometry. 
+
+(a) Exact coefficient (b) Reconstructed coefficient 0 1 2 3 4 5 6 7 8 9 10  
+
+> 10 -4
+> 10 -3
+> 10 -2
+> 10 -1
+> 10 0
+
+(c) Relative error Figure 5: Noise-free reconstruction for the Chinese character example. 
+
+(a) 1% noise, k = 10 (b) 0.1% noise, k = 10 (c) 0.01% noise, k = 10 
+
+(d) 3% noise, k = 0 (e) 3% noise, k = 1 (f) 3% noise, k = 2 
+
+Figure 6: Reconstructions for the Chinese character example with noisy data. The first row shows the results after 10 iterations for three noise levels; the second row shows the first three iterates for 3% noise. 
+
+# Acknowledgments. 
+
+Zhidong Zhang is supported by the National Key Research and Development Plan of China (Grant No. 2023YFB3002400). Wenlong Zhang is partially supported by the National Natural Science Foundation of China under grant numbers No.12371423, No.12241104 and No.12561160122. 17 References 
+
+[1] M. Bellassoued and O. Ben Fraj. Stably determining time-dependent convection– diffusion coefficients from a partial dirichlet-to-neumann map. Inverse Problems ,37(4):045011, 2021. [2] F. Black and M. Scholes. The pricing of options and corporate liabilities. Journal of political economy , 81(3):637–654, 1973. [3] D. Cen, W. Zhang, and Z. Zhang. An efficient iteration method to reconstruct the drift term from the final measurement, 2025. [4] Z. Chen, W. Zhang, and J. Zou. Stochastic convergence of regularized solutions and their finite element approximations to inverse source problems. SIAM Journal on Numerical Analysis , 60(2):751–780, 2022. [5] J. Cheng, J. Nakagawa, M. Yamamoto, and T. Yamazaki. Uniqueness in an in-verse problem for a one-dimensional fractional diffusion equation. Inverse problems ,25(11):115002, 2009. [6] E. L. Cussler. Diffusion: mass transfer in fluid systems . Cambridge university press, 2009. [7] Z.-C. Deng and L. Yang. An inverse problem of identifying the coefficient of first-order in a degenerate parabolic equation. Journal of computational and applied mathematics ,235(15):4404–4417, 2011. [8] Z.-C. Deng, J.-N. Yu, and L. Yang. Identifying the coefficient of first-order in parabolic equation from final measurement data. Mathematics and Computers in Simulation ,77(4):421–435, 2008. [9] E. DiBenedetto. Degenerate parabolic equations . Springer Science & Business Media, 2012. [10] E. DiBenedetto and U. Gianazza. Partial differential equations . Springer Nature, 2023. [11] P. Duchateau. Monotonicity and invertibility of coefficient-to-data mappings for parabolic inverse problems. SIAM Journal on Mathematical Analysis , 26(6):1473–1487, 1995. [12] L. C. Evans. Partial differential equations , volume 19. American Mathematical Society, 2 edition, 2010. [13] B. Frank Jones Jr. Various methods for finding unknown coefficients in parabolic differential equations. Communications on Pure and Applied Mathematics , 16(1):33– 44, 1963. [14] V. Isakov. Inverse parabolic problems with the final overdetermination. Communica-tions on Pure and Applied Mathematics , 44(2):185–209, 1991. [15] V. Isakov. Inverse problems for partial differential equations . Springer, 2006. [16] B. F. Jones Jr. The determination of a coefficient in a parabolic differential equation: part i. existence and uniqueness. Journal of Mathematics and Mechanics , pages 907– 918, 1962. 18 [17] O. A. Ladyzhenskaia, V. A. Solonnikov, and N. N. Ural’tseva. Linear and quasi-linear equations of parabolic type , volume 23. American Mathematical Soc., 1968. [18] G. Li, D. Zhang, X. Jia, and M. Yamamoto. Simultaneous inversion for the space-dependent diffusion coefficient and the fractional order in the time-fractional diffusion equation. Inverse Problems , 29(6):065014, 2013. [19] G. M. Lieberman. Boundary and initial regularity for solutions of degenerate parabolic equations. Nonlinear Analysis: Theory, Methods & Applications , 20(5):551–569, 1993. [20] G. M. Lieberman. Second order parabolic differential equations . World scientific, 1996. [21] H. Risken. Fokker-planck equation. In The Fokker-Planck equation: methods of solution and applications , pages 63–95. Springer, 1989. [22] W. Rundell. The determination of a parabolic equation from initial and final data. 
+
+Proceedings of the American Mathematical Society , 99(4):637–642, 1987. [23] S. K. Sahoo and M. Vashisth. A partial data inverse problem for the convection-diffusion equation. arXiv preprint arXiv:1901.08026 , 2019. [24] G. Savaré. Parabolic problems with mixed variable lateral conditions: An abstract approach. Journal de Mathématiques Pures et Appliquées , 76(4):321–351, 1997. [25] Tagliabue, Anna, Dedè, Luca, and Quarteroni, Alfio. Nitsches method for parabolic partial differential equations with mixed time varying boundary conditions. ESAIM: M2AN , 50(2):541–563, 2016. [26] A. Tamburrino. Monotonicity based imaging methods for elliptic and parabolic inverse problems. Journal of Inverse & Ill-Posed Problems , 14(6), 2006. [27] Z. Zhang. An undetermined coefficient problem for a fractional diffusion equation. 
+
+Inverse Problems , 32(1):015011, 2016. [28] Z. Zhang, Z. Zhang, and Z. Zhou. Identification of potential in diffusion equations from terminal observation: analysis and discrete approximation. SIAM Journal on Numerical Analysis , 60(5):2834–2865, 2022. [29] Z. Zhang and Z. Zhou. Recovering the potential term in a fractional diffusion equation. 
+
+IMA Journal of Applied Mathematics , 82(3):579–600, 2017. 19

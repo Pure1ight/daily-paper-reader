@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.14883v1/fig-001.webp",
+      "caption": "TABLE III TESTING PERFORMANCE OF NLARX MODELS",
+      "page": 6,
+      "index": 1,
+      "width": 514,
+      "height": 386
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14883v1/fig-002.webp",
+      "caption": "TABLE II TESTING PERFORMANCE OF THE NODE, FODE, AND XFODE MODELS: RMSE REPORTED AS MEAN ±1 STANDARD ERROR OVER 20 EXPERIMENTS",
+      "page": 6,
+      "index": 2,
+      "width": 1054,
+      "height": 545
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14883v1/fig-003.webp",
+      "caption": "Fig. 3. RMSE boxplots of trained models on (a) Two-Tank and (b) MR-Damper datasets; SR1 with the white, SR2 with the gray background.",
+      "page": 6,
+      "index": 3,
+      "width": 968,
+      "height": 200
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14883v1/fig-004.webp",
+      "caption": "Fig. 2. Visualization of learned MFs on the Two-Tank dataset (single seed). States are defined with the incremental form (SR2), thus z = [y;∆y;∆2y;u]. Each combined input dimension zi is interpretable: z1 output position, z2 output velocity, z3 output acceleration, and z4 control input.",
+      "page": 3,
+      "index": 4,
+      "width": 760,
+      "height": 652
+    },
+    {
+      "url": "assets/figures/arxiv/2604.14883v1/fig-005.webp",
+      "caption": "TABLE I DATASETS SUMMARY",
+      "page": 5,
+      "index": 5,
+      "width": 510,
+      "height": 333
+    }
+  ]
+}

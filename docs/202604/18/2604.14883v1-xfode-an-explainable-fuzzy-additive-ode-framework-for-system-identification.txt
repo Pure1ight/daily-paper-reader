@@ -1,0 +1,611 @@
+Title: xFODE: An Explainable Fuzzy Additive ODE Framework for System Identification
+
+URL Source: https://arxiv.org/pdf/2604.14883v1
+
+Published Time: Fri, 17 Apr 2026 00:51:08 GMT
+
+Number of Pages: 6
+
+Markdown Content:
+# xFODE: An Explainable Fuzzy Additive ODE Framework for System Identification 
+
+Ertu˘ grul Kec ¸eci and Tufan Kumbasar 
+
+Abstract — Recent advances in Deep Learning (DL) have strengthened data-driven System Identification (SysID), with Neural and Fuzzy Ordinary Differential Equation (NODE/FODE) models achieving high accuracy in nonlinear dynamic modeling. Yet, system states in these frameworks are often reconstructed without clear physical meaning, and input contributions to the state derivatives remain difficult to interpret. To address these limitations, we propose Explain-able FODE (xFODE), an interpretable SysID framework with integrated DL-based training. In xFODE, we define states in an incremental form to provide them with physical meanings. We employ fuzzy additive models to approximate the state derivative, thereby enhancing interpretability per input. To provide further interpretability, Partitioning Strategies (PSs) are developed, enabling the training of fuzzy additive models with explainability. By structuring the antecedent space during training so that only two consecutive rules are activated for any given input, PSs not only yield lower complexity for local inference but also enhance the interpretability of the antecedent space. To train xFODE, we present a DL framework with parameterized membership function learning that supports end-to-end optimization. Across benchmark SysID datasets, xFODE matches the accuracy of NODE, FODE, and NLARX models while providing interpretable insights. 
+
+I. I NTRODUCTION 
+
+Deep Learning (DL) has been increasingly applied for data-driven System Identification (SysID) to learn complex system dynamics [1]–[4]. Recent efforts include probabilistic deep models [5], physics-informed architectures [6], and hybrid gray–box designs [7]. Among these, Neural Ordinary Differential Equations (NODEs) have emerged as a powerful framework that models state derivatives with Neural Net-works (NNs) [8], and have been extended to improve training efficiency and interpretability [8]–[10]. Building on NODEs, Fuzzy Ordinary Differential Equa-tions (FODEs) replace NNs with Fuzzy Logic Systems (FLSs) to provide interpretable system dynamics [11]. Yet, the design in [11] defines rules over high-dimensional an-tecedent spaces with unrestricted interactions, which limits its interpretability. Furthermore, since no explicit Partitioning Strategy (PS) is applied to the antecedent space, the learned Gaussian Membership Functions (MFs) can exhibit sub-stantial overlap between neighboring MFs, reducing trans-parency. Thus, the interpretability of FLSs is underutilized, and FODEs become black-box models, like NODEs.  
+
+> This work was supported by MathWorks ®in part by a Research Grant awarded to T. Kumbasar. Any opinions, findings, conclusions, or recom-mendations expressed in this paper are those of the authors and do not necessarily reflect the views of MathWorks, Inc. Ertu˘ grul Kec ¸eci and Tufan Kumbasar are with AI and Intelligent Sys-tems Laboratory, Istanbul Technical University, 34469, Istanbul, T¨ urkiye
+
+kececie@itu.edu.tr, kumbasart@itu.edu.tr       
+
+> Fig. 1. Illustration of xFODE inference in a SISO setup with two states for clarity: Initial states are obtained from the State Representation block, defined incrementally as xk= [ yk,∆yk]. These states, together with the input, are fed to the FAME, to generate the state derivatives. The derivatives are then integrated in the ODE block to compute the next states.
+
+Although NODEs and FODEs can accurately capture non-linear system dynamics, they remain challenging to interpret. System states are often not directly measurable and must be estimated or reconstructed [1]–[3], which can compro-mise their physical meanings. Moreover, both frameworks provide limited transparency regarding how each dimension of a high-dimensional state representation affects the system dynamics. Additive modeling structures [12]–[14] provide a potential solution, as they can decompose system dynamics into dimension-wise contributions while preserving expres-sive power. Quite recently, Fuzzy Additive Models (FAMs) have been proposed to enhance interpretability on tabular data [15], yet their application to SysID remains unexplored. This paper proposes Explainable FODE (xFODE), an interpretable data-driven SysID model with integrated DL based training. In xFODE, states are constructed from mea-surable outputs in an incremental form, preserving their physical meaning. To capture input-wise contributions to state dynamics, xFODE employs FAMs to approximate the state derivatives. Further, we introduce PSs for training of FAM, effectively transforming it into a FAM with Explain-ability (FAME) [15]. The PSs sculpt the antecedent space during training so that only two consecutive rules are active for any input, providing reduced local inference complexity and direct interpretability of the antecedent space. To train xFODE, we develop a DL framework using parameterization techniques that allow learning of MFs for each PS. To assess xFODE, we compare it with NODE, FODE, and NonLinear AutoRegressive network with eXogenous inputs (NLARX) models on SysID datasets. The results show that xFODE achieves interpretable modeling with accuracy on par with NODE, FODE, and NLARX. 
+
+> arXiv:2604.14883v1 [cs.LG] 16 Apr 2026
+
+II. N EURAL AND FUZZY ODE N ETWORKS 
+
+This section provides a concise overview of NODE and FODE and their design challenges. Let us define a non-autonomous partially observable nonlinear system as: 
+
+˙x(t) = d(x(t), u(t)) , x(t0) = x0
+
+y(t) = h(x(t)) (1) where x(t) ∈ Rnx denotes the states, u(t) ∈ Rnu the inputs, and y(t) ∈ Rny the outputs. d(·) describes the nonlinear model, while h(·) defines the output mapping. 
+
+A. Dynamic Inferences of NODE and FODE 
+
+To represent the dynamics in (1), it has been shown that NODEs [16] and FODEs [11] are efficient structures. Both models are defined with a parameterized vector field dM(·)
+
+(M ∈ { NN , FLS }) as follows: 
+
+˙x(t) = dM (x(t), u(t); θ) (2) where θ represents the Learnable Parameters (LPs). Given the initial condition x(t0), the state trajectory over the interval [t0, t 1] is then expressed as 
+
+x(t1) = x(t0) + 
+
+Z t1
+
+> t0
+
+dM(x(τ ), u(τ ); θ) dτ. (3) If the Euler integration method is used, then the discrete-time representation of (1) is as follows: 
+
+xk+1 = xk + dM(zk)
+
+yk = h(xk), (4) where the input zk = [ xk; uk] ∈ Rnz is defined as zk =[z1,k , z 2,k , . . . , z nz ,k ] with nz = nx + nu.
+
+B. Challenges in NODE and FODE Modeling 
+
+Although NODEs and FODEs provide flexible dynamic representations, two fundamental challenges limit their in-terpretability and practical utility.  
+
+> •
+
+State Representation: The state vector xk is generally 
+
+not directly measurable . Thus, it must be estimated or defined [1], which might destroy their physical meaning and render the learned dynamics difficult to interpret. To preserve interpretability, the states can be defined di-rectly from the outputs yk = [ y1,k , y 2,k , . . . , y ny ,k ]T ∈
+
+Rny rather than latent or estimated states.  
+
+> •
+
+Lack of Interpretability of dM: Regardless of whether 
+
+dM(zk) is implemented via a NN or an FLS, it functions as a high-dimensional black-box mapping. In the case of NODEs, the NN captures complex nonlinearities but provides no direct insight into the contribution of individual inputs. For FODEs, although fuzzy rules are employed, the high-dimensional antecedent spaces and unrestricted rule interactions often yield entangled dy-namics that are difficult to interpret. Thus, the influence of each input zi,k on the state derivative remains opaque. As a result, these models cannot provide input-wise attribu-tion, model transparency, or component-level interpretability. III. XFODE F RAMEWORK 
+
+The limitations of NODE and FODE motivate the need for more transparent models. As shown in Fig. 1, the proposed xFODE aims to preserve the expressive power of NODE/FODE modeling while enabling interpretability. The following subsections detail its key components. 
+
+A. Interpretable State Representation 
+
+A standard approach for constructing the state vector xk
+
+is the lagged form , which stacks a sequence of past outputs: SR1: xk = [ yk, yk−1, . . . , yk−m ]T , (5) where m denotes the number of lags. While this formulation captures temporal dependencies, each component represents a past output, making it difficult to directly link elements of 
+
+xk to the system’s dynamic evolution. To improve interpretability, we suggest defining xk in the 
+
+incremental form , in which the state vector is constructed using discrete differences: SR2: xk = [ yk, ∆yk, . . . , ∆myk ]T (6) with m denoting the number of difference orders and 
+
+∆j yk = ∆ j−1yk − ∆j−1yk−1, j = 1 , . . . , m . This rep-resentation emphasizes temporal changes, with each term corresponding to a physically meaningful quantity, such as velocity or acceleration of the outputs. 
+
+B. Additive ODE Dynamics 
+
+Modeling the state derivative as a single high-dimensional mapping can obscure input contributions. xFODE instead represents the derivative additively: 
+
+xk+1 = xk +
+
+> nz
+
+X
+
+> i=1
+
+fi(zi,k ; θi), (7) where fi : R → Rnx is a single-input mapping for zi,k . Each mapping produces nx outputs, one for each state dimension, 
+
+ˆdi,k = fi(zi,k ; θi), (8) where ˆdi,k ∈ Rnx represents the contribution of input 
+
+zi,k to each component of the derivative-like update of the state vector. This additive decomposition enables input-wise interpretability while retaining the capacity to model complex dynamics. 
+
+C. Interpretable Mapping Design 
+
+In xFODE, each mapping fi(.) is implemented as a single-input FLS, producing nx outputs that correspond to contri-butions to each state dimension xk. For notational simplicity, we drop the indices i and k throughout this subsection. Each FLS consists of P rules ( p = 1 , 2, . . . , P ) defined as 
+
+Rp : If z is Ap Then ˆd is dp, (9) with dp = [ dp, 1, d p, 2, . . . , d p,n x ]T and the consequents are defined as dp,o = aopz + aop, 0, o = 1 , 2, . . . , n x. The FLS mapping can be defined in a compact form as follows: 
+
+f (z; θ) = 
+
+PPp=1 μp(z)dp
+
+PPp=1 μp(z) , (10) (a) Learned GaussMF if there is no PS employed (b) Learned TriMFs via PS1                
+
+> (c) Learned Gauss2MF via PS2 (d) Learned Gauss2MF via PS3 Fig. 2. Visualization of learned MFs on the Two-Tank dataset (single seed). States are defined with the incremental form (SR2), thus z= [ y; ∆ y; ∆ 2y;u].Each combined input dimension ziis interpretable: z1output position, z2output velocity, z3output acceleration, and z4control input.
+
+where μp(z) is the membership grade of the fuzzy set 
+
+Ap. This formulation allows all output dimensions to share the same antecedent space while maintaining independent consequents for each state dimension, enabling transparent input-wise contribution to the state derivative. A common choice for defining the input domain is using Gaussian MFs (GaussMFs) to capture nonlinearities: 
+
+μp(z) = exp (−(z − cp)2/2( σp)2) (11) where cp and σp are the center and standard deviation, respectively. While GaussMFs provide smooth transitions, their overlap can cause multiple rules to be simultaneously fired, reducing interpretability, as illustrated in Fig. 2(a). To address this, we propose PSs for sculpting the an-tecedent space so that, for any input, only two consecutive rules are active. Thus, the mapping in (10) simplifies to 
+
+f (z′; θ) = 
+
+Pp∗+1  
+
+> p=p∗
+
+μp(z′)dp
+
+Pp∗+1  
+
+> p=p∗
+
+μp(z′) . (12) for z′ ∈ [cp∗ , c p∗+1 ]. This ensures a simple and interpretable mapping while maintaining computational efficiency. 
+
+1) PS1-Partitioning with Triangular MFs (TriMFs): 
+
+TriMFs offer a straightforward way to partition the input domain. A TriMF is defined as follows: 
+
+μp(z) = max 
+
+
+
+0, min 
+
+ z − lp
+
+cp − lp
+
+, rp − zrp − cp
+
+ 
+
+(13) where lp, cp, and rp denote the left endpoint, center, and right endpoint of the pth MF. To maintain interpretable partitioning, the following cou-pling relationships are defined between consecutive MFs: 
+
+∆lp = cp − lp, ∆rp = rp − cp, (14) 
+
+cp+1 = cp + ∆ rp, ∆lp+1 = ∆ rp. (15) This coupling ensures that, for any input z′, only two consecutive MFs are activated as shown in Fig. 2(b). 
+
+2) PS2-Partitioning with Two-Sided Gaussian MFs (Gauss2MFs): To provide greater flexibility and smoothness while preserving interpretability, we can use Gauss2MFs: 
+
+μp(z) = 
+
+
+
+exp 
+
+
+
+− (z − cp)2 /2  σlp
+
+2
+
+, if z ≤ cp
+
+exp 
+
+
+
+− (z − cp)2 /2  σrp
+
+2
+
+, if z > c p
+
+(16) where σlp and σrp are the left and right standard deviations, respectively. To ensure interpretability and smooth overlap between adjacent MFs, we parameterize the centers as: 
+
+cp+1 = cp + 4 σrp (17) and the standard deviations as: 
+
+σrp = σlp+1 (18) This parameterization ensures an interpretable partition of the input domain as shown in Fig. 2(c). Note that we assume 
+
+μp(z′) ≈ 0 when |z′| > 4σrp [15]. 
+
+3) PS3-Partitioning with Complementary Gauss2MFs: 
+
+In PS2, while Gauss2MFs offer asymmetric flexibility, the 
+
+4σ center spacing in (17) may result in weak overlap between adjacent MFs. Thus, to increase the overlap, we construct odd-indexed MFs as local complements of neigh-boring even-indexed MFs. Let even indexed MFs A2q (q =1, 2, . . . , ⌈(P − 3) /2⌉) be defined by (16). The midpoint between consecutive even-indexed MFs is: 
+
+¯c2q+1 = ( c2q + c2( q+1) )/2. (19) The odd indexed MFs A2q+1 are then defined as 
+
+μ2q+1 (z) = 
+
+
+
+0, z < c 2q ,
+
+1 − μ2q (z), c2q ≤ z ≤ ¯c2q+1 ,
+
+1 − μ2( q+1) (z), ¯c2q+1 ≤ z ≤ c2( q+1) ,
+
+0, z > c 2( q+1) ,
+
+(20) with μ1(z) = 1 −μ2(z), z < c 2 and when P is odd, μP (z) = 1 − μP −1(z), z > c P −1. This MF design guarantees that, for any input, only two MFs are active, as shown in Fig. 2(d). IV. DL F RAMEWORK FOR X FODE In this section, we present a DL framework for learning xFODE. Algorithm 1 * outlines the overall training process for xFODE, while Algorithm 2 details the training inference applied to each trajectory within a mini-batch. Here, we consider a dataset D = {uk, yk}Kk=1 . The state vector xk is constructed from yk using either the lagged or incremental SR. Then, we define the input–state trajectories for training. 
+
+S =
+
+h 
+
+u{j} 
+
+> 0
+
+, x{j}
+
+> 0
+
+
+
+, . . . , 
+
+
+
+u{j} 
+
+> N
+
+, x{j}
+
+> N
+
+i 
+
+, j ∈ [1 , . . . , B ]
+
+(21) Here, N is the roll-out while B is the number of trajectories. xFODE learns the underlying system dynamics by mini-mizing an L1 loss function over S:
+
+min  
+
+> θ∈C
+
+L1 = 1
+
+B
+
+> B
+
+X
+
+> j=1
+> N
+
+X
+
+> k=1
+
+|x{j} 
+
+> k
+
+− ˆx{j} 
+
+> k
+
+| (22) where ˆx{j} 
+
+> k
+
+represents the predicted states by xFODE: 
+
+ˆxk = ˆ xk−1 +
+
+> nz
+
+X
+
+> i=1
+
+fi(ˆ zi,k −1; θi). (23) The complete set of LPs is defined as θ = {θi}nz where each θi is parameterized according PS:  
+
+> •
+
+For PS1: θi = {c1, ∆l
+
+> 1
+
+, ∆r , d} where c1 and ∆l 
+
+> 1
+
+are scalar, ∆r ∈ RP ×1, and d ∈ R2P n x×1 
+
+> •
+
+For PS2/ PS3: θi = {c1, σ l
+
+> 1
+
+, σr , d} where c1 and σl 
+
+> 1
+
+σ
+
+are scalar, σr ∈ RP ×1, and d ∈ R2P n x×1
+
+During training, it is necessary to enforce σp > 0 or 
+
+∆p > 0, ∀p, depending on the shape of MF [17]. Since 
+
+> *MATLAB implementation. [Online]. Available:
+> https://github.com/ertugrulkececi/xfode
+
+Algorithm 1 Training steps of xFODE  
+
+> 1:
+
+Input: D = {uk, yk}Kk=1 , dataset  
+
+> 2:
+
+B, number of measured trajectories  
+
+> 3:
+
+N , prediction horizon  
+
+> 4:
+
+P , number of rules  
+
+> 5:
+
+mbs , mini-batch size  
+
+> 6:
+
+E, number of epochs  
+
+> 7:
+
+m, number of lags/ difference orders in (5)/(6)  
+
+> 8:
+
+Output: LP set θ 
+
+> 9:
+
+Initialize θ; 
+
+> 10:
+
+Construct xk via (5)/(6);  
+
+> 11:
+
+Build S = ( u{j} 
+
+> 1: N
+
+, x{j} 
+
+> 1: N
+
+)Bj=1 ; 
+
+> 12:
+
+for e = 1 to E do  
+
+> 13:
+
+for each mbs in B do  
+
+> 14:
+
+Select a mini-batch [u{j} 
+
+> 0: N
+
+, x{j} 
+
+> 0: N
+
+]mbs j=1  
+
+> 15:
+
+ˆx{j} 
+
+> 1: N
+
+← xFODE ([ x{j} 
+
+> 0
+
+, u{j} 
+
+> 0: N
+
+]; θ) 
+
+> 16:
+
+Compute L1 
+
+> 17:
+
+Compute the gradient ∂L 1/∂θ via AD  
+
+> 18:
+
+Update θ via a DL optimizer, e.g., Adam  
+
+> 19:
+
+end for  
+
+> 20:
+
+end for  
+
+> 21:
+
+θ∗ = arg min( L1) 
+
+> 22:
+
+Return θ = θ∗
+
+Algorithm 2 Training inference of xFODE for a trajectory in a mini-batch  
+
+> 1:
+
+Input: Initial state x0, input sequence u0: N , LP set θ,prediction horizon N 
+
+> 2:
+
+Output: Predicted state trajectory ˆx1: N 
+
+> 3:
+
+Initialize ˆx ← ∅, ˆx0 = x0 
+
+> 4:
+
+for k = 0 to N − 1 do  
+
+> 5:
+
+zk ← [ˆ xk, uk] 
+
+> 6:
+
+ˆxk+1 ← ˆxk + Pnz 
+
+> i=1
+
+fi(ˆ zi,k ; θi) 
+
+> 7:
+
+ˆx ← ˆx ∪ ˆxk+1  
+
+> 8:
+
+ˆxk ← ˆxk+1  
+
+> 9:
+
+end for  
+
+> 10:
+
+Return ˆx
+
+DL optimizers operate in unconstrained parameter spaces, we reparameterize the MF spreads to enable unconstrained optimization. For TriMF, we define ∆′ 
+
+> p
+
+∈ (−∞ , ∞):
+
+∆p = log(1 + e∆′ 
+
+> p
+
+) (24) and σ′ 
+
+> p
+
+∈ (−∞ , ∞) for Gauss2MF as: 
+
+σp = log(1 + eσ′ 
+
+> p
+
+) (25) V. P ERFORMANCE ANALYSIS 
+
+We evaluate xFODE, FODE, and NODE on five bench-mark SysID datasets summarized in Table I, with all datasets normalized. Experiments are conducted in a MATLAB envi-ronment and repeated over 20 independent runs for statistical reliability. The analyzed model configurations are:  
+
+> •
+
+NODE: dN N (·) is a neural network with two hidden layers of 128 units each and tanh activations. TABLE I DATASETS SUMMARY                          
+
+> Dataset nunyTraining samples Testing samples
+> Two-Tank 111500 1500 Hair Dryer 11500 500 MR Damper 113000 499 Steam Engine 22250 201 EV Battery 2115001 14351
+> •
+
+FODE: dF LS (·) is a multi-input FLS with P = 5 rules, using GaussMFs in the antecedents without a PS.  
+
+> •
+
+xFODE: Each FLS fi(·) in (7) uses P = 5 rules with antecedent sculpting strategies PS1–PS3 (Section III-C).  
+
+> •
+
+Additive FODE (AFODE): To evaluate the effect of PSs, we include an AFODE variant using GaussMFs without a PS, with P = 5 rules. For all models, the state vector xk is constructed using either SR1 or SR2. The SR hyperparameter m is selected from the range [0 , 5] via cross-validation on NODE and set to m = 2 
+
+for the Two-Tank, Hair Dryer, and MR Damper; and m = 1 
+
+for the Steam Engine and EV Battery datasets. The roll-out is set to N = 20 across all datasets. To test their SysID performances, all models are evaluated using multi-step prediction tasks (i.e., simulation mode). We report the mean RMSE along with its ±1 standard error in Table II, as well as #LP for each model. Moreover, for bench-marking, NLARX models were trained using MATLAB’s built-in nlarx SysID function with Sigmoid Network (SN), Tree Ensemble (TE), Support Vector Machine (SVM), and NN. We reported their regressor definition and RMSE values in Table III. The results indicate that:  
+
+> •
+
+Using SR2 to define states consistently yields lower RMSE and variance than SR1 for all models, as also shown from the box plot in Fig. 3.  
+
+> •
+
+xFODE achieves lower RMSE than NODE on the Two-Tank and Steam Engine datasets and outperforms FODE on the Hair Dryer, EV Battery, and Steam Engine datasets. While NODE and FODE perform slightly bet-ter on some datasets, xFODE’s improved interpretability comes with minimal performance cost and a comparable #LP to FODE, markedly fewer than NODE.  
+
+> •
+
+xFODE yields slightly higher RMSE than AFODE across all datasets. However, unlike AFODE, where multiple rules can be active simultaneously (Fig. 2(a)), xFODE learns rules such that only two consecutive rules are activated at any time (Figs. 2(b)–2(d)).  
+
+> •
+
+xFODE attains its best SysID performance with dif-ferent PSs depending on the dataset. These findings indicate that the best PS is dataset dependent.  
+
+> •
+
+xFODE outperforms TE and SVM on most datasets. While SN and NN methods enable NLARX models to achieve lower RMSE on the Hair Dryer, MR Damper, and EV Battery datasets, these models often require large regressor structures and lack interpretability. In summary, the proposed xFODE framework effectively enhances interpretability through structured partitioning of the antecedent space. This key improvement is illustrated in Fig. 2, where the antecedent spaces of the learned models can be expressed using intuitive linguistic terms such as Negative (N), Negative-Medium (NM), Zero (Z), Positive-Medium (PM), and Positive (P). Since MFs learned by xFODE are well-separated in contrast to AFODE, it enhances the human interpretability of the fuzzy rule base. xFODE delivers this with a low #LP and performance on par with NODE/FODE, combined with the benefits of defining states within SR2. VI. C ONCLUSION AND FUTURE WORK 
+
+This paper introduces the xFODE, which offers inter-pretable models for SysID. In xFODE, states are constructed from outputs within SR2 to maintain physical meanings. The xFODE framework models state derivative through additive single-input FLSs, revealing input-wise contributions to state dynamics. xFODE provides transparent mapping of FLSs by shaping their antecedent spaces with structured PSs. With these PSs, xFODE ensures that at most two consecutive rules are activated, thereby resulting in clean rule semantics. Results on benchmark datasets reveal that xFODE achieves comparable performance with NODE/FODE using different PSs depending on the dataset. Overall, xFODE effectively enhances the interpretability of input and antecedent spaces while maintaining competitive SysID performance. Although xFODE improves the interpretability of states and antecedents, the rule consequents remain ambiguous. In future work, we will analyze the rule consequent to improve the interpretability of the learned model further. ACKNOWLEDGMENT 
+
+The authors acknowledge using ChatGPT to refine the grammar and enhance the expression of English. REFERENCES [1] G. Pillonetto, A. Aravkin, D. Gedon, L. Ljung, A. H. Ribeiro, and T. B. Sch¨ on, “Deep networks for system identification: a survey,”                       
+
+> Automatica , vol. 171, p. 111907, 2025. [2] T. Dai, K. Aljanaideh, R. Chen, R. Singh, A. Stothert, and L. Ljung, “Deep learning of dynamic systems using system identification tool-box™,” IFAC-PapersOnLine , vol. 58, no. 15, pp. 580–585, 2024. [3] L. Di Natale, M. Zakwan, B. Svetozarevic, P. Heer, G. Ferrari-Trecate, and C. N. Jones, “Stable linear subspace identification: A machine learning approach,” in IEEE European Control Conference , 2024, pp. 3539–3544. [4] M. Forgione, A. Muni, D. Piga, and M. Gallieri, “On the adaptation of recurrent neural networks for system identification,” Automatica , vol. 155, p. 111092, 2023. [5] A. Benavoli, D. Piga, M. Forgione, and M. Zaffalon, “dynogp: Deep gaussian processes for dynamic system identification,” arXiv preprint arXiv:2502.05620 , 2025. [6] Y. Yu and Y. Liu, “Physics-guided generative adversarial network for probabilistic structural system identification,” Expert Systems with Applications , vol. 239, p. 122339, 2024. [7] D. H. B. de Sousa, F. R. Lopes, A. W. do Lago, M. A. Meggiolaro, and H. V. H. Ayala, “Hybrid gray and black-box nonlinear system identification of an elastomer joint flexible robotic manipulator,”
+> Mechanical Systems and Signal Processing , vol. 200, p. 110405, 2023. [8] A. Rahman, J. Drgoˇ na, A. Tuor, and J. Strube, “Neural ordinary differential equations for nonlinear system identification,” in IEEE American control conference , 2022, pp. 3979–3984. [9] Y. Yang and H. Li, “Neural ordinary differential equations for robust parameter estimation in dynamic systems with physical priors,” Ap-plied Soft Computing , vol. 169, p. 112649, 2025.
+
+TABLE II TESTING PERFORMANCE OF THE NODE, FODE, AND X FODE MODELS : RMSE REPORTED AS MEAN ±1 STANDARD ERROR OVER 20 EXPERIMENTS 
+
+Model Two-Tank Hair Dryer MR Damper EV Battery Steam Engine 
+
+#LP RMSE #LP RMSE #LP RMSE #LP RMSE #LP RMSE NODE-SR1 17539 0.0220 ± (0.0049) 17539 0.1491 ± (0.0307) 17539 10.1554 ± (0.6083) 17410 0.1846 ± (0.0262) 17924 y1: 0.1151 ± (0.0051) 
+
+y2: 0.1011 ± (0.0051) NODE-SR2 17539 0.0197 ± (0.0043) 17539 0.1173 ± (0.0038) 17539 9.6809 ± (0.3299) 17410 0.1757 ± (0.0038) 17924 y1: 0.0909 ± (0.0078) 
+
+y2: 0.0873 ± (0.0056) FODE-SR1 115 0.0165 ± (0.0013) 115 0.1638 ± (0.0154) 115 9.9203 ± (0.4495) 90 0.8918 ± (1.0916)* 200 y1: 0.0878 ± (0.0096) 
+
+y2: 0.1047 ± (0.0099) FODE-SR2 115 0.0166 ± (0.0014) 115 0.1352 ± (0.0107) 115 9.2819 ± (0.8725) 90 0.3814 ± (0.2994) 200 y1: 0.1014 ± (0.0171) 
+
+y2: 0.1129 ± (0.0184) AFODE-SR1 160 0.0164 ± (0.0018) 160 0.1975 ± (0.0046) 160 9.7185 ± (0.6903) 120 0.1881 ± (0.0173) 300 y1: 0.1007 ± (0.0086) 
+
+y2: 0.1171 ± (0.0086) AFODE-SR2 160 0.0163 ± (0.0008) 160 0.1233 ± (0.0021) 160 9.5588 ± (0.4112) 120 0.1721 ± (0.0258) 300 y1: 0.0762 ± (0.0062) 
+
+y2: 0.0713 ± (0.0049) xFODE-SR1-PS1 148 0.0275 ± (0.0014) 148 0.1948 ± (0.0051) 148 10.2756 ± (0.6852) 108 0.2113 ± (0.0247) 282 y1: 0.1081 ± (0.0119) 
+
+y2: 0.1207 ± (0.0091) xFODE-SR2-PS1 148 0.0197 ± (0.0015) 148 0.1271 ± (0.0032) 148 9.6841 ± (0.3818) 148 0.1845 ± (0.0222) 282 y1: 0.0790 ± (0.0041) 
+
+y2: 0.0729 ± (0.0044) xFODE-SR1-PS2 148 0.0263 ± (0.0022) 148 0.2300 ± (0.0074) 148 10.6379 ± (0.8213) 108 0.1993 ± (0.0382) 282 y1: 0.1083 ± (0.0125) 
+
+y2: 0.1229 ± (0.0139) xFODE-SR2-PS2 148 0.0208 ± (0.0015) 148 0.1249 ± (0.0045) 148 9.9384 ± (0.4458) 108 0.1817 ± (0.0146) 282 y1: 0.0802 ± (0.0083) 
+
+y2: 0.0740 ± (0.0109) xFODE-SR1-PS3 148 0.0176 ± (0.0032) 148 0.2032 ± (0.0042) 148 10.5588 ± (0.6652) 108 0.1903 ± (0.0222) 282 y1: 0.1192 ± (0.0171) 
+
+y2: 0.1291 ± (0.0147) xFODE-SR2-PS3 148 0.0180 ± (0.0012) 148 0.1293 ± (0.0043) 148 10.0630 ± (0.3803) 108 0.1880 ± (0.0394) 282 y1: 0.0862 ± (0.0120) 
+
+y2: 0.0768 ± (0.0088)  
+
+> *FODE-SR1 yielded NaN values for 4 seeds. These experiments are excluded from statistical analysis.
+
+(a) Two-Tank dataset (b) MR Damper dataset Fig. 3. RMSE boxplots of trained models on (a) Two-Tank and (b) MR-Damper datasets; SR1 with the white, SR2 with the gray background. [10] L. B¨ ottcher, “Gradient-free training of neural odes for system identi-fication and control using ensemble kalman inversion,” arXiv preprint arXiv:2307.07882 , 2023. [11] Y. G¨ uven and T. Kumbasar, “Fuzzy logic strikes back: Fuzzy odes for dynamic modeling and uncertainty quantification,” IEEE Transactions on Artificial Intelligence , 2025. [12] R. Agarwal, L. Melnick, N. Frosst, X. Zhang, B. Lengerich, R. Caru-ana, and G. E. Hinton, “Neural additive models: Interpretable machine learning with neural nets,” Advances in neural information processing systems , vol. 34, pp. 4699–4711, 2021. [13] E. Mariotti, J. M. A. Moral, and A. Gatt, “Exploring the balance between interpretability and performance with carefully designed constrainable neural additive models,” Information Fusion , vol. 99, p. 101882, 2023. [14] Z. Yang, A. Zhang, and A. Sudjianto, “Gami-net: An explainable neural network based on generalized additive models with structured interactions,” Pattern Recognition , vol. 120, p. 108192, 2021. [15] ¨O. B. G¨ okmen, Y. G¨ uven, and T. Kumbasar, “Fame: Introducing fuzzy additive models for explainable ai,” in IEEE International Conference on Fuzzy Systems , 2025. [16] R. T. Chen, Y. Rubanova, J. Bettencourt, and D. K. Duvenaud, “Neu-ral ordinary differential equations,” Advances in neural information processing systems , vol. 31, 2018. [17] A. Beke and T. Kumbasar, “More than accuracy: A composite learning framework for interval type-2 fuzzy logic systems,” IEEE Transactions on Fuzzy Systems , vol. 31, no. 3, pp. 734–744, 2022. TABLE III TESTING PERFORMANCE OF NLARX MODELS 
+
+Model ∗ Two-Tank Hair Dryer MR Damper EV Battery Steam Engine 
+
+SN [3 3 1] [5 5 0] [5 5 1] [2 2 1] [4 4 1] 0.0193 0.0707 5.3760 0.1470 y1: 0.0774 
+
+y2: 0.0813 TE [3 3 1] [10 10 0] [20 20 0] [3 3 0] [4 4 0] 0.0575 0.1318 8.1335 0.2771 y1: 0.1945 
+
+y2: 0.1760 SVM [5 5 0] [10 10 0] [1 1 0] [20 20 0] [5 5 1] 0.1972 0.0790 16.8883 0.7832 y1: 0.1377 
+
+y2: 0.1188 NN [7 7 1] [5 5 0] [5 5 0] [2 2 0] [5 5 0] 0.0254 0.0875 7.5247 0.1440 y1: 0.1036 
+
+y2: 0.1231
