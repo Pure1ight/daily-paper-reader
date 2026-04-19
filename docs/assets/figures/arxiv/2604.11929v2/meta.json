@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.11929v2/fig-001.webp",
+      "caption": "Fig. 4: Diagnostics of anomalous decreases in identification success rate at large n and vanishing noise. a Across 100 trials, term-selection frequencies for each governing equation of the three-dimensional systems in the regimes where performance degrades. Ground-truth terms are shown in dark blue and additionally selected terms in light blue. Spurious inclusion of an intercept term is highlighted and analyzed in the bottom panels (Dadras ẋ1 at large n; Rössler ẋ1 at SNR = ∞). b PSIS-LOO Pareto shape parameters k̂i for a representative Dadras ẋ1 trial, comparing n = 104 (no influential points) and n = 105 (many k̂i > 0.7), indicating sensitivity to influential observations. c Residuals versus posterior predictive mean for the Rössler ẋ1 equation at SNR = ∞ and SNR = 61 dB, illustrating heteroscedastic structure at vanishing noise that can promote overselection.",
+      "page": 10,
+      "index": 1,
+      "width": 767,
+      "height": 860
+    },
+    {
+      "url": "assets/figures/arxiv/2604.11929v2/fig-002.webp",
+      "caption": "Fig. 8: Integrating Bayesian-ARGOS with SINDy-SHRED improves the robustness of latent-dynamics identification and long-horizon forecasting for global sea surface temperature (SST). a Distribution of decoded-field reconstruction RMSE across learned latent spaces for three forecast intervals, comparing Bayesian-ARGOS (blue) with the original SINDy forecaster (green); diamonds indicate means and box overlays indicate interquartile ranges. b Representative trajectories in a learned 3D latent state (z = (z1, z2, z3) ⊤): GRU-derived latent evolution (solid) and Bayesian-ARGOS simulations from the identified governing equations (dashed). c Decoded SST forecasts at increasing lead times (from 50 to 250 time steps): observations (top), Bayesian-ARGOS predictions (middle) and differences (bottom); RMSE is reported for each horizon, and colour bars indicate SST (◦C) and prediction error(◦C).",
+      "page": 18,
+      "index": 2,
+      "width": 776,
+      "height": 846
+    },
+    {
+      "url": "assets/figures/arxiv/2604.11929v2/fig-003.webp",
+      "caption": "Fig. 2: Success-rate benchmarking for governing-equation identification on four chaotic systems. a–d correspond to the Lorenz, Thomas, Rössler, and Dadras systems, respectively. For each system, the left subpanel shows a representative attractor; the middle subpanel shows the success rate (fraction of 100 trials recovering all ground-truth terms) versus number of observations n at SNR = 49 dB; and the right subpanel shows the success rate versus SNR (dB) at n = 5000. Success rates for Bayesian-ARGOS, ARGOS, and SINDy are shown as blue, red, and green, respectively. The dashed line marks the 80% success-rate threshold.",
+      "page": 8,
+      "index": 3,
+      "width": 747,
+      "height": 958
+    },
+    {
+      "url": "assets/figures/arxiv/2604.11929v2/fig-004.webp",
+      "caption": "Fig. 3: Success-rate benchmarking and post-identification diagnostics for the Aizawa system. a Representative attractor (left) and identification success rate (fraction of 100 trials that recover all ground-truth terms) versus the number of observations n at fixed SNR = 49 dB (middle) and versus SNR (dB) at fixed n = 5000 (right) for Bayesian-ARGOS (blue), ARGOS (red), and SINDy (green); the dashed line marks the success-rate threshold (70%). b Variance inflation factors (VIFs) for frequently selected candidate terms in ẋ3 (terms listed in the left subpanel), shown across n (middle) and SNR (right); the dashed line marks VIF = 10, values above which indicate strong collinearity. c Identified-term distributions for the three equations at representative SNR values show spurious inclusion of extraneous terms in the ẋ3 equation at SNR = 50 dB and 60 dB. d Residuals versus posterior predictive mean for a representative ẋ3 identification trial at SNR = 50 dB (left) and 60 dB (right) indicate the emergence of heteroscedastic structure at higher SNR.",
+      "page": 9,
+      "index": 4,
+      "width": 752,
+      "height": 695
+    },
+    {
+      "url": "assets/figures/arxiv/2604.11929v2/fig-005.webp",
+      "caption": "Fig. 1: Bayesian-ARGOS. a Measured (noisy) state trajectories are smoothed and differentiated via an adaptive Savitzky–Golay filter to obtain X and Ẋ, from which a candidate library Θ(X) is constructed. b A frequentist screening module performs a two-stage procedure—adaptive lasso with automated λ selection, followed by threshold-based pruning with OLS refits and BIC model selection—in two sequential passes using Ridge- and OLS-derived adaptive weights, respectively. Between passes, the design matrix is refined to include terms up to the highest polynomial degree identified in the first pass, yielding a trimmed design matrix. c The Bayesian module applies HMC sampling to the trimmed design matrix to estimate posterior distributions of the coefficients and retain only terms whose credible intervals exclude zero. d and e The identified parsimonious ODEs are supplemented with statistical diagnostics—residual-structure analysis, influential-observation detection via PSIS-LOO,and multicollinearity assessment via VIF (applied before Bayesian regression)—as signals of potential model misspecification.",
+      "page": 5,
+      "index": 5,
+      "width": 760,
+      "height": 805
+    },
+    {
+      "url": "assets/figures/arxiv/2604.11929v2/fig-006.webp",
+      "caption": "Fig. 7: Integration of Bayesian-ARGOS with SINDy-SHRED. Sparse sensor time series are mapped by a sequence model into a low-dimensional latent state; a shallow decoder reconstructs the full spatiotemporal field, while a latent forecaster identifies governing equations and advances the latent dynamics. Bayesian-ARGOS here functions as the latent forecaster to provide posterior distributions over latentdynamics coefficients and uncertainty-aware forecasts that are subsequently decoded to produce field predictions.",
+      "page": 16,
+      "index": 6,
+      "width": 777,
+      "height": 571
+    }
+  ]
+}

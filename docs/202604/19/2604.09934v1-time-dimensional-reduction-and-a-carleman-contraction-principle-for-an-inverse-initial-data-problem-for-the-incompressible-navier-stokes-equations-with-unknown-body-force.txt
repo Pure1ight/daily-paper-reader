@@ -1,0 +1,2768 @@
+Title: Time-dimensional reduction and a Carleman contraction principle for an inverse initial data problem for the incompressible Navier-Stokes equations with unknown body force
+
+URL Source: https://arxiv.org/pdf/2604.09934v1
+
+Published Time: Tue, 14 Apr 2026 00:19:25 GMT
+
+Number of Pages: 29
+
+Markdown Content:
+# Time-dimensional reduction and a Carleman contraction principle for an inverse initial data problem for the incompressible Navier–Stokes equations with unknown body force 
+
+## Phuong M. Nguyen ∗ Loc H. Nguyen †
+
+Abstract 
+
+We solve an inverse initial data problem for the incompressible Navier–Stokes system. The objective is to recover the initial velocity and pressure from lateral boundary observations, without assuming that the time-independent body force is known. To eliminate this unknown force, we differentiate the momentum equation with respect to time and then apply a Legendre polynomial–exponential time-dimensional reduction. This procedure yields a coupled system of elliptic equations for the expansion coefficients. We then construct a contractive map for this reduced system on a suitable admissible set equipped with a Carleman-weighted norm. Its fixed point yields an approximate solution of the time-dimensional reduction model, and the contraction property gives rise to a globally convergent Picard iteration. Finally, we present a numerical algorithm based on this framework and numerical experiments showing accurate reconstructions of the initial velocity and pressure from synthetic boundary data. 
+
+Keywords: inverse initial data; incompressible Navier–Stokes; Carleman contraction; time-dimensional reduction; numerical reconstruction. 
+
+AMS subject classifications: 35R30, 35Q30, 35R25, 65N21. 
+
+# 1 Introduction 
+
+Let d ≥ 2 denote the spatial dimension, let Ω ⊂ Rd be a domain, and let T > 0 be a final time. Let 
+
+u : Ω × (0 , T ) → Rd be the velocity field and p : Ω × (0 , T ) → R be the pressure. We consider the incompressible Navier–Stokes system 
+
+
+
+ut + ( u · ∇ )u = −∇ p + μ∆u + f (x, t ) ∈ Ω × (0 , T ),
+
+div u = 0 (x, t ) ∈ Ω × (0 , T ),
+
+u(x, t ) = 0 (x, t ) ∈ ∂Ω × (0 , T ),
+
+u(x, 0) = u0 x ∈ Ω,
+
+(1.1) where u0 is the initial velocity, μ > 0 is the viscosity coefficient, and f : Rd → Rd is a time-independent body force. The first equation in (1.1) expresses the momentum balance, while the second enforces incom-pressibility. We study the following nonlinear inverse problem. 
+
+Problem 1 (Initial data inverse problem for the Navier–Stokes system) . Let ν denote the outward unit normal vector on ∂Ω. Assume that f is unknown. Given the lateral boundary data 
+
+g(x, t ) := ∂ν u(x, t ), h(x, t ) := 
+
+ p(x, t )
+
+∂ν p(x, t )
+
+
+
+for (x, t ) ∈ ∂Ω × (0 , T ), (1.2) 
+
+> ∗
+
+Department of Mathematics and Statistics, University of North Carolina at Charlotte, Charlotte, NC, 28223, USA, 
+
+pnguye45@charlotte.edu , corresponding author. 
+
+> †
+
+Department of Mathematics and Statistics, University of North Carolina at Charlotte, Charlotte, NC, 28223, USA, 
+
+loc.nguyen@charlotte.edu .
+
+1
+
+> arXiv:2604.09934v1 [math.AP] 10 Apr 2026
+
+determine the initial data u0 = u(x, 0) and p0 = p(x, 0) in Ω.
+
+It is useful to clarify the practical meaning of the data in (1.2). Although Problem 1 is formulated in terms of the normal derivatives ∂ν u and ∂ν p, these quantities can be interpreted as idealized limits of finite-difference quotients computed from measurements near the boundary. For example, for x ∈ ∂Ω and 
+
+δ > 0 sufficiently small, 
+
+∂ν p(x, t ) ≈ p(x, t ) − p(x − δν (x), t )
+
+δ ,
+
+and similarly for each component of u. Thus, the data ( ∂ν u, p, ∂ ν p) on ∂Ω × (0 , T ) should be viewed as a mathematical idealization of high-resolution measurements taken on the boundary and on a nearby interior layer parallel to it. The inverse initial data problem for the incompressible Navier–Stokes system is relevant in a variety of applications, including aerospace and automotive engineering, hydraulic systems, oceanography, atmospheric modeling, and environmental fluid transport [29, 43, 47, 49]. In such settings, direct access to the initial velocity and pressure fields is often infeasible, while accurate knowledge of these quantities is important for initializing predictive simulations and understanding the subsequent evolution of the flow. Recovering the initial state from lateral boundary measurements is therefore a meaningful inverse problem. Since the analysis and numerical treatment of inverse problems depend on the underlying forward model, it is useful to briefly recall the status of the forward Navier–Stokes system. While the global regularity prob-lem for the three-dimensional incompressible Navier–Stokes equations remains open, substantial progress has been made in several related settings; see, for example, [7, 19, 29, 37, 44]. In particular, the exis-tence of global weak solutions for stationary problems with homogeneous Dirichlet boundary conditions was established in [29] and further developed in [9, 37, 40, 41]. Additional results include uniqueness and differ-entiability for small-data stationary problems [39], well-posedness for coupled Navier–Stokes–Cahn–Hilliard and Boussinesq-type systems [2, 6, 11], and existence and asymptotic behavior for stationary Navier–Stokes equations in higher-dimensional half-spaces [10]. These works provide a broad analytical background for inverse problems associated with viscous fluid models. Inverse problems for the Navier–Stokes equations have been studied in several directions, including the recovery of coefficients, geometries, and initial data from boundary or interior observations. In [8], a numerical approximation scheme based on a Lagrange–Galerkin method was developed for inverse problems related to drag reduction and velocity identification. A regularized Gauss–Newton method for shape reconstruction in two-dimensional Navier–Stokes equations was proposed in [50], where differentiability with respect to the boundary curve was established. Global identifiability of the viscosity in two-dimensional Stokes and Navier–Stokes equations from Cauchy force measurements was proved in [20]. Global uniqueness results for inverse boundary value problems for the two-dimensional Navier–Stokes equations and the Lam´ e system were obtained in [12] by means of complex geometric optics solutions. More recently, iterative procedures for retrospective inverse problems, including a simple backward integration method, were introduced in [38]. In addition, global uniqueness for viscosity determination in Stokes and Navier–Stokes equations in both two and three dimensions was established in [30]. These works demonstrate the breadth of inverse problems for fluid equations, but they primarily focus on coefficient, viscosity, or shape identification. By contrast, the present paper focuses on recovering the initial velocity and pressure from lateral boundary data when the body force is unknown. A distinctive feature of Problem 1 is that the body force f is not prescribed. In most inverse problems, all model ingredients except the target unknown are assumed known a priori. For example, the formulation in [48] requires prior knowledge of both the body force f and the pressure 
+
+p. In contrast, here neither the body force nor the pressure is assumed known in advance; rather, the goal is to recover the initial velocity and pressure ( u0, p 0) solely from the lateral boundary measurements (1.2). This formulation is closer to realistic situations, where external forcing may be unavailable, only partially observed, or contaminated by uncertainty. From a mathematical perspective, Problem 1 is highly challenging. The governing system is nonlinear, the observations are restricted to the lateral boundary, and one seeks to determine interior initial data without knowing all terms in the model. A standard approach for nonlinear inverse problems is to formulate the reconstruction as an optimization problem. For instance, one may minimize an output least-squares functional measuring the discrepancy between the observed boundary data and the boundary data generated 2by a trial pair ( u0, p 0), and then solve the resulting minimization problem by an adjoint-based gradient method. Because the forward operator is nonlinear, however, this cost functional is typically nonconvex and may admit multiple local minima. As a result, such methods depend strongly on the availability of a good initial guess, which is often unavailable in practice. To overcome these difficulties, we follow a different strategy. We first eliminate the unknown body force 
+
+f by differentiating the momentum equation with respect to time. We then apply a Legendre polynomial– exponential time-dimensional reduction, inspired by the exponentially weighted Legendre basis introduced in [45] and later used in [28]. This reduction transforms the original inverse problem into a finite-dimensional coupled elliptic system for the coefficient vectors of u and p. We solve the reduced system by a Carleman– Picard method, which avoids the need for a good initial guess by constructing a contraction map on a suitable admissible set and proving that the associated operator has a unique fixed point. At both the analytical and numerical levels, this yields a systematic reconstruction framework for Problem 1. We also note the related work [48], where a damped Picard iteration was introduced for recovering the initial velocity in an anisotropic Navier–Stokes setting. That approach, however, requires prior knowledge of both the pressure p
+
+and the body force f , and a convergence proof for the damped Picard iteration was not established there. The idea of combining time-dimensional reduction with Carleman estimates was introduced in [24] for an inverse initial-value problem for a quasilinear parabolic equation. Later, [33] showed that this approach can be interpreted as the construction of a contraction mapping whose fixed point is the desired solution, thereby yielding global convergence of the associated Picard iteration even when the initial guess is far from the true solution. Since then, this framework has been extended to several inverse problems; see, for example, [1, 22, 23, 27, 34, 36, 46, 48]. However, these earlier methods are not directly applicable to the present problem due to the complex structure of the incompressible Navier–Stokes system. In particular, the nonlinear terms in the reduced system involve coupled transport-type interactions between the velocity and pressure variables, and they do not satisfy the structural assumptions imposed on the nonlinearity in [24, 33]. For this reason, the main contribution of the present paper is to develop a Carleman contraction method specifically adapted to this inverse initial data problem by combining force elimination with a Legendre-polynomial exponential-time dimensional reduction. The remainder of the paper is organized as follows. In Section 2, we recall the Legendre polynomial– exponential basis and establish the auxiliary properties needed for the time-dimensional reduction. In Sec-tion 3, we derive the reduced system for the coefficient vectors together with its Cauchy data. Section 4 is devoted to the Carleman contraction framework, where we prove the contractive property of the re-duced operator and establish the existence and uniqueness of its fixed point. In Section 5, we describe the reconstruction procedure, the numerical implementation, and several numerical examples illustrating the performance of the proposed method. Finally, Section 6 contains concluding remarks and possible directions for future work. 
+
+# 2 The Legendre polynomial–exponential basis 
+
+In this section, we recall the Legendre polynomial–exponential basis introduced in [45] and collect the two properties needed later: the structure of the matrix SN and the commutation of time derivatives with the corresponding basis expansion. For each n ≥ 0, let Pn be the Legendre polynomial of degree n on ( −1, 1), defined by Rodrigues’ formula 
+
+Pn(x) = 12nn!dn
+
+dxn (x2 − 1) n, x ∈ (−1, 1) .
+
+Mapping t ∈ (0 , T ) to x = 2tT − 1 ∈ (−1, 1), we define the shifted and normalized Legendre functions on (0 , T ) by 
+
+Qn(t) = 
+
+r 2n + 1 
+
+T Pn
+
+ 2tT − 1
+
+
+
+, t ∈ (0 , T ). (2.1) 3Then {Qn}n≥0 is an orthonormal basis of L2(0 , T ), that is, 
+
+Z T
+
+> 0
+
+Qn(t)Qm(t) d t = δmn , m, n ≥ 0.
+
+On L2(0 , T ), we use the exponentially weighted inner product 
+
+⟨u, v ⟩e−2t := 
+
+Z T
+
+> 0
+
+e−2tu(t)v(t) d t, ∥u∥e−2t := ⟨u, u ⟩1/2 
+
+> e−2t
+
+.
+
+Since e−2t ∈ [e−2T , 1] for all t ∈ [0 , T ], the norm ∥ · ∥ e−2t is equivalent to the standard L2(0 , T ) norm. We define the Legendre polynomial–exponential functions by Ψn(t) := etQn(t), t ∈ (0 , T ), n ≥ 0. (2.2) Then {Ψn}n≥0 is an orthonormal basis of L2(0 , T ) with respect to the weighted inner product ⟨· , ·⟩ e−2t .Indeed, 
+
+⟨Ψn, Ψm⟩e−2t =
+
+Z T
+
+> 0
+
+e−2tΨn(t)Ψ m(t) d t =
+
+Z T
+
+> 0
+
+Qn(t)Qm(t) d t = δmn .
+
+The following proposition describes the structure of the matrix generated by the time derivatives of the basis functions. 
+
+Proposition 1. Let {Ψn}n≥0 be defined by (2.2) . For m, n ≥ 0, define 
+
+smn := 
+
+Z T
+
+> 0
+
+e−2t Ψ′
+
+> n
+
+(t)Ψ m(t) dt, (2.3) 
+
+and, for each N ≥ 0, let 
+
+SN := smn 
+
+Nm,n =0 .
+
+Then 
+
+smn =
+
+(
+
+1, m = n, 
+
+0, m > n. 
+
+Consequently, SN is an upper triangular matrix with ones on the diagonal. In particular, SN is invertible for every N ≥ 0.Proof. The proof is a modification of the argument in [15], where an analogous result was proved for another exponential-based basis. By (2.2), we have Ψn(t) = etQn(t), Ψ′
+
+> n
+
+(t) = et Q′
+
+> n
+
+(t) + Qn(t).
+
+Substituting this into (2.3), we obtain 
+
+smn =
+
+Z T
+
+> 0
+
+e−2tΨ′
+
+> n
+
+(t)Ψ m(t) dt =
+
+Z T
+
+> 0
+
+ Q′
+
+> n
+
+(t) + Qn(t)Qm(t) dt =
+
+Z T
+
+> 0
+
+Q′
+
+> n
+
+(t)Qm(t) dt + δmn ,
+
+where we used the orthonormality of {Qn}n≥0 in L2(0 , T ). Since Qn is a polynomial of degree n, the derivative Q′ 
+
+> n
+
+is a polynomial of degree at most n − 1. On the other hand, Qm is orthogonal in L2(0 , T ) to every polynomial of degree at most m − 1. Therefore, whenever 
+
+m > n , we have deg( Q′
+
+> n
+
+) ≤ n − 1 ≤ m − 1,
+
+and hence Z T
+
+> 0
+
+Q′
+
+> n
+
+(t)Qm(t) dt = 0 .
+
+4It follows that 
+
+smn = 0 , m > n. 
+
+Next, for the diagonal entries, 
+
+Z T
+
+> 0
+
+Q′
+
+> n
+
+(t)Qn(t) dt = 12
+
+Qn(t)2T 
+
+> 0
+
+.
+
+Using (2.1) together with the identities Pn(−1) = ( −1) n and Pn(1) = 1, we obtain 
+
+Qn(0) = ( −1) n
+
+r 2n + 1 
+
+T , Qn(T ) = 
+
+r 2n + 1 
+
+T .
+
+Hence Qn(0) 2 = Qn(T )2, so that Qn(t)2T 
+
+> 0
+
+= 0 .
+
+Therefore, Z T
+
+> 0
+
+Q′
+
+> n
+
+(t)Qn(t) dt = 0 ,
+
+and thus 
+
+snn =
+
+Z T
+
+> 0
+
+Q′
+
+> n
+
+(t)Qn(t) dt + 1 = 1 .
+
+The proof is complete. Next, let s ≥ 0. For any w ∈ L2((0 , T ); Hs(Ω)), we define its {Ψn}–coefficients by 
+
+wn(x) := 
+
+Z T
+
+> 0
+
+e−2t w(x, t )Ψ n(t) dt, n ≥ 0. (2.4) The following proposition shows that the first and second time derivatives commute with the {Ψn}–expansion. We refer to [48, Theorem 1] and [45, Theorem 1] for the proofs. 
+
+Proposition 2 (Commutation of time derivatives with the {Ψn}–expansion) . Let s ≥ 0, and let {Ψn}n≥0
+
+be defined by (2.2) . Assume that 
+
+w ∈ Hk((0 , T ); Hs(Ω)) 
+
+for some integer k ≥ 5, and let {wn}n≥0 be the coefficients of w defined in (2.4) . Then 
+
+∂tw =
+
+> ∞
+
+X
+
+> n=0
+
+wnΨ′ 
+
+> n
+
+in L2((0 , T ); Hs(Ω)) ,
+
+and 
+
+∂2 
+
+> t
+
+w =
+
+> ∞
+
+X
+
+> n=0
+
+wnΨ′′  
+
+> n
+
+in L2((0 , T ); Hs(Ω)) .
+
+# 3 The time-dimensional reduction model 
+
+We now derive a time-dimensional reduction model for Problem 1. The derivation proceeds in four steps. First, we eliminate the time-independent body force f by differentiating the Navier–Stokes system with respect to time. Next, we expand the unknowns in the Legendre polynomial–exponential basis. We then truncate the resulting series and project the equations onto the finite-dimensional basis. Finally, we derive the Cauchy data for the reduced unknowns from the measured lateral boundary data. A major difficulty in Problem 1 is that one aims to recover the interior behavior of 2 d + 1 unknown functions, namely the d components of u, the pressure p, and the d components of the body force f , while 5only the d + 1 coupled equations in (1.1) are available. A first key step is therefore to eliminate f . Since f
+
+is independent of time, we differentiate the momentum equation in (1.1) with respect to t. This removes f
+
+from the system and yields 
+
+utt + ( ut · ∇ )u + ( u · ∇ )ut = −∇ pt + μ∆ut in Ω × (0 , T ). (3.1) Taking the divergence of (3.1) ∆pt = div( −utt − (ut · ∇ )u − (u · ∇ )ut + μ∆ut) in Ω × (0 , T ).
+
+Using div u = 0 and hence div utt = 0 and μdiv∆ ut = μ∆div( ut) = 0, we obtain ∆pt = div( −(ut · ∇ )u − (u · ∇ )ut)= −
+
+> d
+
+X
+
+> i=1
+
+∂xi [
+
+> d
+
+X
+
+> j=1
+
+∂tuj ∂xj ui] −
+
+> d
+
+X
+
+> i=1
+
+∂xi [
+
+> d
+
+X
+
+> j=1
+
+uj ∂xj ∂tui]= −
+
+> d
+
+X
+
+> i,j =1
+
+∂xi (∂tuj )∂xj ui −
+
+> d
+
+X
+
+> i,j =1
+
+∂tuj ∂xixj ui −
+
+> d
+
+X
+
+> i,j =1
+
+∂xi uj ∂xj (∂tui) −
+
+> d
+
+X
+
+> i,j =1
+
+uj ∂xixj ∂tui.
+
+Note that 
+
+> d
+
+X
+
+> i,j =1
+
+∂tuj ∂xixj ui =
+
+> d
+
+X
+
+> j=1
+
+∂tuj ∂xj
+
+> d
+
+X
+
+> i=1
+
+∂xi ui =
+
+> d
+
+X
+
+> j=1
+
+∂tuj ∂xj div u = 0 ,
+
+> d
+
+X
+
+> i,j =1
+
+uj ∂xixj ∂tui =
+
+> d
+
+X
+
+> j=1
+
+uj ∂xj
+
+> d
+
+X
+
+> i=1
+
+∂xi (∂tui) = 
+
+> d
+
+X
+
+> j=1
+
+uj ∂xj div ut = 0 .
+
+Hence, ∆pt = −∇ ut : ( ∇u)⊤ − ∇ u : ( ∇ut)⊤ in Ω × (0 , T ), (3.2) where ⊤ denotes matrix transpose. We next expand u and p in the Legendre polynomial–exponential basis {Ψn}n≥0. Specifically, 
+
+u(x, t ) = 
+
+> ∞
+
+X
+
+> n=0
+
+un(x)Ψ n(t), p(x, t ) = 
+
+> ∞
+
+X
+
+> n=0
+
+pn(x)Ψ n(t),
+
+where 
+
+un(x) = 
+
+Z T
+
+> 0
+
+e−2t u(x, t )Ψ n(t) dt, pn(x) = 
+
+Z T
+
+> 0
+
+e−2t p(x, t )Ψ n(t) dt. 
+
+By Proposition 2, the first and second time derivatives admit the expansions 
+
+ut(x, t ) = 
+
+> ∞
+
+X
+
+> n=0
+
+un(x)Ψ ′
+
+> n
+
+(t), pt(x, t ) = 
+
+> ∞
+
+X
+
+> n=0
+
+pn(x)Ψ ′
+
+> n
+
+(t), utt (x, t ) = 
+
+> ∞
+
+X
+
+> n=0
+
+un(x)Ψ ′′ 
+
+> n
+
+(t).
+
+Substituting these expressions into (3.1) and (3.2), we obtain 
+
+> ∞
+
+X
+
+> n=0
+
+un(x)Ψ ′′ 
+
+> n
+
+(t) + 
+
+ ∞X
+
+> n=0
+
+un(x)Ψ ′
+
+> n
+
+(t)
+
+
+
+· ∇ 
+
+ ∞X
+
+> k=0
+
+uk(x)Ψ k(t)
+
+
+
++
+
+ ∞X
+
+> k=0
+
+uk(x)Ψ k(t)
+
+
+
+· ∇ 
+
+ ∞X
+
+> n=0
+
+un(x)Ψ ′
+
+> n
+
+(t)
+
+
+
+= −∇ 
+
+ ∞X
+
+> n=0
+
+pn(x)Ψ ′
+
+> n
+
+(t)
+
+
+
++ μ∆
+
+ ∞X
+
+> n=0
+
+un(x)Ψ ′
+
+> n
+
+(t)
+
+
+
+, (3.3) 6and ∆
+
+ ∞X
+
+> n=0
+
+pn(x)Ψ ′
+
+> n
+
+(t)
+
+
+
+= −∇ 
+
+ ∞X
+
+> n=0
+
+un(x)Ψ ′
+
+> n
+
+(t)
+
+
+
+:
+
+
+
+∇
+
+ ∞X
+
+> k=0
+
+uk(x)Ψ k(t)
+
+ ⊤
+
+− ∇ 
+
+ ∞X
+
+> k=0
+
+uk(x)Ψ k(t)
+
+
+
+:
+
+
+
+∇
+
+ ∞X
+
+> n=0
+
+un(x)Ψ ′
+
+> n
+
+(t)
+
+ ⊤
+
+. (3.4) To obtain a finite-dimensional reduced model, we truncate the above series at level N ∈ N. This trunca-tion yields the following projected approximation of (3.3) and (3.4): 
+
+> N
+
+X
+
+> n=0
+
+un(x)Ψ ′′ 
+
+> n
+
+(t) + 
+
+ NX
+
+> n=0
+
+un(x)Ψ ′
+
+> n
+
+(t)
+
+
+
+· ∇ 
+
+ NX
+
+> k=0
+
+uk(x)Ψ k(t)
+
+
+
++
+
+ NX
+
+> k=0
+
+uk(x)Ψ k(t)
+
+
+
+· ∇ 
+
+ NX
+
+> n=0
+
+un(x)Ψ ′
+
+> n
+
+(t)
+
+
+
+= −∇ 
+
+ NX
+
+> n=0
+
+pn(x)Ψ ′
+
+> n
+
+(t)
+
+
+
++ μ∆
+
+ NX
+
+> n=0
+
+un(x)Ψ ′
+
+> n
+
+(t)
+
+
+
+, (3.5) and ∆
+
+ NX
+
+> n=0
+
+pn(x)Ψ ′
+
+> n
+
+(t)
+
+
+
+= −∇ 
+
+ NX
+
+> n=0
+
+un(x)Ψ ′
+
+> n
+
+(t)
+
+
+
+:
+
+
+
+∇
+
+ NX
+
+> k=0
+
+uk(x)Ψ k(t)
+
+ ⊤
+
+− ∇ 
+
+ NX
+
+> k=0
+
+uk(x)Ψ k(t)
+
+
+
+:
+
+
+
+∇
+
+ NX
+
+> n=0
+
+un(x)Ψ ′
+
+> n
+
+(t)
+
+ ⊤
+
+. (3.6) In the remainder of this paper, we regard the truncated projected system as the reduced model associated with Problem 1. The analysis in the following sections is carried out for this finite-dimensional coefficient system, which approximates the original inverse problem. For each m = 0 , 1, . . . , N , we multiply (3.5) and (3.6) by e−2tΨm(t) and integrate over (0 , T ). Introduce the coefficients 
+
+rmn := 
+
+Z T
+
+> 0
+
+e−2tΨ′′ 
+
+> n
+
+(t)Ψ m(t) dt, smn := 
+
+Z T
+
+> 0
+
+e−2tΨ′
+
+> n
+
+(t)Ψ m(t) dt, 
+
+and 
+
+cmkn := 
+
+Z T
+
+> 0
+
+e−2tΨ′
+
+> n
+
+(t)Ψ k(t)Ψ m(t) dt, m, k, n = 0 , 1, . . . , N. 
+
+Then, for each m = 0 , 1, . . . , N , we obtain 
+
+> N
+
+X
+
+> n=0
+
+rmn un(x) + 
+
+> N
+
+X
+
+> k,n =0
+
+cmkn (un(x) · ∇ )uk(x) + 
+
+> N
+
+X
+
+> k,n =0
+
+cmkn (uk(x) · ∇ )un(x)= −
+
+> N
+
+X
+
+> n=0
+
+smn ∇pn(x) + μ
+
+> N
+
+X
+
+> n=0
+
+smn ∆un(x), x ∈ Ω,
+
+and 
+
+> N
+
+X
+
+> n=0
+
+smn ∆pn(x) = −
+
+> N
+
+X
+
+> k,n =0
+
+cmkn ∇un(x) :  ∇uk(x)⊤ −
+
+> N
+
+X
+
+> k,n =0
+
+cmkn ∇uk(x) :  ∇un(x)⊤, x ∈ Ω.
+
+7Rearranging the highest-order spatial terms to the left-hand side gives 
+
+μ
+
+> N
+
+X
+
+> n=0
+
+smn ∆un(x) = 
+
+> N
+
+X
+
+> n=0
+
+rmn un(x) + 
+
+> N
+
+X
+
+> k,n =0
+
+cmkn (un(x) · ∇ )uk(x)+
+
+> N
+
+X
+
+> k,n =0
+
+cmkn (uk(x) · ∇ )un(x) + 
+
+> N
+
+X
+
+> n=0
+
+smn ∇pn(x), x ∈ Ω, (3.7) and 
+
+> N
+
+X
+
+> n=0
+
+smn ∆pn(x) = −
+
+> N
+
+X
+
+> k,n =0
+
+cmkn ∇un(x) :  ∇uk(x)⊤ −
+
+> N
+
+X
+
+> k,n =0
+
+cmkn ∇uk(x) :  ∇un(x)⊤, x ∈ Ω. (3.8) To write the projected system more compactly, define 
+
+UN (x) := 
+
+
+
+u0(x)
+
+u1(x)...
+
+uN (x)
+
+ , P N (x) := 
+
+
+
+p0(x)
+
+p1(x)...
+
+pN (x)
+
+ ,
+
+and let 
+
+SN := [ smn ]Nm,n =0 , RN := [ rmn ]Nm,n =0 .
+
+For each m = 0 , 1, . . . , N , set 
+
+Fm(x, UN , ∇UN ) := 
+
+> N
+
+X
+
+> k,n =0
+
+cmkn (un(x) · ∇ )uk(x) + 
+
+> N
+
+X
+
+> k,n =0
+
+cmkn (uk(x) · ∇ )un(x),Gm(x, UN , ∇UN ) := −
+
+> N
+
+X
+
+> k,n =0
+
+cmkn ∇un(x) :  ∇uk(x)⊤ −
+
+> N
+
+X
+
+> k,n =0
+
+cmkn ∇uk(x) :  ∇un(x)⊤.
+
+We also define the stacked nonlinear terms 
+
+FN (x, UN , ∇UN ) := 
+
+
+
+F0(x, UN , ∇UN )...
+
+FN (x, UN , ∇UN )
+
+ , GN (x, UN , ∇UN ) := 
+
+
+
+G0(x, UN , ∇UN )...
+
+GN (x, UN , ∇UN )
+
+ .
+
+Then (3.7)–(3.8) can be written as 
+
+μ S N (∆ UN ) = RN UN + FN (x, UN , ∇UN ) + SN (∇P N ) in Ω ,
+
+and 
+
+SN (∆ P N ) = GN (x, UN , ∇UN ) in Ω ,
+
+where the matrices SN and RN act on the coefficient index n = 0 , . . . , N .It remains to determine the boundary data for the reduced unknowns. These are obtained by projecting the measured lateral data in (1.2) onto the basis {Ψn}Nn=0 . Recall that u = 0 on ∂Ω × (0 , T ) and 
+
+∂ν u(x, t ) = g(x, t ), h(x, t ) = 
+
+h1(x, t )
+
+h2(x, t )
+
+
+
+=
+
+ p(x, t )
+
+∂ν p(x, t )
+
+
+
+, (x, t ) ∈ ∂Ω × (0 , T ).
+
+8For each n = 0 , 1, . . . , N , the boundary traces of the coefficients are 
+
+un(x) = 
+
+Z T
+
+> 0
+
+e−2t u(x, t )Ψ n(t) dt = 0 , x ∈ ∂Ω, (3.9) and 
+
+pn(x) = 
+
+Z T
+
+> 0
+
+e−2t p(x, t )Ψ n(t) dt =
+
+Z T
+
+> 0
+
+e−2t h1(x, t )Ψ n(t) dt, x ∈ ∂Ω. (3.10) Similarly, their normal derivatives satisfy 
+
+∂ν un(x) = 
+
+Z T
+
+> 0
+
+e−2t ∂ν u(x, t )Ψ n(t) dt =
+
+Z T
+
+> 0
+
+e−2t g(x, t )Ψ n(t) dt, x ∈ ∂Ω, (3.11) and 
+
+∂ν pn(x) = 
+
+Z T
+
+> 0
+
+e−2t ∂ν p(x, t )Ψ n(t) dt =
+
+Z T
+
+> 0
+
+e−2t h2(x, t )Ψ n(t) dt, x ∈ ∂Ω. (3.12) For later reference, we introduce 
+
+ΓN (x) := 
+
+Z T
+
+> 0
+
+e−2t g(x, t )Ψ 0(t) dt 
+
+...
+
+Z T
+
+> 0
+
+e−2t g(x, t )Ψ N (t) dt 
+
+
+
+, HN 
+
+> 1
+
+(x) := 
+
+Z T
+
+> 0
+
+e−2t h1(x, t )Ψ 0(t) dt 
+
+...
+
+Z T
+
+> 0
+
+e−2t h1(x, t )Ψ N (t) dt 
+
+
+
+,
+
+and 
+
+HN 
+
+> 2
+
+(x) := 
+
+Z T
+
+> 0
+
+e−2t h2(x, t )Ψ 0(t) dt 
+
+...
+
+Z T
+
+> 0
+
+e−2t h2(x, t )Ψ N (t) dt 
+
+
+
+, x ∈ ∂Ω.
+
+Consequently, the Cauchy data for UN and P N on ∂Ω are 
+
+UN |∂Ω(x) = 0, ∂ν UN |∂Ω(x) = ΓN (x), x ∈ ∂Ω,
+
+and 
+
+P N |∂Ω(x) = HN 
+
+> 1
+
+(x), ∂ν P N |∂Ω(x) = HN 
+
+> 2
+
+(x), x ∈ ∂Ω,
+
+where 0 denotes the ( N + 1)-vector whose entries are the zero vector in Rd.In summary, we have derived the following time-dimensional reduction system: 
+
+
+
+μ S N (∆ UN ) = RN UN + FN (x, UN , ∇UN ) + SN (∇P N ), x ∈ Ω,SN (∆ P N ) = GN (x, UN , ∇UN ), x ∈ Ω,
+
+UN |∂Ω(x) = 0, ∂ν UN |∂Ω(x) = ΓN (x), x ∈ ∂Ω,P N |∂Ω(x) = HN 
+
+> 1
+
+(x), ∂ν P N |∂Ω(x) = HN 
+
+> 2
+
+(x), x ∈ ∂Ω.
+
+(3.13) 
+
+# 4 The Carleman contraction framework for the reduced system 
+
+In this section, we develop a Carleman contraction framework for solving the reduced system derived in Section 3. We first recall a Carleman estimate. We then introduce a regularized operator obtained by freezing the nonlinear terms in the reduced system. Next, we prove that this operator is contractive for 9sufficiently large Carleman parameter and deduce the existence and uniqueness of its fixed point. Finally, we show that this fixed point is consistent with a solution of the reduced system as the regularization parameter tends to zero. Carleman estimates are fundamental tools in the study of partial differential equations. They were originally introduced to prove unique continuation properties; see, for instance, [5, 42]. Since then, they have become powerful tools in many areas of partial differential equations, especially in both theoretical and numerical studies of inverse problems; see, e.g., [3, 4, 13, 14, 16, 17, 25, 32]. They have also found applications in cloaking [31] and in the computation of solutions to Hamilton–Jacobi equations [18, 26]. We now recall the Carleman estimate that will be used throughout this section. Let x0 ∈ Rd \ Ω be such that 
+
+r(x) = |x − x0| > 1 for all x ∈ Ω.
+
+For each β > 0, define 
+
+μβ (x) = r−β (x) = |x − x0|−β , x ∈ Ω.
+
+Lemma 1 (Carleman estimate) . There exist positive constants β0, depending only on x0, Ω, and d, such that for every function v ∈ C2(Ω) satisfying 
+
+v(x) = ∂ν v(x) = 0 for all x ∈ ∂Ω,
+
+the following estimate holds: 
+
+Z
+
+> Ω
+
+e2λμ β (x)|∆v|2 dx ≥ Cλ 
+
+Z
+
+> Ω
+
+e2λμ β (x)|∇ v(x)|2 dx + Cλ 3
+
+Z
+
+> Ω
+
+e2λμ β (x)|v(x)|2 dx
+
+for all β ≥ β0 and λ ≥ λ0. Here, λ0 = λ0(x0, Ω, d, β ) and C = C(x0, Ω, d, β ) > 0 depend only on the listed parameters. 
+
+Lemma 1 is a direct consequence of [31, Lemma 5]; see also [26, Lemma 2.1] for details. An alternative derivation, with a different Carleman weight function, can be obtained from [21, Chapter 4, Section 1, Lemma 3]; see also [25, Section 3]. We also refer the reader to [3, 4, 16, 32] for various forms of Carleman estimates and their applications. Variants under partial boundary conditions are available as well; see, for example, [18, 35]. We now apply Lemma 1 to the reduced system (3.13). Since SN is invertible by Proposition 1, system (3.13) can be rewritten as 
+
+
+
+∆UN = ( μS N )−1RN UN + FN (x, UN , ∇UN ) + SN (∇P N ), x ∈ Ω,
+
+∆P N = S−1 
+
+> N
+
+GN (x, UN , ∇UN ), x ∈ Ω,
+
+UN |∂Ω(x) = 0, ∂ν UN |∂Ω(x) = ΓN (x), x ∈ ∂Ω,P N |∂Ω(x) = HN 
+
+> 1
+
+(x), ∂ν P N |∂Ω(x) = HN 
+
+> 2
+
+(x), x ∈ ∂Ω.
+
+(4.1) We seek a solution ( UN , P N ) of (4.1) in the admissible set 
+
+A =
+
+n
+
+(V, Q) ∈ [Hs(Ω)] d(N +1) × [Hs(Ω)] N +1 : ∥V∥[L∞(Ω)] d(N +1) ≤ M, ∥Q∥[L∞(Ω)] N +1 ≤ M, 
+
+V|∂Ω = 0, ∂ ν V|∂Ω = ΓN , Q|∂Ω = HN 
+
+> 1
+
+, ∂ ν Q|∂Ω = HN
+
+> 2
+
+o
+
+,
+
+where M > 0 is a sufficiently large constant, and s > d 
+
+> 2
+
++2 is chosen so that Hs(Ω) is continuously embedded into C2(Ω). Throughout the paper, we assume that A is nonempty. It is straightforward to verify that A is a closed and convex subset of 
+
+H := [ Hs(Ω)] d(N +1) × [Hs(Ω)] N +1 .
+
+10 Fix β > β 0, let λ0 be as in Lemma 1, and let ϵ > 0. For each λ > λ 0, we define an operator 
+
+Tλ,ϵ : A → A 
+
+as follows. Given any ( V, Q) ∈ A , let 
+
+Tλ,ϵ (V, Q) = argmin 
+
+> (W,R)∈A
+
+Jλ,ϵ (W, R; V, Q),
+
+where 
+
+Jλ,ϵ (W, R; V, Q) := 
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆W − (μS N )−1RN W + FN (x, V, ∇V) + SN (∇Q) 2 dx
+
++
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆R − S−1 
+
+> N
+
+GN (x, V, ∇V) 2 dx + ϵ∥(W, R)∥2 
+
+> H
+
+.
+
+Remark 1 (Well-posedness of the minimization problem) . For each fixed (V, Q) ∈ A , the functional 
+
+Jλ,ϵ (W, R; V, Q) is convex in the variables (W, R) because the nonlinear terms are frozen at (V, Q). More-over, the regularization term with ϵ > 0 makes this functional strictly convex. Since A is a closed and convex subset of H, the minimization problem defining Tλ,ϵ (V, Q) has a unique solution. Hence, Tλ,ϵ is well defined. 
+
+Having defined Tλ,ϵ , we next show that it is contractive on A with respect to the norm 
+
+∥(V, Q)∥2 
+
+> λ,ϵ
+
+:= 
+
+Z
+
+> Ω
+
+e2λμ β (x)
+
+|V(x)|2 + |∇ V(x)|2 + |Q(x)|2 + |∇ Q(x)|2
+
+dx + ϵλ ∥(V, Q)∥2 
+
+> H
+
+. (4.2) 
+
+Theorem 1 (Contractive property of Tλ,ϵ ). Fix β ≥ β0, and let λ0 be as in Lemma 1. Then there exists a constant C > 0, depending only on x0, Ω, β, d, μ, N , SN , RN , {cmkn }Nm,k,n =0 , and M , such that for every 
+
+ϵ > 0, every λ ≥ λ0, and every 
+
+(V1, Q1), (V2, Q2) ∈ A ,
+
+we have 
+
+∥T λ,ϵ (V1, Q1) − T λ,ϵ (V2, Q2)∥λ,ϵ ≤ C
+
+√λ ∥(V1, Q1) − (V2, Q2)∥λ,ϵ . (4.3) 
+
+In particular, if λ is chosen sufficiently large so that 
+
+θ := C
+
+√λ ∈ (0 , 1) ,
+
+then Tλ,ϵ is a contraction on A with respect to the norm ∥ · ∥ λ,ϵ .Proof. Take any two pairs ( V1, Q1), (V2, Q2) ∈ A , and define (W1, R1) := Tλ,ϵ (V1, Q1), (W2, R2) := Tλ,ϵ (V2, Q2).
+
+Set 
+
+eV := V1 − V2, eQ := Q1 − Q2, fW := W1 − W2, eR := R1 − R2.
+
+Since all pairs in A satisfy the same Cauchy data on ∂Ω, we have 
+
+eV|∂Ω = ∂ν eV|∂Ω = eQ|∂Ω = ∂ν eQ|∂Ω = 0 ,
+
+and 
+
+fW|∂Ω = ∂ν fW|∂Ω = eR|∂Ω = ∂ν eR|∂Ω = 0 .
+
+Let 
+
+B := ( μS N )−1RN ,
+
+11 and define 
+
+fi(x) := ( μS N )−1h
+
+FN (x, Vi, ∇Vi) + SN (∇Qi)
+
+i
+
+, gi(x) := S−1 
+
+> N
+
+GN (x, Vi, ∇Vi), i = 1 , 2.
+
+Then, for each i = 1 , 2, the pair ( Wi, Ri) is the unique minimizer over A of the functional (W, R) 7 →
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆W − BW − fi(x) 2 dx +
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆R − gi(x) 2 dx + ϵ∥(W, R)∥2 
+
+> H
+
+.
+
+Since A is convex, the standard variational inequality for constrained minimizers implies that, for every (Z, S) ∈ A ,
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆Wi − BWi − fi(x) ·  ∆( Z − Wi) − B(Z − Wi) dx
+
++
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆Ri − gi(x) · ∆( S − Ri) dx + ϵ (Wi, Ri), (Z, S) − (Wi, Ri) H ≥ 0. (4.4) Choosing ( Z, S) = ( W2, R2) in (4.4) with i = 1, and using 
+
+W2 − W1 = − fW, R2 − R1 = − eR,
+
+we obtain 
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆W1 − BW1 − f1(x) ·  ∆ fW − B fW dx
+
++
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆R1 − g1(x) · ∆ eR dx + ϵ (W1, R1), ( fW, eR) H ≤ 0. (4.5) Similarly, choosing ( Z, S) = ( W1, R1) in (4.4) with i = 2, we get 
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆W2 − BW2 − f2(x) ·  ∆ fW − B fW dx
+
++
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆R2 − g2(x) · ∆ eR dx + ϵ (W2, R2), ( fW, eR) H ≥ 0. (4.6) Subtracting (4.5) from (4.6), we obtain 
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆ fW − B fW 2 dx +
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆ eR 2 dx + ϵ∥( fW, eR)∥2
+
+> H
+
+≤
+
+Z
+
+> Ω
+
+e2λμ β (x)(f1(x) − f2(x)) ·  ∆ fW − B fW dx +
+
+Z
+
+> Ω
+
+e2λμ β (x)(g1(x) − g2(x)) · ∆ eR dx. (4.7) Using 2 ab ≤ a2 + b2, we deduce from (4.7) that 
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆ fW − B fW 2 dx +
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆ eR 2 dx + 2 ϵ∥(fW, eR)∥2
+
+> H
+
+≤
+
+Z
+
+> Ω
+
+e2λμ β (x) f1(x) − f2(x) 2 dx +
+
+Z
+
+> Ω
+
+e2λμ β (x) g1(x) − g2(x) 2 dx. (4.8) Because the iteration is restricted to A and s > d 
+
+> 2
+
++2 implies the continuous embedding Hs(Ω) ,→ C2(Ω), all admissible pairs are uniformly bounded together with their first derivatives. Therefore, the nonlinear mappings (V, Q) 7 → FN (x, V, ∇V) + SN (∇Q) and V 7 → GN (x, V, ∇V)12 are Lipschitz continuous on A. Hence, there exists a constant C > 0, depending only on M , d, μ, N , SN ,
+
+RN , {cmkn }Nm,k,n =0 , and Ω, such that 
+
+f1(x) − f2(x) + g1(x) − g2(x) ≤ C
+
+
+
+| eV(x)| + |∇ eV(x)| + | eQ(x)| + |∇ eQ(x)|
+
+
+
+for all x ∈ Ω. Consequently, 
+
+Z
+
+> Ω
+
+e2λμ β (x) f1(x) − f2(x) 2 dx +
+
+Z
+
+> Ω
+
+e2λμ β (x) g1(x) − g2(x) 2 dx
+
+≤ C
+
+Z
+
+> Ω
+
+e2λμ β (x)
+
+| eV(x)|2 + |∇ eV(x)|2 + | eQ(x)|2 + |∇ eQ(x)|2
+
+dx. (4.9) Here and in what follows, C denotes a generic positive constant, depending on M , d, μ, N , SN , RN ,
+
+{cmkn }Nm,k,n =0 and independent of the unknown functions, that may vary from estimate to estimate. To estimate the left-hand side of (4.8), using the inequality |a − b|2 ≥ 12 a2 − b2 gives 
+
+∆ fW − B fW 2 ≥ 12 |∆ fW|2 − | B fW|2.
+
+Hence, since B is a constant matrix 
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆ fW − B fW 2 dx ≥ 12
+
+Z
+
+> Ω
+
+e2λμ β (x)|∆ fW|2 dx − C
+
+Z
+
+> Ω
+
+e2λμ β (x)| fW|2 dx.
+
+Since each component of fW and eR satisfies homogeneous Dirichlet and Neumann boundary conditions, Lemma 1 applies componentwise and yields 
+
+Z
+
+> Ω
+
+e2λμ β (x)|∆ fW|2 dx ≥ Cλ 
+
+Z
+
+> Ω
+
+e2λμ β (x)|∇ fW|2 dx + Cλ 3
+
+Z
+
+> Ω
+
+e2λμ β (x)| fW|2 dx
+
+and Z
+
+> Ω
+
+e2λμ β (x)|∆ eR|2 dx ≥ Cλ 
+
+Z
+
+> Ω
+
+e2λμ β (x)|∇ eR|2 dx + Cλ 3
+
+Z
+
+> Ω
+
+e2λμ β (x)| eR|2 dx.
+
+Therefore, after enlarging λ0 if necessary, such that for all λ ≥ λ0,
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆ fW − B fW 2 dx +
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆ eR 2 dx
+
+≥ Cλ 
+
+Z
+
+> Ω
+
+e2λμ β (x)
+
+| fW(x)|2 + |∇ fW(x)|2 + | eR(x)|2 + |∇ eR(x)|2
+
+dx. (4.10) Combining (4.8), (4.9), and (4.10), we obtain 
+
+λ
+
+Z
+
+> Ω
+
+e2λμ β (x)
+
+| fW(x)|2 + |∇ fW(x)|2 + | eR(x)|2 + |∇ eR(x)|2
+
+dx + ϵ∥( fW, eR)∥2
+
+> H
+
+≤ C
+
+Z
+
+> Ω
+
+e2λμ β (x)
+
+| eV(x)|2 + |∇ eV(x)|2 + | eQ(x)|2 + |∇ eQ(x)|2
+
+dx. (4.11) Dividing by λ and using (4.2), we obtain 
+
+∥( fW, eR)∥2 
+
+> λ,ϵ
+
+≤ Cλ
+
+Z
+
+> Ω
+
+e2λμ β (x)
+
+| eV(x)|2 + |∇ eV(x)|2 + | eQ(x)|2 + |∇ eQ(x)|2
+
+dx.
+
+13 Since the integral on the right-hand side is bounded above by ∥( eV, eQ)∥2
+
+> λ,ϵ
+
+, we find that 
+
+∥( fW, eR)∥2 
+
+> λ,ϵ
+
+≤ Cλ ∥( eV, eQ)∥2
+
+> λ,ϵ
+
+.
+
+Therefore, 
+
+∥T λ,ϵ (V1, Q1) − T λ,ϵ (V2, Q2)∥λ,ϵ ≤
+
+r Cλ ∥(V1, Q1) − (V2, Q2)∥λ,ϵ .
+
+This proves (4.3). In particular, if λ is sufficiently large so that C/ √λ < 1, then Tλ,ϵ is a contraction on 
+
+A.An immediate consequence of Theorem 1 is the existence and uniqueness of a fixed point of Tλ,ϵ .
+
+Corollary 1 (Existence and uniqueness of the fixed point) . Assume that λ is chosen sufficiently large so that Tλ,ϵ is a contraction on A with respect to the norm ∥ · ∥ λ,ϵ . Then Tλ,ϵ admits a unique fixed point 
+
+(U∗, P∗) ∈ A , that is, 
+
+Tλ,ϵ (U∗, P∗) = ( U∗, P∗).
+
+Moreover, for any initial guess (U(0) , P(0) ) ∈ A , the sequence 
+
+(U(n+1) , P(n+1) ) = Tλ,ϵ (U(n), P(n)), n ≥ 0,
+
+converges in the norm ∥ · ∥ λ,ϵ to (U∗, P∗) as n → ∞ .Proof. Since ϵ > 0, the norm ∥ · ∥ λ,ϵ is equivalent to the norm of H. Indeed, for every ( V, Q) ∈ H,
+
+ϵλ ∥(V, Q)∥2 
+
+> H
+
+≤ ∥ (V, Q)∥2 
+
+> λ,ϵ
+
+≤ Cλ,ϵ ∥(V, Q)∥2
+
+> H
+
+for some constant Cλ,ϵ > 0. Hence, because A is closed in H, the metric space ( A, ∥ · ∥ λ,ϵ ) is complete. The conclusion therefore follows from Banach’s fixed-point theorem and Theorem 1. We next compare this fixed point with a solution of the reduced system (4.1). 
+
+Theorem 2 (Consistency of the fixed point) . Fix β ≥ β0, and let λ0 be as in Lemma 1. Assume that the reduced system (4.1) has a solution 
+
+(U†, P †) ∈ A .
+
+Then there exist λ1 ≥ λ0 and a constant C > 0, depending only on x0, Ω, β, d, μ, N , SN , RN ,
+
+{cmkn }Nm,k,n =0 , and M , such that for every ϵ > 0 and every λ ≥ λ1, the operator Tλ,ϵ admits a unique fixed point 
+
+(Uλ,ϵ , P λ,ϵ ) ∈ A 
+
+and 
+
+∥(Uλ,ϵ − U†, P λ,ϵ − P †)∥2 
+
+> λ,ϵ
+
+≤ Cϵ λ ∥(U†, P †)∥2 
+
+> H
+
+. (4.12) 
+
+In particular, for each fixed λ ≥ λ1,
+
+∥(Uλ,ϵ − U†, P λ,ϵ − P †)∥λ,ϵ → 0 as ϵ → 0.
+
+Proof. For brevity, define 
+
+F(x, V, Q) := ( μS N )−1h
+
+FN (x, V, ∇V) + SN (∇Q)
+
+i
+
+, G(x, V) := S−1 
+
+> N
+
+GN (x, V, ∇V),
+
+and recall that 
+
+B := ( μS N )−1RN .
+
+14 Then (4.1) can be rewritten as ∆UN − BUN = F(x, UN , P N ), ∆P N = G(x, UN ).
+
+Fix ϵ > 0 and λ ≥ λ1, where λ1 is chosen large enough so that Tλ,ϵ is contractive and the absorption argument below is valid. Let ( Uλ,ϵ , P λ,ϵ ) be the unique fixed point of Tλ,ϵ .Since ( Uλ,ϵ , P λ,ϵ ) is a fixed point, it is the unique minimizer over A of the functional (W, R) 7 →
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆W − BW − F (x, Uλ,ϵ , P λ,ϵ ) 2 dx
+
++
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆R − G (x, Uλ,ϵ ) 2 dx + ϵ∥(W, R)∥2 
+
+> H
+
+.
+
+Therefore, for every ( Z, S) ∈ A , the corresponding variational inequality gives 
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆Uλ,ϵ − BUλ,ϵ − F (x, Uλ,ϵ , P λ,ϵ ) ·  ∆( Z − Uλ,ϵ ) − B(Z − Uλ,ϵ ) dx
+
++
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆Pλ,ϵ − G (x, Uλ,ϵ ) · ∆( S − Pλ,ϵ ) dx + ϵ (Uλ,ϵ , P λ,ϵ ), (Z, S) − (Uλ,ϵ , P λ,ϵ ) H ≥ 0. (4.13) We now choose ( Z, S) = ( U†, P †) ∈ A and define 
+
+eU := Uλ,ϵ − U†, eP := Pλ,ϵ − P †.
+
+Since both ( Uλ,ϵ , P λ,ϵ ) and ( U†, P †) belong to A, they satisfy the same Cauchy data on ∂Ω. Hence, 
+
+eU|∂Ω = ∂ν eU|∂Ω = eP |∂Ω = ∂ν eP |∂Ω = 0 .
+
+Using ( Z, S) = ( U†, P †) in (4.13), and recalling that 
+
+U† − Uλ,ϵ = − eU, P † − Pλ,ϵ = − eP , 
+
+we obtain 
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆Uλ,ϵ − BUλ,ϵ − F (x, Uλ,ϵ , P λ,ϵ ) ·  ∆ eU − B eU dx
+
++
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆Pλ,ϵ − G (x, Uλ,ϵ ) · ∆ eP d x + ϵ (Uλ,ϵ , P λ,ϵ ), ( eU, eP ) H ≤ 0. (4.14) Since ( U†, P †) solves (4.1), we have ∆U† − BU† = F(x, U†, P †), ∆P † = G(x, U†).
+
+Subtracting these identities from the corresponding expressions for ( Uλ,ϵ , P λ,ϵ ), we get ∆ eU − B eU = F(x, Uλ,ϵ , P λ,ϵ ) − F (x, U†, P †) + rU,
+
+and ∆ eP = G(x, Uλ,ϵ ) − G (x, U†) + rP ,
+
+where 
+
+rU := ∆ Uλ,ϵ − BUλ,ϵ − F (x, Uλ,ϵ , P λ,ϵ ), rP := ∆ Pλ,ϵ − G (x, Uλ,ϵ ).
+
+15 Substituting these two identities into (4.14), and using 
+
+(Uλ,ϵ , P λ,ϵ ), ( eU, eP ) H = ∥( eU, eP )∥2 
+
+> H
+
++ (U†, P †), ( eU, eP ) H ,
+
+we obtain 
+
+Z
+
+> Ω
+
+e2λμ β (x)|rU|2 dx +
+
+Z
+
+> Ω
+
+e2λμ β (x)|rP |2 dx + ϵ∥( eU, eP )∥2
+
+> H
+
+≤ − 
+
+Z
+
+> Ω
+
+e2λμ β (x)rU ·
+
+
+
+F(x, Uλ,ϵ , P λ,ϵ ) − F (x, U†, P †)
+
+
+
+dx
+
+−
+
+Z
+
+> Ω
+
+e2λμ β (x)rP ·
+
+
+
+G(x, Uλ,ϵ ) − G (x, U†)
+
+
+
+dx − ϵ (U†, P †), ( eU, eP ) H .
+
+Using 2 ab ≤ 12 a2 + 2 b2, we infer that 
+
+Z
+
+> Ω
+
+e2λμ β (x)|rU|2 dx +
+
+Z
+
+> Ω
+
+e2λμ β (x)|rP |2 dx + ϵ∥( eU, eP )∥2
+
+> H
+
+≤ C
+
+Z
+
+> Ω
+
+e2λμ β (x) F(x, Uλ,ϵ , P λ,ϵ ) − F (x, U†, P †) 2
+
+dx
+
++ C
+
+Z
+
+> Ω
+
+e2λμ β (x) G(x, Uλ,ϵ ) − G (x, U†) 2
+
+dx + Cϵ ∥(U†, P †)∥2 
+
+> H
+
+. (4.15) Because the iteration remains in A, and because s > d 
+
+> 2
+
++ 2 implies Hs(Ω) ,→ C2(Ω), all admissible pairs are uniformly bounded together with their first derivatives. Hence, the mappings F and G are Lipschitz continuous on A. Therefore, there exists a constant C > 0, depending only on the structural parameters and M , such that 
+
+Z
+
+> Ω
+
+e2λμ β (x) F(x, Uλ,ϵ , P λ,ϵ ) − F (x, U†, P †) 2
+
+dx
+
++
+
+Z
+
+> Ω
+
+e2λμ β (x) G(x, Uλ,ϵ ) − G (x, U†) 2
+
+dx
+
+≤ C
+
+Z
+
+> Ω
+
+e2λμ β (x)
+
+| eU(x)|2 + |∇ eU(x)|2 + | eP (x)|2 + |∇ eP (x)|2
+
+dx. (4.16) Combining (4.15) and (4.16), we get 
+
+Z
+
+> Ω
+
+e2λμ β (x)|rU|2 dx +
+
+Z
+
+> Ω
+
+e2λμ β (x)|rP |2 dx + ϵ∥( eU, eP )∥2
+
+> H
+
+≤ C
+
+Z
+
+> Ω
+
+e2λμ β (x)
+
+| eU(x)|2 + |∇ eU(x)|2 + | eP (x)|2 + |∇ eP (x)|2
+
+dx + Cϵ ∥(U†, P †)∥2 
+
+> H
+
+. (4.17) On the other hand, from the definitions of rU and rP , we have ∆ eU − B eU = rU + F(x, Uλ,ϵ , P λ,ϵ ) − F (x, U†, P †),
+
+and ∆ eP = rP + G(x, Uλ,ϵ ) − G (x, U†).
+
+16 Therefore, 
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆ eU − B eU 2 dx +
+
+Z
+
+> Ω
+
+e2λμ β (x)|∆ eP |2 dx
+
+≤ C
+
+Z
+
+> Ω
+
+e2λμ β (x)|rU|2 dx + C
+
+Z
+
+> Ω
+
+e2λμ β (x)|rP |2 dx
+
++ C
+
+Z
+
+> Ω
+
+e2λμ β (x) F(x, Uλ,ϵ , P λ,ϵ ) − F (x, U†, P †) 2
+
+dx
+
++ C
+
+Z
+
+> Ω
+
+e2λμ β (x) G(x, Uλ,ϵ ) − G (x, U†) 2
+
+dx.
+
+Using (4.16) and (4.17), we conclude that 
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆ eU − B eU 2 dx +
+
+Z
+
+> Ω
+
+e2λμ β (x)|∆ eP |2 dx
+
+≤ C
+
+Z
+
+> Ω
+
+e2λμ β (x)
+
+| eU(x)|2 + |∇ eU(x)|2 + | eP (x)|2 + |∇ eP (x)|2
+
+dx + Cϵ ∥(U†, P †)∥2 
+
+> H
+
+. (4.18) Since B is a constant matrix, the same argument as in the proof of Theorem 1, together with Lemma 1 applied componentwise to eU and eP , yields 
+
+C1λ
+
+Z
+
+> Ω
+
+e2λμ β (x)
+
+| eU(x)|2 + |∇ eU(x)|2 + | eP (x)|2 + |∇ eP (x)|2
+
+dx
+
+≤
+
+Z
+
+> Ω
+
+e2λμ β (x) ∆ eU − B eU 2 dx +
+
+Z
+
+> Ω
+
+e2λμ β (x)|∆ eP |2 dx (4.19) for all λ ≥ λ1, after enlarging λ1 if necessary. Combining (4.18) and (4.19), and taking λ1 sufficiently large so that the weighted H1-term on the right-hand side can be absorbed into the left-hand side, we obtain 
+
+Z
+
+> Ω
+
+e2λμ β (x)
+
+| eU(x)|2 + |∇ eU(x)|2 + | eP (x)|2 + |∇ eP (x)|2
+
+dx ≤ Cϵ λ ∥(U†, P †)∥2 
+
+> H
+
+. (4.20) Dividing (4.17) by λ and using (4.20), we further obtain 
+
+ϵλ ∥( eU, eP )∥2 
+
+> H
+
+≤ Cλ
+
+Z
+
+> Ω
+
+e2λμ β (x)
+
+| eU(x)|2 + |∇ eU(x)|2 + | eP (x)|2 + |∇ eP (x)|2
+
+dx + Cϵ λ ∥(U†, P †)∥2 
+
+> H
+
+,
+
+and hence ϵλ ∥( eU, eP )∥2 
+
+> H
+
+≤ Cϵ λ ∥(U†, P †)∥2 
+
+> H
+
+. (4.21) Finally, combining (4.20) and (4.21), and recalling the definition (4.2) of ∥ · ∥ λ,ϵ , we conclude that 
+
+∥(Uλ,ϵ − U†, P λ,ϵ − P †)∥2 
+
+> λ,ϵ
+
+≤ Cϵ λ ∥(U†, P †)∥2 
+
+> H
+
+.
+
+This proves (4.12). The convergence statement follows immediately. This section provides the theoretical justification for the reconstruction method developed in this pa-per. The contractive property of Tλ,ϵ and the consistency of its fixed point show that the Carleman–Picard iteration is a well-founded approach for solving the reduced system. We now move to the numerical imple-mentation of this method and to computational examples based on synthetic boundary measurements. 17 5 Reconstruction, numerical implementation, and numerical ex-amples 
+
+Corollary 1 and Theorem 2 yield an approximation of the coefficient vectors in the time-dimensional reduction system. We next use these coefficients to reconstruct the space-time solution ( u, p ) and then recover the unknown initial data in the inverse problem. More precisely, once approximations of the coefficients {un}Nn=0 
+
+and {pn}Nn=0 are available, we reconstruct 
+
+u(x, t ) ≈
+
+> N
+
+X
+
+> n=0
+
+un(x)Ψ n(t), p(x, t ) ≈
+
+> N
+
+X
+
+> n=0
+
+pn(x)Ψ n(t).
+
+In particular, by evaluating these expressions at t = 0, that is, 
+
+u(x, 0) ≈
+
+> N
+
+X
+
+> n=0
+
+un(x)Ψ n(0) , p(x, 0) ≈
+
+> N
+
+X
+
+> n=0
+
+pn(x)Ψ n(0) ,
+
+we obtain an approximation of the initial data, and hence an approximate solution of the inverse problem under consideration. The procedure is summarized in Algorithm 1. 
+
+Algorithm 1 Carleman–Picard method for the time-dimensional reduction system and reconstruction of the initial data  
+
+> 1:
+
+Compute the projected boundary data by (3.9), (3.10), (3.11), and (3.12).  
+
+> 2:
+
+Choose parameters β, λ, ϵ, and a maximum number of iterations Kmax . 
+
+> 3:
+
+Choose an initial pair ( U(0) , P(0) ) ∈ A . 
+
+> 4:
+
+for k = 0 , 1, 2, . . . , K max − 1 do  
+
+> 5:
+
+Compute (U(k+1) , P(k+1) ) := Tλ,ϵ (U(k), P(k)),
+
+i.e., let ( U(k+1) , P(k+1) ) be the minimizer over A of the frozen least-squares functional 
+
+Jλ,ϵ (W, R; U(k), P(k)). 
+
+> 6:
+
+end for  
+
+> 7:
+
+Set 
+
+Urec := U(Kmax ), P rec := P(Kmax ). 
+
+> 8:
+
+Reconstruct the space-time solution by 
+
+urec (x, t ) := 
+
+> N
+
+X
+
+> n=0
+
+un(x)Ψ n(t), prec (x, t ) := 
+
+> N
+
+X
+
+> n=0
+
+pn(x)Ψ n(t),
+
+where Urec = ( u0, . . . , uN )⊤ and P rec = ( p0, . . . , p N )⊤. 
+
+> 9:
+
+Recover the initial data by evaluating at t = 0: 
+
+urec (x, 0) = 
+
+> N
+
+X
+
+> n=0
+
+un(x)Ψ n(0) , prec (x, 0) = 
+
+> N
+
+X
+
+> n=0
+
+pn(x)Ψ n(0) .
+
+## 5.1 Data generation 
+
+To generate synthetic data for the inverse solver, we numerically solve the forward incompressible Navier– Stokes system on the square domain Ω = ( −1, 1) 2 up to the final time T = 0 .4 for prescribed test pairs 18 (f , u0). In all numerical examples, the initial velocity u0 is chosen to be divergence-free, while the body force f is time-independent and depends on the test case. For simplicity in the forward simulation, we take the viscosity coefficient to be μ = 1. We discretize Ω on a uniform Cartesian grid with Nx = Ny = 31 grid points in each direction, so that dx = dy = 231 −1 = 115 ≈ 0.0667. The time interval (0 , T ) is discretized uniformly by tn = n ∆t for 
+
+n = 0 , 1, . . . , N t, with ∆ t = 10 −4. This choice is used in the finite-difference forward solver, with a small time step to maintain stability because the convection term is treated explicitly. At each time level, we first compute the pressure by solving a Poisson equation. This equation is obtained by taking the divergence of the momentum equation and using the incompressibility condition div u = 0, which yields ∆pn = −
+
+> 2
+
+X
+
+> i,j =1
+
+∂xi unj ∂xj uni + div f in Ω . (5.1) The corresponding boundary condition is obtained by taking the normal component of the momentum equation on ∂Ω. Since u = 0 on ∂Ω, both the time derivative and the convection term vanish there, and we obtain 
+
+∂ν pn = ν · (∆ un + f ) on ∂Ω.
+
+To fix the additive constant in the pressure, we impose the normalization 
+
+Z
+
+> Ω
+
+pn(x) dx = 0 . (5.2) The pressure equation (5.1)–(5.2) is discretized by finite differences on the spatial grid. Once pn has been computed, we update the velocity by the semi-implicit scheme 
+
+un+1 − un
+
+∆t = −(un · ∇ )un − ∇ pn + ∆ un+1 + f in Ω , (5.3) subject to the homogeneous Dirichlet boundary condition 
+
+un+1 = 0 on ∂Ω.
+
+Here, the convection term and the pressure gradient are treated explicitly, while the diffusion term is treated implicitly, so that each time step requires solving only a linear elliptic problem for un+1 .The pressure equation also enforces incompressibility at the next time step. Indeed, taking the divergence of (5.3) gives div un+1 − div un
+
+∆t = −div  (un · ∇ )un − ∆pn + ∆(div un+1 ) + div f .
+
+Assuming that div un = 0 and using (5.1), we obtain div un+1 − ∆t ∆(div un+1 ) = 0 .
+
+Thus, formally, div un+1 satisfies a homogeneous elliptic equation. With compatible boundary conditions, this yields div un+1 = 0. In the discrete computation, the velocity therefore remains divergence-free up to discretization and solver errors. After computing the time-dependent fields u(x, t ) and p(x, t ), we extract the lateral boundary data required in Problem 1, namely 
+
+g(x, t ) = ∂ν u(x, t ), h(x, t ) = 
+
+ p(x, t )
+
+∂ν p(x, t )
+
+
+
+, (x, t ) ∈ ∂Ω × (0 , T ),
+
+where the normal derivatives are approximated by finite differences along the boundary. To assess the stability of the reconstruction method, we add noise to the boundary data. Let δ > 019 denote the noise level. For each boundary data y, we define the perturbed data by 
+
+ynoisy = y
+
+
+
+1 + δ(−2 rand + 1) 
+
+
+
+,
+
+where rand is an array of independent random variables uniformly distributed in (0 , 1). Equivalently, each component of y is multiplied by a random factor in the interval [1 − δ, 1 + δ], which corresponds to uniformly distributed relative noise of level δ. In our numerical tests, δ = 10% .
+
+## 5.2 Remarks on the implementation 
+
+In this subsection, we discuss several implementation details that are important in our numerical computa-tions. We begin with Step 2, in which the parameters β, λ, ϵ, and Kmax are selected. In the present work, these parameters are chosen empirically. More precisely, we use Test 1 as a reference test and manually tune the parameters until the reconstructed solution is satisfactory. Once these parameters are chosen, we keep them fixed for all other numerical tests. In our computations, we take N = 35, ϵ = 10 −11 , and Kmax = 5. The Carleman weight parameters are chosen as x0 = (0 , −10), β = 20, and λ = 6. We now turn to Step 3, where the initial pair is chosen. In all numerical tests, we initialize the iteration by ( U(0) , P(0) ) = ( 0, 0). Although this pair does not necessarily belong to A, the discrepancy is corrected automatically after one iteration, since ( U(1) , P(1) ) is defined as the minimizer of the frozen least-squares functional over A, and hence lies in A. Numerically, this initialization is sufficient for all examples considered in this paper. We now discuss the implementation in Step 5. We observe that although S is invertible, the matrix 
+
+S−1 contains “singular” entries with large numbers when N = 35 as in our choice. This might cause some unnecessary errors in computation. We therefore solve the equivalent system obtained by replacing the partial differential equations in (4.1) with (3.13). The corresponding definition of Jλ,ϵ is 
+
+Jλ,ϵ (W, R; V, Q) := 
+
+Z
+
+> Ω
+
+e2λμ β (x) μS N ∆W − RN W + FN (x, V, ∇V) + SN (∇Q) 2 dx
+
++
+
+Z
+
+> Ω
+
+e2λμ β (x) SN ∆R − GN (x, V, ∇V) 2 dx + ϵ∥(W, R)∥2 
+
+> H
+
+.
+
+Given the current iterate ( U(k), P(k)), we first evaluate the nonlinear terms 
+
+FN (x, U(k), ∇U(k)) and GN (x, U(k), ∇U(k)),
+
+and then freeze them in the reduced system. This leads to two linear weighted least-squares problems: one for P(k+1) and one for U(k+1) . More precisely, we first solve the least-squares problem associated with the equation for P N , together with the projected Dirichlet and Neumann boundary data and the Sobolev regularization terms. After obtaining P(k+1) , we evaluate the coupling term SN (∇P(k+1) ) and then solve the second linear weighted least-squares problem for U(k+1) . In the MATLAB implementation, each least-squares problem is assembled as an overdetermined linear system of the form Ax ≈ b, where A denotes the system matrix, x is the vector of unknown discrete values, and b is the corresponding right-hand side vector. We then solve this system by the MATLAB command x = A\b , which returns the least-squares solution. Repeating this procedure for k = 0 , 1, 2, . . . generates the sequence ( U(k), P(k)), which serves as a numerical approximation of the fixed point of Tλ,ϵ .All other steps in Algorithm 1, including the projection of the boundary data and the reconstruction of the space-time solution and the initial data, are straightforward to implement once the coefficient vectors have been computed. 20 5.3 Numerical examples 
+
+In this subsection, we present some numerical tests obtained by Algorithm 1. 
+
+Test 1. We next present the first numerical test. In this example, the body force f = ( f1, f 2) is defined by 
+
+f1(x, y ) = e− (x−0.05) 2+( y+0 .05) 20.08 
+
+
+
+−4y(1 − y2)(1 − x2)2 − 2( y + 0 .05) 0.08 (1 − x2)2(1 − y2)2
+
+
+
+,
+
+and 
+
+f2(x, y ) = −e− (x−0.05) 2+( y+0 .05) 20.08 
+
+
+
+−4x(1 − x2)(1 − y2)2 − 2( x − 0.05) 0.08 (1 − x2)2(1 − y2)2
+
+
+
+.
+
+The force field is normalized so that its maximum absolute component equals 1. The true initial velocity utrue 0 (x, y ) =  utrue 0,1 (x, y ), u true 0,2 (x, y ) is defined by 
+
+utrue 0,1 (x, y ) = 0 .10 e− x2+y20.12 
+
+
+
+−4y(1 − y2)(1 − x2)2 − 2y
+
+0.12 (1 − x2)2(1 − y2)2
+
+
+
+,
+
+and 
+
+utrue 0,2 (x, y ) = −0.10 e− x2+y20.12 
+
+
+
+−4x(1 − x2)(1 − y2)2 − 2x
+
+0.12 (1 − x2)2(1 − y2)2
+
+
+
+.
+
+This field is also normalized so that its maximum absolute component equals 1. The reconstruction of the initial velocity is displayed in Figure 1. To monitor the convergence of the Picard iteration, we record both the relative changes of the iterates and the relative residuals of the reduced system at each step. More precisely, for the ( k + 1)-st iterate, we define relU (k) := ∥U(k+1) − U(k)∥L2
+
+∥U(k+1) ∥L2
+
+, relP (k) := ∥P(k+1) − P(k)∥L2
+
+∥P(k+1) ∥L2
+
+. (5.4) In addition, we compute the relative residuals ResU (k) := μS N (∆ U(k+1) ) − RN U(k+1) − FN (x, U(k+1) , ∇U(k+1) ) − SN (∇P(k+1) ) L2
+
+μS N (∆ U(k+1) ) L2 + RN U(k+1) + FN (x, U(k+1) , ∇U(k+1) ) + SN (∇P(k+1) ) L2
+
+,
+
+and ResP (k) := SN (∆ P(k+1) ) − GN (x, U(k+1) , ∇U(k+1) ) L2
+
+SN (∆ P(k+1) ) L2 + GN (x, U(k+1) , ∇U(k+1) ) L2
+
+. (5.5) These quantities are shown in Figure 2 and are used to assess both the stabilization of the iterates and the accuracy with which the reduced system is satisfied. Figure 1 shows that the proposed method reconstructs the main structures of the true initial velocity and pressure with good accuracy. In particular, the reconstructed profiles of u0,1, u0,2, and p0 agree well with the corresponding true ones, and the error plots indicate that the discrepancies remain localized and moderate throughout the computational domain. Here, the relative L2 error of a reconstructed quantity qrec 
+
+with true value qtrue is defined by 
+
+∥qrec − qtrue ∥L2(Ω) 
+
+∥qtrue ∥L2(Ω) 
+
+× 100% .
+
+With this definition, the relative L2 errors are 14 .47097% for u0,1, 13 .33345% for u0,2, and 23 .91453% for p0.Although the pressure reconstruction is slightly less accurate than the velocity reconstruction, the overall quality remains satisfactory for this first test. In addition, Figure 2 demonstrates a stable and rapidly convergent iterative process: both the relative changes of the iterates and the relative residuals decrease steadily as the iteration proceeds, indicating that the Picard scheme stabilizes quickly and that the computed solution satisfies the reduced system with good accuracy. 
+
+Test 2. We next present the second numerical test. In this example, the body force f = ( f1, f 2) is 21 (a) utrue 0,1 (b) utrue 0,2 (c) ptrue 0 (·, 0) 
+
+(d) urec 0,1 (e) urec 0,2(·, 0) (f) prec 0
+
+(g) |utrue 0,1 −urec 0,1|∥utrue 0,1 ∥L∞ (h) |utrue 0,2 −urec 0,2|∥utrue 0,2 ∥L∞ (i) |ptrue 0 −prec 0 |∥ptrue 0 ∥L∞
+
+Figure 1: Test 1. First row: true velocity components and initial pressure. Second row: reconstructed velocity components and initial pressure. Third row: pointwise relative reconstruction errors. defined by 
+
+f1(x, y ) = e− (x/ 0.30) 2+( y/ 0.30) 21.0 , f2(x, y ) = e− (x/ 0.22) 2+
+
+ (y+0 .20) /0.28 
+
+21.0 .
+
+The force field is normalized so that its maximum absolute component equals 1. The true initial velocity utrue 0 (x, y ) =  utrue 0,1 (x, y ), u true 0,2 (x, y ) is defined by 
+
+utrue 0,1 (x, y ) = 0 .08 
+
+h
+
+− 4y(1 − y2)(1 − x2)2
+
+e− (x+0 .25) 2+( y−0.05) 20.14 − 0.85 e− (x−0.20) 2+( y+0 .18) 20.10 
+
+
+
++ (1 − x2)2(1 − y2)2
+
+− 2( y − 0.05) 0.14 e− (x+0 .25) 2+( y−0.05) 20.14 + 0 .85 2( y + 0 .18) 0.10 e− (x−0.20) 2+( y+0 .18) 20.10 
+
+i 
+
+,
+
+and 
+
+utrue 0,2 (x, y ) = −0.08 
+
+h
+
+− 4x(1 − x2)(1 − y2)2
+
+e− (x+0 .25) 2+( y−0.05) 20.14 − 0.85 e− (x−0.20) 2+( y+0 .18) 20.10 
+
+
+
++ (1 − x2)2(1 − y2)2
+
+− 2( x + 0 .25) 0.14 e− (x+0 .25) 2+( y−0.05) 20.14 + 0 .85 2( x − 0.20) 0.10 e− (x−0.20) 2+( y+0 .18) 20.10 
+
+i 
+
+.
+
+22 (a) Relative errors relU and relP versus the iteration number. 
+
+> (b) Residuals ResU and ResP versus the iteration num-ber.
+
+Figure 2: Test 1. Convergence history of the Picard iteration. The left image shows the relative changes relU (k) and relP (k), while the right image shows the relative residuals ResU (k) and ResP (k).This field is also normalized so that its maximum absolute component equals 1. The true and reconstructed initial velocity components and pressure for Test 2 are displayed in Figure 3, together with the corresponding pointwise relative reconstruction errors. As in Test 1, we monitor the quantities relU (k), relP (k), ResU (k), and ResP (k) defined in (5.4)–(5.5); their values are displayed in Figure 4 and are used to assess both the stabilization of the iterates and the accuracy with which the reduced system is satisfied. Figure 3 shows that the proposed method again produces a satisfactory reconstruction of the initial velocity and pressure for Test 2. The reconstructed profiles capture the main geometric features of the true solution, including the locations and shapes of the dominant positive and negative regions, while the error plots indicate that the discrepancies remain moderate over the computational domain. Using the relative L2
+
+error ∥qrec − qtrue ∥L2(Ω) /∥qtrue ∥L2(Ω) × 100%, the reconstruction errors are 17 .64913% for u0,1, 15 .74004% for u0,2, and 18 .65730% for p0. These values confirm that the method maintains good accuracy even for this more complicated test. In addition, Figure 4 shows a stable convergence behavior of the Picard iteration: both the relative changes of the iterates and the relative residuals decrease steadily, indicating that the iteration stabilizes reliably and that the computed solution satisfies the reduced system with good accuracy. 
+
+Test 3. We next present the third numerical test. In this example, the body force f = ( f1, f 2) is defined by 
+
+f1(x, y ) = e−
+
+ (x+0 .04) /0.28 
+
+2+
+
+ (y−0.02) /0.32 
+
+20.95 , f2(x, y ) = e−
+
+ (x−0.03) /0.24 
+
+2+
+
+ (y+0 .18) /0.30 
+
+20.90 .
+
+The force field is normalized so that its maximum absolute component equals 1. The true initial velocity utrue 0 (x, y ) =  utrue 0,1 (x, y ), u true 0,2 (x, y ) is defined by 
+
+utrue 0,1 (x, y ) = 0 .08 
+
+h 
+
+− 4y(1 − y2)(1 − x2)2 − 2( y − 0.35) 0.06 (1 − x2)2(1 − y2)2
+
+e− (x+0 .45) 2+( y−0.35) 20.06 
+
+− 0.85 
+
+
+
+− 4y(1 − y2)(1 − x2)2 − 2( y + 0 .35) 0.05 (1 − x2)2(1 − y2)2
+
+e− (x−0.45) 2+( y+0 .35) 20.05 
+
+i
+
+,
+
+and 
+
+utrue 0,2 (x, y ) = −0.08 
+
+h 
+
+− 4x(1 − x2)(1 − y2)2 − 2( x + 0 .45) 0.06 (1 − x2)2(1 − y2)2
+
+e− (x+0 .45) 2+( y−0.35) 20.06 
+
+− 0.85 
+
+
+
+− 4x(1 − x2)(1 − y2)2 − 2( x − 0.45) 0.05 (1 − x2)2(1 − y2)2
+
+e− (x−0.45) 2+( y+0 .35) 20.05 
+
+i
+
+.
+
+This field is also normalized so that its maximum absolute component equals 1. The true and reconstructed 23 (a) utrue 0,1 (b) utrue 0,2 (c) ptrue 0                 
+
+> (d) urec 0,1(e) urec 0,2(f) prec 0
+> (g) |utrue 0,1−urec 0,1|∥utrue 0,1∥L∞(h) |utrue 0,2−urec 0,2|∥utrue 0,2∥L∞(i) |ptrue 0−prec 0|∥ptrue 0∥L∞
+
+Figure 3: Test 2. First row: true initial velocity components and pressure. Second row: reconstructed initial velocity components and pressure. Third row: pointwise relative reconstruction errors. initial velocity components and pressure for Test 3 are displayed in Figure 5, together with the corresponding pointwise relative reconstruction errors. As in Test 1, we monitor the quantities relU (k), relP (k), ResU (k), and ResP (k) defined in (5.4)–(5.5). The corresponding results for Test 3 are shown in Figure 6. The numerical results for Test 3 remain satisfactory despite the increased complexity of this example. Figure 5 shows that the proposed method successfully reconstructs the main structures of the true initial ve-locity and pressure, including the locations, signs, and overall shapes of the dominant features. In particular, the reconstructed solution captures well the two separated localized structures in the velocity field as well as the main features of the pressure distribution. The corresponding pointwise relative error plots indicate that the largest discrepancies are concentrated near the regions of strongest variation, while the errors remain moderate in most parts of the domain. Using the relative L2 error ∥qrec − qtrue ∥L2(Ω) /∥qtrue ∥L2(Ω) × 100%, the reconstruction errors are 35 .98964% for u0,1, 31 .06575% for u0,2, and 42 .79563% for p0. Although these errors are larger than those in Tests 1 and 2, the reconstructions still recover the essential qualitative fea-tures of the exact solution. In addition, Figure 6 shows a stable convergence behavior of the Picard iteration: both the relative changes of the iterates and the relative residuals decrease steadily as the iteration proceeds, which indicates that the iteration stabilizes reliably and that the computed solution satisfies the reduced 24 (a) relU (k) and relP (k) (b) ResU (k) and ResP (k)
+
+Figure 4: Test 2. Convergence history of the Picard iteration. The left image shows the relative changes relU (k) and relP (k), while the right image shows the relative residuals ResU (k) and ResP (k).system with good accuracy. 
+
+# 6 Concluding remarks 
+
+In this paper, we study an inverse initial-data problem for the incompressible Navier–Stokes system. The goal was to reconstruct the initial velocity u0 and the initial pressure p0 from lateral boundary observations, without assuming that the time-independent body force f is known a priori. To overcome this difficulty, we first eliminated f by differentiating the Navier–Stokes system with respect to time. We then applied the Legendre polynomial–exponential time-dimensional reduction method to derive a finite-dimensional coupled elliptic system for the coefficient vectors UN and P N . For this reduced system, we introduced a Carleman contraction framework and proved that the associated operator Tλ,ϵ is contractive on a suitable admissible set when λ is sufficiently large. As a consequence, the reduced system admits a unique fixed point, which provides a stable approximation of the desired coefficient vectors and, in turn, of the initial data. We also proposed a practical numerical algorithm based on this contraction mapping principle and used it to reconstruct the initial velocity and pressure from synthetic boundary data. The numerical examples show that the proposed method recovers the main qualitative features of the true initial data with satisfactory accuracy, while the convergence histories confirm the stability of the Picard iteration and the accuracy with which the reduced system is satisfied. These results indicate that the combination of time-dimensional reduction and the Carleman–Picard method is a promising approach for inverse problems for nonlinear fluid models. Possible directions for future work include the treatment of partial boundary data, more detailed convergence and stability estimates for the fully discrete scheme, and extensions to more general fluid systems and three-dimensional geometries. 
+
+# References 
+
+[1] R. Abney, T. T. Le, L. H. Nguyen, and C. Peters. A Carleman-Picard approach for reconstructing zero-order coefficients in parabolic equations with limited data. Applied Mathematics and Computation ,494:129286, 2025. [2] S. N. Antontsev and Kh. Khompysh. Inverse problems for a Boussinesq system for incompressible viscoelastic fluids. Mathematical Methods in the Applied Sciences , 46(9):11130–11156, jun 2023. [3] L. Beilina and M. V. Klibanov. Approximate Global Convergence and Adaptivity for Coefficient Inverse Problems . Springer, New York, 2012. 25 (a) utrue 0,1 (b) utrue 0,2 (c) ptrue 0                 
+
+> (d) urec 0,1(e) urec 0,2(f) prec 0
+> (g) |utrue 0,1−urec 0,1|∥utrue 0,1∥L∞(h) |utrue 0,2−urec 0,2|∥utrue 0,2∥L∞(i) |ptrue 0−prec 0|∥ptrue 0∥L∞
+
+Figure 5: Test 3. First row: true initial velocity components and pressure. Second row: reconstructed initial velocity components and pressure. Third row: pointwise relative reconstruction errors. [4] A. L. Bukhgeim and M. V. Klibanov. Uniqueness in the large of a class of multidimensional inverse problems. Soviet Math. Doklady , 17:244–247, 1981. [5] T. Carleman. Sur les syst` emes lin´ eaires aux deriv´ ees partielles du premier ordre a deux variables. C. R. Acad. Sci. Paris , 197:471–474, 1933. [6] L. Fang, R. Nei, and Z. Guo. Global well-posedness of the nonhomogeneous incompressible Navier– Stokes–Cahn–Hilliard system with Landau potential. Journal of Differential Equations , 445:113585, 2025. [7] E. Feireisl. Dynamics of Viscous Compressible Fluids . Oxford University Press, Oxford, UK, 2004. [8] G. Fourestey and M. Moubachir. Solving inverse problems involving the navier–stokes equations dis-cretized by a lagrange–galerkin method. Computer Methods in Applied Mechanics and Engineering ,194(6):877–906, feb 2005. [9] J. Frehse, S. Goj, and M. Steinhauer. Lp-estimates for the Navier–Stokes Equations for Steady Com-pressible Flow. Manuscripta Mathematica , 116:265–275, 2005. 26 (a) relU (k) and relP (k) (b) ResU (k) and ResP (k)
+
+Figure 6: Test 3. Convergence history of the Picard iteration. The left image shows the relative changes relU (k) and relP (k), while the right image shows the relative residuals ResU (k) and ResP (k).[10] M. Fujii. Stationary Navier–Stokes equations on the half spaces in the scaling critical framework. Journal of Differential Equations , 435:113298, 2025. [11] J. He and H. Wu. Global well-posedness of a Navier–Stokes–Cahn–Hilliard system with chemotaxis and singular potential in 2D. Journal of Differential Equations , 297:47–80, oct 2021. [12] O. Yu. Imanuvilov and M. Yamamoto. Global uniqueness in inverse boundary value problems for the navier–stokes equations and lam´ e system in two dimensions. Inverse Problems , 31(3):035004, mar 2015. [13] V. A. Khoa, G. W. Bidney, M. V. Klibanov, L. H. Nguyen, L. Nguyen, A. Sullivan, and V. N. Astratov. Convexification and experimental data for a 3D inverse scattering problem with the moving point source. 
+
+Inverse Problems , 36:085007, 2020. [14] V. A. Khoa, M. V. Klibanov, and L. H. Nguyen. Convexification for a 3D inverse scattering problem with the moving point source. SIAM J. Imaging Sci. , 13(2):871–904, 2020. [15] M. V. Klibanov. Convexification of restricted Dirichlet to Neumann map. J. Inverse and Ill-Posed Problems , 25(5):669–685, 2017. [16] M. V. Klibanov and J. Li. Inverse Problems and Carleman Estimates: Global Uniqueness, Global Convergence and Experimental Data . De Gruyter, 2021. [17] M. V. Klibanov and L. H. Nguyen. PDE-based numerical method for a limited angle X-ray tomography. 
+
+Inverse Problems , 35:045009, 2019. [18] M. V. Klibanov, L. H. Nguyen, and H. V. Tran. Numerical viscosity solutions to Hamilton-Jacobi equations via a Carleman estimate and the convexification method. Journal of Computational Physics ,451:110828, 2022. [19] O. A. Ladyzhenskaya. The Mathematical Theory of Viscous Incompressible Flow . Gordon and Breach, New York, 1969. [20] R.-Y. Lai, G. Uhlmann, and J.-N. Wang. Inverse boundary value problem for the stokes and the navier–stokes equations in the plane. Archive for Rational Mechanics and Analysis , 215(3):811–829, mar 2015. [21] M. M. Lavrent’ev, V. G. Romanov, and S. P. Shishat ·ski˘ i. Ill-Posed Problems of Mathematical Physics and Analysis . Translations of Mathematical Monographs. AMS, Providence: RI, 1986. 27 [22] T. T. Le. Global reconstruction of initial conditions of nonlinear parabolic equations via the Carleman-contraction method. In D-L. Nguyen, L. H. Nguyen, and T-P. Nguyen, editors, Advances in Inverse problems for Partial Differential Equations , volume 784 of Contemporary Mathematics , pages 23–42. American Mathematical Society, 2023. [23] T. T. Le, M. V. Klibanov, L. H. Nguyen, A. Sullivan, and L. Nguyen. Carleman contraction mapping for a 1D inverse scattering problem with experimental time-dependent data. Inverse Problems , 38:045002, 2022. [24] T. T. Le and L. H. Nguyen. A convergent numerical method to recover the initial condition of nonlinear parabolic equations from lateral Cauchy data. Journal of Inverse and Ill-posed Problems , 30(2):265–286, 2022. [25] T. T. Le, L. H. Nguyen, T-P. Nguyen, and W. Powell. The quasi-reversibility method to numerically solve an inverse source problem for hyperbolic equations. Journal of Scientific Computing , 87:90, 2021. [26] T. T. Le, L. H. Nguyen, and H. V. Tran. A Carleman-based numerical method for quasilinear elliptic equations with over-determined boundary data and applications. Computers and Mathematics with Applications , 125:13–24, 2022. [27] T. T. Le, L. V. Nguyen, L. H. Nguyen, and H. Park. The time dimensional reduction method to deter-mine the initial conditions without the knowledge of damping coefficients. Computers and Mathematics with Applications , 166:77–90, 2024. [28] T. T. Le, C. B. Van, D. T. Dang, and L. H. Nguyen. Inverse initial data reconstruction for Maxwell’s equations via time-dimensional reduction method. Journal of Computational Physics , 559:114896, 2026. [29] P. L. Lions. Mathematical Topics in Fluid Dynamics, Volume 2: Compressible Models . Clarendon Press, Oxford, UK, 1998. [30] G. Liu. Determining the viscosity function from the boundary measurements for the stokes and the navier–stokes equations. Inverse Problems , 40(12):125011, dec 2024. [31] H. M. Nguyen and L. H. Nguyen. Cloaking using complementary media for the Helmholtz equation and a three spheres inequality for second order elliptic equations. Transaction of the American Mathematical Society , 2:93–112, 2015. [32] L. H. Nguyen. An inverse space-dependent source problem for hyperbolic equations and the Lipschitz-like convergence of the quasi-reversibility method. Inverse Problems , 35:035007, 2019. [33] L. H. Nguyen. The Carleman contraction mapping method for quasilinear elliptic equations with over-determined boundary data. Acta Mathematica Vietnamica , 48:401–422, 2023. [34] L. H. Nguyen and M. V. Klibanov. Carleman estimates and the contraction principle for an inverse source problem for nonlinear hyperbolic equations. Inverse Problems , 38:035009, 2022. [35] L. H. Nguyen, Q. Li, and M. V. Klibanov. A convergent numerical method for a multi-frequency inverse source problem in inhomogenous media. Inverse Problems and Imaging , 13:1067–1094, 2019. [36] P. M. Nguyen, L. H. Nguyen, and H. T. Vu. Solving the inverse scattering problem via Carleman-based contraction mapping. Computers and Mathematics with Applications , 209:129–143, 2026. [37] A. Novotn´ y and I. Straˇ skraba. Introduction to the Mathematical Theory of Compressible Flow , volume 27 of Oxford Lecture Series in Mathematics and its Applications . Oxford University Press, Oxford, UK, 2004. 28 [38] L. O’Connor, D. Lecoanet, E. H. Anders, K. C. Augustson, K. J. Burns, G. M. Vasil, J. S. Oishi, and B. P. Brown. Iterative methods for navier–stokes inverse problems. Physical Review E , 109(4):045108, apr 2024. [39] P. I. Plotnikov, E. V. Ruban, and J. Sokolowski. Inhomogeneous boundary value problems for compress-ible Navier–Stokes equations: Well-posedness and sensitivity analysis. SIAM Journal on Mathematical Analysis , 40(3):1152–1200, jan 2008. [40] P. I. Plotnikov and J. Sokolowski. Stationary boundary value problems for Navier–Stokes equations with adiabatic index γ < 32 . Doklady Mathematics , 70:535–538, 2004. In English; translated from Doklady Akademii Nauk, 397 (2004), pp. 166–169 (in Russian). [41] P. I. Plotnikov and J. Sokolowski. Concentrations of solutions to time-discretized compressible Navier– Stokes equations. Communications in Mathematical Physics , 258:567–608, 2005. [42] M. H. Protter. Unique continuation for elliptic equations. Trans. Amer. Math. Soc. , 95(1):81–91, 1960. [43] G. G. Stokes. On the effect of the internal friction of fluids on the motion of pendulums. Transactions of the Cambridge Philosophical Society , 9:8–106, 1851. Published by the Cambridge Philosophical Society, Cambridge, UK. [44] R. Temam. Navier-Stokes Equations . North-Holland, Amsterdam, 1979. [45] D. D. Trong, C. V. Le, K. D. Luu, and L. H. Nguyen. Recovery of initial displacement and velocity in anisotropic elastic systems by the time dimensional reduction method. Journal of Computational Physics , 542:114371, 2025. [46] D. D. Trong, L. H. Nguyen, and H. T. Vu. Determining initial conditions for nonlinear hyperbolic equations with time dimensional reduction and the Carleman contraction principle. Inverse Problems ,40:125021, 2024. [47] T.-P. Tsai. Lectures on Navier-Stokes Equations , volume 192 of Graduate Studies in Mathematics .American Mathematical Society, Providence, RI, USA, 2018. MSC: Primary 35; 76. [48] C. B. Van, T. T. Le, and L. H. Nguyen. The inverse initial data problem for anisotropic Navier–Stokes equations via Legendre time reduction method. prepint arXiv:2507.16810 , 2025. [49] F. M. White. Viscous Fluid Flow . McGraw-Hill Mechanical Engineering. McGraw-Hill, 3 edition, 1991. [50] W. Yan, Y. He, and Y. Ma. Shape reconstruction of an inverse boundary value problem of two-dimensional Navier–Stokes equations. International Journal for Numerical Methods in Fluids , 62(6):632– 646, feb 2010. 29

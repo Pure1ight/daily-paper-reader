@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.12103v1/fig-001.webp",
+      "caption": "Figure 6: Time-averaged residual error distribution for the oscillating electron beam system over the parameter space. Each square corresponds to one two-dimensional parameter θ = [B0 Ne] ⊤, colored by the time-averaged residual error obtained over a 1000 time step prediction horizon. Training θ samples are marked in black with a white × symbol.",
+      "page": 15,
+      "index": 1,
+      "width": 906,
+      "height": 378
+    },
+    {
+      "url": "assets/figures/arxiv/2604.12103v1/fig-002.webp",
+      "caption": "Figure 5: Electric field snapshots for the oscillating electron beam system at the final prediction time step for three different test values of B0. Each row shows the ground truth, piDMD reconstruction, and pointwise absolute error.",
+      "page": 14,
+      "index": 2,
+      "width": 946,
+      "height": 924
+    },
+    {
+      "url": "assets/figures/arxiv/2604.12103v1/fig-003.webp",
+      "caption": "Figure 4: Time-averaged residual errors for exact DMD, piDMD, stacked parametric DMD and rKOI prediction for oscillating electron beam over the test B0 values.",
+      "page": 13,
+      "index": 3,
+      "width": 441,
+      "height": 364
+    },
+    {
+      "url": "assets/figures/arxiv/2604.12103v1/fig-004.webp",
+      "caption": "Figure 3: Electron beam snapshot at 20.8 ns with B0 = 25 mT and rsp = 2×104, with superparticle injection rate of 12 per time step. Each superparticle is colored based on its instantaneous velocity |v|.",
+      "page": 13,
+      "index": 4,
+      "width": 489,
+      "height": 412
+    },
+    {
+      "url": "assets/figures/arxiv/2604.12103v1/fig-005.webp",
+      "caption": "Figure 9: Electric field snapshots for virtual cathode oscillations at the final prediction time step for two different test values of Ne. Each row shows the ground truth, piDMD reconstruction, and pointwise absolute error.",
+      "page": 17,
+      "index": 5,
+      "width": 946,
+      "height": 609
+    },
+    {
+      "url": "assets/figures/arxiv/2604.12103v1/fig-006.webp",
+      "caption": "Figure 1: Time-averaged residual error comparisons for exact DMD, piDMD, stacked parametric DMD and rKOI prediction for the flow past cylinder system over the test ν values.",
+      "page": 12,
+      "index": 6,
+      "width": 441,
+      "height": 372
+    },
+    {
+      "url": "assets/figures/arxiv/2604.12103v1/fig-007.webp",
+      "caption": "Figure 2: Horizontal velocity field snapshots for the flow past cylinder system at the final prediction time step for two different test values of ν. Each row shows the ground truth, piDMD reconstruction, and pointwise absolute error.",
+      "page": 12,
+      "index": 7,
+      "width": 946,
+      "height": 389
+    },
+    {
+      "url": "assets/figures/arxiv/2604.12103v1/fig-008.webp",
+      "caption": "Figure 8: Time-averaged residual errors for exact DMD, piDMD and stacked parametric DMD for virtual cathode oscillations over the test Ne values.",
+      "page": 16,
+      "index": 8,
+      "width": 441,
+      "height": 371
+    },
+    {
+      "url": "assets/figures/arxiv/2604.12103v1/fig-009.webp",
+      "caption": "Figure 7: Virtual cathode snapshot at 33.6 ns with rsp = 1.5× 106 and superparticle injection rate of 100 per time step. Each superparticle is colored based on its instantaneous velocity |v|.",
+      "page": 16,
+      "index": 9,
+      "width": 489,
+      "height": 433
+    }
+  ]
+}

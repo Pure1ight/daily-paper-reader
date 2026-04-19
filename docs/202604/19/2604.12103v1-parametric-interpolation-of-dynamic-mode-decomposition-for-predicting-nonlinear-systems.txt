@@ -1,0 +1,723 @@
+Title: Parametric Interpolation of Dynamic Mode Decomposition for Predicting Nonlinear Systems
+
+URL Source: https://arxiv.org/pdf/2604.12103v1
+
+Published Time: Wed, 15 Apr 2026 00:20:18 GMT
+
+Number of Pages: 22
+
+Markdown Content:
+# Parametric Interpolation of Dynamic Mode Decomposition for Predicting Nonlinear Systems 
+
+Ananda Chakrabarti a, ∗, Haitham H. Saleh a,b , Indranil Nayak d, Balasubramaniam Shanker a,b ,Fernando L. Teixeira a,b , Debdipta Goswami a,c 
+
+> a
+
+Department of Electrical and Computer Engineering, The Ohio State University, Columbus, OH 43210, USA 
+
+> b
+
+ElectroScience Laboratory, The Ohio State University, Columbus, OH 43212, USA 
+
+> c
+
+Department of Mechanical and Aerospace Engineering, The Ohio State University, Columbus, OH 43210, USA 
+
+> d
+
+SLAC National Accelerator Laboratory, Stanford University, Menlo Park, CA 94025, USA 
+
+Abstract 
+
+We present parameter-interpolated dynamic mode decomposition ( piDMD ), a parametric reduced-order modeling framework that embeds known parameter-affine structure directly into the DMD regression step. Unlike existing parametric DMD methods which interpolate modes, eigenvalues, or reduced operators and can be fragile with sparse training data or multi-dimensional parameter spaces, piDMD learns a single parameter-affine Koopman surrogate reduced order model (ROM) across multiple training parameter samples and predicts at unseen parameter values without retraining. We validate piDMD on fluid flow past a cylinder, electron beam oscillations in transverse magnetic fields, and virtual cathode oscillations – the latter two being simulated using an electromagnetic particle-in-cell (EMPIC) method. Across all benchmarks, piDMD achieves accurate long-horizon predictions and improved robustness over state-of-the-art interpolation-based parametric DMD baselines, with less training samples and with multi-dimensional parameter spaces. 
+
+Keywords: 
+
+Koopman, Dynamic mode decomposition, Data-driven modeling, Reduced-order modeling, Parametric modeling, Machine learning 
+
+1. Introduction 
+
+Recent developments in machine learning (ML) have enabled data-driven modeling of complex systems across a wide range of applications, from playing board games [ 1], to speech recognition [ 2], and even discovering new mathematical algorithms [ 3]. While purely 
+
+> ∗
+
+Corresponding author. 
+
+Email addresses: chakrabarti.44@osu.edu (Ananda Chakrabarti), saleh.175@osu.edu (Haitham H. Saleh), nayaknil@stanford.edu (Indranil Nayak), shanker@ece.osu.edu (Balasubramaniam Shanker), 
+
+teixeira.5@osu.edu (Fernando L. Teixeira), goswami.78@osu.edu (Debdipta Goswami) 
+
+> arXiv:2604.12103v1 [eess.SY] 13 Apr 2026
+
+data-driven approaches can be powerful, they often struggle to model physical systems where data might be scarce and the governing equations encode important physical and structural constraints. This has given rise to a family of physics-constrained ML methods [ 4–7] that incorporate knowledge of the underlying dynamics directly into the learning pipeline for accurate system modeling. Despite this progress, modeling and control of complex, high-dimensional nonlinear dynamics remains a central challenge in science and engineering. Many systems of practical interest, such as those involving complex fluid flows and nonlinear plasma dynamics, can be studied through high-fidelity, first-principles simulations. These simulations provide rich spatiotemporal data, but their heavy computational cost makes repeated evaluations across the parameter space impractical. The curse of dimensionality further exacerbates this issue when the parameter space itself is high-dimensional. Data-driven reduced-order models (ROMs) address these bottlenecks by learning low-rank surrogates directly from data. Such models reproduce the dynamics at a small fraction of the cost of high-fidelity simulations. Among data-driven ROM techniques, dynamic mode decomposition (DMD) [ 8, 9] has become a popular choice, since it is simple to implement and yields a linear representation of the dynamics, which is well-suited for prediction, analysis, and control. DMD also has intrinsic connections to Koopman operator theory [ 10 ], which offers a linear perspective on inherently nonlinear systems by operating in an infinite-dimensional space of observable functions. In practice, this operator is approximated using a finite-dimensional projection onto an invariant subspace spanned by a set of observables. DMD obtains such a projection by taking the observables to be the system states themselves. Several variants of the standard DMD algorithm have been developed [ 11 , 12 ]. In extended dynamic mode decomposition (EDMD) [ 13 ], hand-picked dictionaries of observable functions are used to learn the finite-dimensional projection of the Koopman operator. Hankel DMD [ 14 , 15 ] uses time-delay coordinates of the states as vector-valued observables. This approach has connections to Takens’ embedding theorem [ 16 ] and often yields more accurate predictions than standard DMD. Other Koopman-based modeling frameworks automate the choice of observables entirely using neural networks (NNs), resulting in a family of Koopman autoencoders (KAEs) [ 7, 17 , 18 ] for learning nonlinear systems. Online variants of DMD [ 19 –21 ] learn and recursively update the DMD operator as new data becomes available. Koopman/DMD methods have also been extended to control systems, yielding linear [ 22 , 23 ] or bilinear [ 24 –26 ] models of nonlinear control systems. These models enable efficient, convex algorithms from linear systems theory to be applied to nonlinear control problems [ 27 –29 ]. Starting with fluid dynamics [ 9, 30 ], DMD and its Koopman-based variants have been successfully applied to a wide variety of domains, such as plasma dynamics [ 31 , 32 ], electromagnetic cavities [33], power networks [34], epidemiology [35], financial markets [36], robotics [ 37 , 38 ], traffic networks [ 39 ], neuroscience [ 40 , 41 ] and much more, due to its simplicity and generalizability. In this paper, while we build on the bilinear DMD framework, we restrict our attention to autonomous systems and focus on prediction rather than control. A key limitation of standard DMD and its many variants is that they are typically trained on data for a single, fixed set of system parameters. In many applications, however, the actual dynamics depends strongly on governing physical parameters, such as the Reynolds number in fluid flows or externally applied fields in plasma systems. If any such parameter changes, 2the DMD/Koopman operator must be retrained from scratch. Collecting new training data and constructing a separate DMD model for every parameter set of interest quickly becomes computationally prohibitive. This motivates parametric DMD methodologies that generalize across a continuum of parameters using data from only a small set of training samples. The central challenge is to introduce parameter dependence without sacrificing the efficiency and interpretability that make DMD attractive in the first place. Existing parametric DMD methods address this issue in several ways. A popular approach [ 42 ] forms a single global regression problem by stacking snapshot data from multiple parameters and computing one DMD model, whose modes are then interpolated to unseen parameters. However, such stacking becomes costly as the training set grows. Other methods compute separate reduced-order DMD models at each training parameter and interpolate the eigenpairs or reduced DMD operators [43 ] using standard interpolation techniques to obtain models at new parameters. A more recent method [ 44 ] introduces explicit schemes for interpolating DMD modes via subspace angles and Grassmann-manifold methods, together with mode realignment, while interpolating eigenvalues separately using standard techniques. Another approach [ 45 ] projects snapshots into a POD space, forecasts reduced trajectories with DMD (or its variants), and reconstructs unseen parameters by interpolating the reduced trajectories. These interpolation-based approaches can marginally reduce computational cost relative to stacked parametric DMD. In practice, however, they are highly sensitive to the ROM rank and the choice of training parameters, and they rely on the restrictive assumption that the reduced DMD/Koopman operators vary smoothly with parameters. This sensitivity is amplified when the number of training parameters is small or when the parameter space is multi-dimensional, where interpolation can become unstable and may even produce models that fail to converge during prediction. An NN-based approach is also proposed in [ 46 ], where the Koopman operator is expressed as a function of the parameters and learnt directly using a neural network. However, this approach still requires a large number of parameter samples as training data to accurately learn a parametric Koopman operator. Its black-box nature also makes exploration and optimization over the parameter space difficult, if not impractical. This paper presents parameter-interpolated dynamic mode decomposition (piDMD ), a parameter-affine DMD framework designed to exploit the affine parametric structure of the underlying dynamics. The main idea is to incorporate parameter dependence directly into the regression step used to identify the DMD evolution operator, rather than relying on interpolation of eigenpairs, DMD modes or reduced operators. By learning a parametric Koopman surrogate ROM that is affine in known parameter functions, piDMD preserves the computational workflow of bilinear DMD [ 24 , 25 ] while avoiding many of the pitfalls of other parametric DMD methods. The resulting model can be evaluated at unseen parameters using operations similar to those in bilinear DMD. We demonstrate piDMD on representative high-dimensional benchmarks in nonlinear dynamics: a two-dimensional incompressible flow past a cylinder with viscosity variation, an electron beam oscillating under transverse magnetic field, with variation first in the external magnetic field amplitude and subsequently in both the magnetic field amplitude and the electron injection rate, and virtual cathode oscillations with variation in the electron injection 3rate. The latter two plasma systems were simulated using a charge-conserving electromagnetic particle-in-cell (EMPIC) solver [ 47 , 48 ]. In all settings, we benchmark against state-of-the-art baselines: stacked parametric DMD [ 42 ], reduced Koopman operator interpolation (rKOI) 
+
+[43 ], and exact (standard) DMD [ 8, 9], where the latter is trained directly on data from the target test parameters and therefore represents the best case scenario. The results show that 
+
+piDMD achieves improved predictive accuracy than the other interpolation-based alternatives and exhibits greater robustness to limited training data and multi-dimensional parameter spaces, all while maintaining a simple and intuitive training and evaluation mechanism. The remainder of the paper is organized as follows. Section 2 reviews Koopman operator theory and standard DMD. Section 3 presents the theory behind the proposed piDMD method as well as the algorithm itself. Section 4 reports numerical results on the flow past cylinder and the plasma systems of oscillating electron beam and virtual cathode oscillations. Finally, Section 5 summarizes the paper and discusses future research directions. 
+
+2. Background 
+
+2.1. Koopman operator theory: an overview 
+
+Consider a nonlinear dynamical system fθ : X → X evolving on a compact manifold 
+
+X ⊆ Rn and parametrized by θ ∈ Rp,
+
+˙x = fθ(x), (1) where x ∈ X is the state. Let Φθ(t, x0) denote the flow map of (1) at time t > 0, starting from an initial state x0. A measurable function φ : X → C is called an observable of the system (1) , and we let F denote the space of all such observables. The continuous-time Koopman operator Kt 
+
+> θ
+
+: F → F is then defined as 
+
+(Kt
+
+> θ
+
+φ)( ·) = φ ◦ Φθ(t, ·), (2) where ◦ denotes function composition. Unlike the original nonlinear system, which describes the time evolution of the true state x, the Koopman operator acts on observables φ and is 
+
+linear in its argument. As such, Kt 
+
+> θ
+
+can be characterized by its eigenvalues and eigenfunctions. A function ϕ : X → C is an eigenfunction of Kt 
+
+> θ
+
+with corresponding eigenvalue λ ∈ C if 
+
+(Kt
+
+> θ
+
+ϕ)( ·) = eλt ϕ(·). (3) The infinitesimal generator of the Koopman operator, defined as lim t→0
+
+Kt 
+
+> θ
+
+− It (with I
+
+being the identity operator), coincides with the Lie derivative Lfθ = fθ · ∇ along fθ [ 49 ]. This generator satisfies the eigenvalue equation 
+
+Lfθ ϕ = λϕ. (4) Consequently, the time-varying observable ψ(t, x) ≜ Kt
+
+> θ
+
+φ(x) is the solution of the partial differential equation (PDE) [49] 
+
+∂ψ ∂t = Lfθ ψ, ψ(0 , x) = φ(x).
+
+(5) 4While this linearity of the Koopman operator is a clear advantage, Kt 
+
+> θ
+
+it is also infinite-dimensional and admits an infinite number of eigenfunctions. In particular, if ϕ1 and 
+
+ϕ2 are eigenfunctions of Kt 
+
+> θ
+
+with eigenvalues λ1 and λ2 respectively, then ϕk 
+
+> 1
+
+ϕl 
+
+> 2
+
+is also an eigenfunction with eigenvalue kλ 1 + lλ 2 for all k, l ∈ N. Moreover, being infinite-dimensional, the Koopman operator may also contain continuous and residual spectra with associated generalized eigendistributions [ 50 ]. In this paper, however, we restrict our attention to the point spectrum of the Koopman operator. Let g(·) ∈ F p, p ∈ N, be a vector-valued observable. It can be expressed in terms of the Koopman eigenfunctions ϕi(·) as 
+
+g(·) = 
+
+> ∞
+
+X
+
+> i=1
+
+ϕi(·)vgi , (6) where the coefficients vgi ∈ Rp, i = 1 , 2, . . . , are known as the Koopman modes of g(·). These modes represent the projection of the observable onto the space spanned by the Koopman eigenfunctions [ 51 ]. While the Koopman eigenvalues and eigenfunctions are intrinsic properties of the dynamics, the Koopman modes depend on the choice of observable. 
+
+2.2. Approximating the Koopman Operator via DMD 
+
+Dynamic mode decomposition (DMD) is a data-driven method for approximating the Koopman operator and extracting dominant Koopman modes directly from time-series snapshot data via matrix factorization [ 8, 9]. Unlike other methods such as EDMD and KAEs, DMD uses the identity observable (i.e., the state itself, meaning φ(·) is an identity map) and fits a best linear map that advances snapshots forward in time. Consider state snapshots xk ∈ Rn sampled uniformly with sampling interval ∆t, i.e., 
+
+xk ≜ x(t0 + k∆t), k = 0 , 1, . . . , T. (7) We concatenate them to form snapshot matrices X ∈ Rn×T and X+ ∈ Rn×T , where X+
+
+is one time snapshot ahead of X:
+
+X = x0 · · · xT −1
+
+ , X+ = x1 · · · xT
+
+ . (8) DMD seeks to find a best-fit linear operator A ∈ Rn×n satisfying X+ ≈ AX using least-squares approximation: 
+
+X+ ≈ AX =⇒ A = arg min  
+
+> A∈ Rn×n
+
+X+ − A X 2 
+
+> F
+
+≈ X+X† (9) where † denotes the Moore-Penrose pseudoinverse. A standard computationally efficient implementation is obtained via rank truncation. Compute the singular value decomposition (SVD) of X1 and retain the leading r singular values: 
+
+X = UΣV ⊤ ≈ UrΣrV⊤ 
+
+> r
+
+, (10) 5where Ur ∈ Rn×r, Σr ∈ Rr×r, and Vr ∈ RT ×r. The reduced Koopman operator ˜A ∈ Rr×r is then approximated as ˜A ≜ U⊤ 
+
+> r
+
+AU r ≈ U⊤ 
+
+> r
+
+X+VrΣ−1 
+
+> r
+
+. (11) We eigendecompose ˜A as ˜A W = WΛ , where Λ = diag (λ1, . . . , λr) contains the eigenvalues of ˜A, and W = [ w1, . . . , wr] are the corresponding eigenvectors. The full-state DMD modes Φ are given by 
+
+Φ ≜ UrW ≈ X+VrΣ−1 
+
+> r
+
+W. (12) Since the DMD eigenvalues we obtained are in discrete-time, we convert them into continuous-time eigenvalues by taking the matrix logarithm Ω ≜ 1∆t ln (Λ), with Ω =
+
+diag (ω1, . . . , ω r). Thus, given an initial condition x(t0), the continuous-time DMD recon-struction or prediction is 
+
+ˆx(t) ≈ ΦeΩ(t−t0)Φ†x(t0). (13) This provides an explicit low-dimensional linear model and modal decomposition for analyzing and reconstructing the system dynamics from data. The standard DMD procedure above constructs an approximation of the finite-dimensional Koopman operator from snapshot data generated by a dynamical system with a fixed 
+
+parameter θ. This requires new training snapshot data at each parameter value of interest in order to construct a corresponding DMD model, which may be computationally expensive or infeasible when high-fidelity simulations or experiments are involved. This motivates 
+
+parametric DMD methods, whose goal is to leverage snapshot data collected at a finite set of training parameters to efficiently construct DMD-based reduced-order models that generalize to previously unseen parameter values. 
+
+Algorithm 1 DMD 
+
+Input: Snapshot data {xk}Tk=0 , sampling interval ∆t, SVD truncation rank r.
+
+Output: Reduced DMD operator ˜A, DMD modes Φ, and continuous-time eigenvalues Ω. 
+
+> 1:
+
+X ← [x0 · · · xT −1], X+ ← [x1 · · · xT ] ▷ DMD regression matrices  
+
+> 2:
+
+procedure Compute DMD (X+, X, r, ∆t) 
+
+> 3:
+
+Ur, Σr, Vr ← SVD (X, r ) ▷ Truncated rank-r SVD of X 
+
+> 4:
+
+˜A ← U⊤ 
+
+> r
+
+X+VrΣ−1 
+
+> r
+
+▷ Reduced DMD/Koopman operator  
+
+> 5:
+
+W, Λ ← EIG ( ˜A) ▷ Eigendecomposition of ˜A 
+
+> 6:
+
+Φ ← X+VrΣ−1 
+
+> r
+
+W ▷ Full-state DMD modes  
+
+> 7:
+
+Ω ← 1∆t ln( Λ) ▷ Continuous-time eigenvalues  
+
+> 8:
+
+end procedure 
+
+3. Parameter-Interpolated Dynamic Mode Decomposition ( piDMD )
+
+3.1. Parametric interpolation for parameter-affine systems 
+
+Consider a dynamical system parametrized by θ in an affine form 
+
+˙x = fθ(x) = f (x) + 
+
+> m
+
+X
+
+> i=1
+
+gi(x) hi(θ), x(t0) = x0, (14) 6where x ∈ X ⊆ Rn, θ ∈ Rp, and the parametrization functions hi : Rp → R for i = 1 , . . . , m 
+
+enter the dynamics affinely through the vector fields gi. Applying (5) to (14) yields the evolution of the following PDE [24]: 
+
+∂ψ ∂t = Lf ψ +
+
+> m
+
+X
+
+> i=1
+
+hi(θ) Lgi ψ, ψ(t0, x) = φ(x),
+
+(15) where Lgi ≜ gi · ∇ are the Lie derivatives along gi for i = 1 , . . . , m , and are therefore linear operators on the space of ψ. The parametrized forced PDE (15) provides a representation of the parametric system (14) in a lifted latent space that is bilinear with respect to the parametric functions hi(θ).Let F be the closure of the span of a countable collection of real-valued observables 
+
+{φ1(·), φ2(·), . . . }. We define the lifted state z = φ(x) ∈ Z ⊆ RN , with φ(x) ≜
+
+φ1(x) φ2(x) . . . ⊤ and N being its cardinality. Further, assume there exists a nonlinear reconstruction map φ−1 : Z → M satisfying φ−1(z) = x. The main result is summarized in the following theorem. 
+
+Theorem 1. Assume that F is invariant under Lf and {Lgi }mi=1 , i.e., Lf F ⊂ F and 
+
+Lgi F ⊂ F for all i ∈ { 1, . . . , m }. Then the lifted dynamics admits a bilinear representation: 
+
+˙z = ∂φ (x)
+
+∂x
+
+"
+
+f (x) + 
+
+> m
+
+X
+
+> i=1
+
+gi(x) hi(θ)
+
+#
+
+> x=φ−1(z)
+
+= Az +
+
+> m
+
+X
+
+> i=1
+
+hi(θ) Biz, (16) 
+
+where Az ≜ Lf φ(x)|x=φ−1(z) and Biz ≜ Lgi φ(x)|x=φ−1(z).Proof. The proof follows that of Theorem 1 in [25], with ui replaced by hi(θ).We thus obtain a parametric model ˙z = K(θ)z, where K(θ) ≜ A + Pmi=1 hi(θ) Bi is the parameter-affine Koopman operator. 
+
+Remark 1. The map φ−1 is a minimal representation that uses only the essential components of z to reconstruct x. As discussed earlier, in standard DMD we have z = φ(x) = x, so that φ = φ−1 = I. In practice, when EDMD is used instead, z is truncated to z =
+
+{φ1(x), . . . , φ N (x)} with N ≫ n, ideally ensuring vanishing residuals. Establishing the invariance of this finite-dimensional functional space span {φ1(·), . . . , φ N (·)} is considerably more challenging and is typically done using neural networks. 3.2. Parameter-Interpolated Dynamic Mode Decomposition ( piDMD )
+
+Here we present parameter-interpolated dynamic mode decomposition (piDMD ) to estimate a parameter-dependent finite-dimensional Koopman operator from finite samples of state 
+
+and parameter data. We consider the parameter-affine continuous-time system introduced in Section 3.1, where the parameter enters through known functions {hi(θ)}mi=1 . Since 7identifying continuous-time generators typically requires derivative information, which is difficult to obtain in practice, we instead learn a discrete-time predictor from snapshot pairs while preserving an affine-in-parameter structure. Over a sampling interval ∆t, the Koopman bilinear dynamics satisfies 
+
+z(t + ∆ t) = e
+
+ A+Pmi=1 hi(θ) Bi
+
+∆tz(t). (17) A first-order Euler discretization yields a parameter-affine discrete-time approximation 
+
+z(t + ∆ t) ≈
+
+ ˜A +
+
+> m
+
+X
+
+> i=1
+
+hi(θ) ˜Bi
+
+
+
+z(t), ˜A ≜ (I + A)∆ t, ˜Bi ≜ Bi∆t. (18) This provides a framework for estimating ( ˜A, { ˜Bi}mi=1 ) directly from data using least-squares approximation. We assume that we are given L training trajectories corresponding to parameter samples 
+
+{θ(ℓ)}Lℓ=1 , with uniformly sampled snapshots 
+
+x(ℓ) 
+
+> k
+
+≜ x(ℓ)(t0 + k∆t), k = 0 , 1, . . . , T, ℓ = 1 , . . . , L. (19) Let h(θ) ≜ h1(θ) · · · hm(θ)⊤ ∈ Rm. To encode the parameter-affine structure linearly in the piDMD least-squares regression, we introduce 
+
+ψ(x, θ) ≜
+
+ xh(θ) ⊗ x
+
+
+
+=
+
+
+
+x
+
+h1(θ)x
+
+...
+
+hm(θ)x
+
+ ∈ Rn+mn , (20) .For each trajectory ℓ, we define the snapshot matrices 
+
+Ψ(ℓ) ≜
+
+h
+
+ψ(x(ℓ)0 , θ(ℓ)) ψ(x(ℓ)1 , θ(ℓ)) · · · ψ(x(ℓ) 
+
+> T−1
+
+, θ(ℓ))
+
+i
+
+∈ R(n+mn )×T ,
+
+X+( ℓ) ≜
+
+h
+
+x(ℓ)1 · · · x(ℓ)
+
+> T
+
+i
+
+∈ Rn×T ,
+
+and concatenate them to form 
+
+Ψ ≜ Ψ(1) · · · Ψ(L) ∈ R(n+mn )×LT and X+ ≜
+
+h
+
+X+(1) · · · X+( L)
+
+i
+
+∈ Rn×LT .
+
+We seek matrices ˜A ∈ Rn×n and ˜B ≜  ˜B1 ˜B2 . . . ˜Bm
+
+ ∈ Rn×mn , where ˜Bi ∈
+
+Rn×n, i ∈ { 1, . . . , m }, such that X+ ≈  ˜A ˜B Ψ, i.e., 
+
+ ˜A ˜B = arg min 
+
+> A∈ Rn×n
+> B∈ Rn×mn
+
+X+ − A B Ψ 2 
+
+> F
+
+≈ X+Ψ† (21) 8For computational efficiency, we use a rank-˜r truncated SVD of Ψ (by retaining the first 
+
+˜r most prominent singular values of Ψ) to compute (21), i.e., 
+
+Ψ = ˜U ˜Σ ˜V⊤ ≈ ˜Ur ˜Σr ˜V⊤ 
+
+> r
+
+.
+
+We partition ˜Ur into its first n rows and remaining mn rows as 
+
+˜Ur =
+
+ ˜U0
+
+˜Uh
+
+
+
+, ˜U0 ∈ Rn×˜r, ˜Uh ∈ Rmn ×˜r.
+
+Then the least-squares solution of (21) is obtained as 
+
+˜A = X+ ˜Vr ˜Σ−1 
+
+> r
+
+˜U⊤ 
+
+> 0
+
+∈ Rn×n, ˜B = X+ ˜Vr ˜Σ−1 
+
+> r
+
+˜U⊤ 
+
+> h
+
+∈ Rn×mn . (22) Substituting ˜B =  ˜B1 ˜B2 · · · ˜Bm
+
+ , ˜Bi ∈ Rn×n, i = 1 , . . . , m , yields the estimate of the parameter-interpolated discrete-time piDMD operator: 
+
+˜K(θ) ≜ ˜A +
+
+> m
+
+X
+
+> i=1
+
+hi(θ) ˜Bi ∈ Rn×n. (23) Thus, ˜K(θ) provides a finite-dimensional estimate of the parameterized Koopman operator 
+
+K(θ) over the sampling interval ∆t and directly enables interpolation across θ.We further compute a low-rank representation of K(θ) for prediction. We perform a truncated SVD of X+ by retaining the first ˆr most prominent singular values, i.e., 
+
+X+ = ˆU ˆΣ ˆV⊤ ≈ ˆUr ˆΣr ˆV⊤
+
+> r
+
+and obtain the reduced-order parametric operator as follows: 
+
+ˆK(θ) 
+
+> r
+
+≜ ˆU⊤ 
+
+> r
+
+˜K(θ) ˆUr ∈ Rˆr×ˆr. (24) We eigendecompose ˆK(θ) 
+
+> r
+
+as ˆK(θ) 
+
+> r
+
+W(θ) = W(θ)Λ(θ), where Λ(θ) = diag (λ(θ)1 , λ (θ)2 , . . . , λ (θ)ˆr )
+
+contains the eigenvalues of ˆK(θ) 
+
+> r
+
+, and W(θ) contains the corresponding eigenvectors, with 
+
+W(θ) ≜ [w(θ)1 , . . . , w(θ)ˆr ]. Thus, the full-state piDMD modes are 
+
+Φ(θ) = ˆUrW(θ).
+
+Since the piDMD eigenvalues we obtained are in discrete time, the continuous-time eigen-values are obtained by taking the matrix logarithm Ω(θ) = 1∆t ln (Λ(θ)) = diag (ω(θ)1 , . . . , ω (θ)ˆr ).Hence, given an initial condition x(t0), the continuous-time, full-state piDMD reconstruction or prediction of the system for any desired parameter θ∗ at time t is 
+
+ˆx(t) ≈ Φ(θ∗)eΩ(θ∗)(t−t0)Φ(θ∗)†x(t0). (25) 
+
+Remark 2. The piDMD formulation assumes the parametrization functions {hi(θ)}mi=1 are known a priori . This is often a natural assumption in physics-driven settings such as automobile HVAC systems, fluid flows or kinetic plasmas where affine parameters enter governing equations through known functional forms. 
+
+Remark 3. The approximation error in (18) –(25) arises from discretization/modeling error in approximating the flow map by an affine-in-parameter discrete operator, and truncation error due to the finite-rank projections ˜r and ˆr.
+
+9Algorithm 2 piDMD 
+
+Input: Training data {(θ(ℓ), {x(ℓ) 
+
+> k
+
+}Tk=0 )}Lℓ=1 , sampling interval ∆t, functions h(θ) =[h1(θ), . . . , h m(θ)] ⊤, SVD truncation ranks ˜r and ˆr, target parameters {θ∗(j)}Jj=1 .
+
+Output: Estimates ˜A, { ˜Bi}mi=1 , ˜K(θ∗(j)), ˆK(θ∗(j)) 
+
+> r
+
+, piDMD modes Φ(θ∗(j)), and continuous-time eigenvalues Ω(θ∗(j)), for all j = 1 , . . . , J .
+
+1: for ℓ = 1 , . . . , L do 
+
+2: Ψ(ℓ) ← [ψ(x(ℓ)0 , θ(ℓ)), . . . , ψ(x(ℓ) 
+
+> T−1
+
+, θ(ℓ))] . ▷ ψ(x, θ) ≜
+
+ xh(θ) ⊗ x
+
+
+
+3: X+( ℓ) ← [x(ℓ)1 , . . . , x(ℓ) 
+
+> T
+
+]
+
+4: end for 
+
+5: Ψ ← [Ψ(1) · · · Ψ(L)], X+ ← [X+(1) · · · X+( L)] ▷ piDMD regression matrices 
+
+6: procedure Compute piDMD (X+, Ψ, ˜r, ˆr, ∆t, h(θ), {θ∗(j)}Jj=1 )
+
+7: ˜Ur, ˜Σr, ˜Vr ← SVD (Ψ, ˜r) ▷ Truncated rank-˜r SVD of Ψ
+
+8: 
+
+ ˜U0
+
+˜Uh
+
+
+
+← ˜Ur ▷ Partitioning ˜Ur
+
+9: ˜A ← X+ ˜Vr ˜Σ−1 
+
+> r
+
+˜U⊤ 
+
+> 0
+
+▷ Estimate of A
+
+10: ˜B ← X+ ˜Vr ˜Σ−1 
+
+> r
+
+˜U⊤ 
+
+> h
+
+, [ ˜B1, · · · , ˜Bm] ← ˜B ▷ Estimates of {Bi}mi=1 
+
+11: ˆUr, ˆΣr, ˆVr ← SVD (X+, ˆr) ▷ Truncated rank-ˆr SVD of X+
+
+12: for j = 1 , . . . , J do 
+
+13: ˜K(θ∗(j)) ← ˜A + Pmi=1 hi(θ∗(j)) ˜Bi ▷ Estimate of K(θ∗(j))
+
+14: ˆK(θ∗(j)) 
+
+> r
+
+← ˆU⊤ 
+
+> r
+
+˜K(θ∗(j)) ˆUr ▷ Low-rank approximation of K(θ∗(j))
+
+15: W(θ∗(j)), Λ(θ∗(j)) ← EIG ( ˆK(θ∗(j)) 
+
+> r
+
+) ▷ Eigendecomposition of ˆK(θ∗(j))
+
+> r
+
+16: Φ(θ∗(j)) ← ˆUrW(θ∗(j)) ▷ Full-state piDMD modes 
+
+17: Ω(θ∗(j)) ← 1∆t ln( Λ(θ∗(j))) ▷ Continuous-time eigenvalues 
+
+18: end for 
+
+19: end procedure 
+
+4. Results 
+
+In this section, we evaluate the proposed piDMD method on three complex, high-dimensional nonlinear systems: incompressible fluid flow past a cylinder, an oscillating electron beam in a transverse magnetic field, and virtual cathode oscillations. In each case, we benchmark 
+
+piDMD against exact (standard) DMD [ 8, 9], which is trained directly on data from the test parameters and therefore serves as the best-case baseline, along with two state-of-the-art interpolation-based parametric DMD methods: stacked parametric DMD [ 42 ] and reduced Koopman operator interpolation (rKOI) [ 43 ]. As our error metric, we use the 2-norm residual (relative) error δ(j)(t) = ∥x(j)(t)−ˆx(j)(t)∥2 
+
+> ∥x(l)(t)∥2
+
+, where x(j)(t) is the true state and ˆx(j)(t) is the predicted state for a test parameter sample θ∗(j) at time t. For each test parameter sample, we calculate the time-averaged residual error over the prediction horizon. In all three systems, 
+
+piDMD outperforms both interpolation-based baselines. 10 4.1. Flow past cylinder 
+
+We consider the two-dimensional incompressible flow past a stationary circular cylinder, a canonical benchmark in nonlinear dynamics that exhibits rich nonlinear behavior. The flow is governed by the incompressible Navier–Stokes (NS) equations 
+
+∂u
+
+∂t + ( u · ∇ )u = −∇ p + ν∇2u, ∇ · u = 0 ,
+
+where u(x, t ) is the horizontal velocity field, p(x, t ) is the pressure, and ν is the viscosity, with ν = 1 
+
+> Re
+
+, Re being the Reynolds number. We generate training and testing data by numerically solving the NS equations using the immersed boundary projection method (IBPM) [ 52 ], which employs a vorticity-based formulation on a staggered Cartesian grid. The computational domain is Ω = [ −1, 8] × [−2, 2] ,discretized with a uniform 300 × 133 grid. The cylinder has diameter D = 1 and is centered at the origin. The simulation is advanced with a fixed time step ∆t = 0 .02 and is carried out in three phases: (i) a spin-up phase to establish the wake, (ii) a brief perturbation phase in which the cylinder undergoes a small plunging motion to excite the dynamics, and (iii) a data-collection phase in which velocity snapshots are recorded at each time step. We enforce zero Dirichilet conditions on the domain boundaries and no-slip condition on the cylinder surface. For parametric modeling, we consider the viscosity as the parameter of interest, i.e., 
+
+θ = h1(θ) = ν and vary it from 0.01 to 0.02 in increments of 0.001 , which corresponds to Reynolds numbers Re ∈ [50 , 100] . To reduce computational cost, we spatially downsample the simulated velocity field by a factor of 3 in each spatial direction and retain only the streamwise horizontal velocity component u. This yields a state dimension of n = 4400 . For each ν, we discard the first 1500 snapshots to remove transient portion of the dynamics. We train the piDMD model using T = 250 snapshots from three parameter values ν =
+
+{0.01 , 0.015 , 0.02 }, and evaluate the trained model on the remaining values (i.e., we have 3 training and 8 test parameter samples). The ν values are normalized to be between 0 and 0.01. We use the truncation ranks ˜r = ˆr = 40 . For each test ν, we predict over a horizon of 1000 time steps (after transient removal) to evaluate the model’s performance. We benchmark this method against exact DMD, stacked parametric DMD and rKOI, each with DMD truncation rank 40 and identical training and prediction windows. The time-averaged residual error results are shown in Figure 1, and ground truth vs prediction comparisons at the final prediction time step for piDMD at various test values of ν are shown in Figure 2. 
+
+4.2. Oscillating electron beam 
+
+Plasma systems are excellent candidates for data-driven modeling due to their high-dimensionality, and inherent nonlinearity arising from the complex wave-particle interactions. We consider a two-dimensional (2-D) electron beam simulated inside a square cavity of dimension 1 cm × 1 cm using a charge-conserving electromagnetic particle-in-cell (EMPIC) algorithm [ 48 ]. The electron beam propagates along the +y direction under the influence of a time-harmonic transverse magnetic flux along the z direction. The solution domain is 11 Figure 1: Time-averaged residual error comparisons for exact DMD, piDMD , stacked parametric DMD and rKOI prediction for the flow past cylinder system over the test ν values.                  
+
+> (a) θ∗=ν= 0 .013 (Re ≈75 )
+> (b) θ∗=ν= 0 .017 (Re ≈60 )
+> Figure 2: Horizontal velocity field snapshots for the flow past cylinder system at the final prediction time step for two different test values of ν. Each row shows the ground truth, piDMD reconstruction, and pointwise absolute error.
+
+discretized using an irregular triangular mesh with N0 = 844 nodes, N1 = 2447 edges, and 
+
+N2 = 1604 elements (triangles). Plasma self-interactions are included by applying the EMPIC algorithm coupled to a finite element field solver to the governing Maxwell-Vlasov system of equations [ 48 ]. In the PIC algorithm, the phase-space distribution of electrons is represented by superparticles (point charges) with charge qsp = rsp qe and mass msp = rsp me, where qe and 
+
+me denote the electron charge and mass, respectively. Superparticles are injected from the bottom of the cavity with a uniform spatial distribution over [0 .45 cm , 0.55 cm ] at an injection rate of 12 superparticles per time-step. The injection velocity is set to vy = 5 × 10 6 m/s. The external oscillating magnetic flux is given by Bext (t) = B0 sin(2 πt/T osc ) ˆ z, with Tosc = 0 .8 ns .The time-step for the EMPIC simulation is 0.2 ps , and we save the time snapshots every 12 Figure 3: Electron beam snapshot at 20 .8 ns with B0 = 25 mT and rsp = 2 × 10 4, with superparticle injection rate of 12 per time step. Each superparticle is colored based on its instantaneous velocity |v|.   
+
+> Figure 4: Time-averaged residual errors for exact DMD, piDMD , stacked parametric DMD and rKOI prediction for oscillating electron beam over the test B0values.
+
+40 time steps, resulting in the DMD sampling interval of ∆t = 8 ps . Figure 3 shows the superparticle distribution of the system at 20.8 ns, with B0 = 25 mT , rsp = 2 × 10 4, and a superparticle injection rate of 12 per time step, with each superparticle colored according to its instantaneous velocity. Here, we first consider the transverse sinusoidal magnetic-field amplitude B0 as the parameter of interest, i.e., θ = h1(θ) = B0. Keeping the superparticle ratio rsp fixed at 
+
+2 × 10 4, we vary B0 from 10 mT to 40 mT in increments of 2.5 mT , while keeping all other simulation settings fixed. We normalize the B0 values to be between 0 and 0.01. After each simulation, we discard the first 500 time-steps due the transient behavior. We choose 
+
+B0 = {10 , 25 , 40 } mT as our training parameters, and leave the rest for testing (i.e., we 13 (a) θ∗ = B0 = 15 mT           
+
+> (b) θ∗=B0= 27 .5mT
+> (c) θ∗=B0= 32 .5mT
+
+Figure 5: Electric field snapshots for the oscillating electron beam system at the final prediction time step for three different test values of B0. Each row shows the ground truth, piDMD reconstruction, and pointwise absolute error. 
+
+have 3 training and 10 test parameter samples). We choose T = 200 snapshots from the post-transient range for each B0 in the training set as our training data, and evaluate over 1000 time-steps for each test B0. We choose ˜r = ˆr = 40 . We benchmark this method against exact DMD, stacked parametric DMD and rKOI, each with DMD truncation rank 40 and identical training and prediction windows. The time-averaged residual error results are shown in Figure 4, and the ground truth vs prediction comparisons at the final prediction time step for piDMD at various test B0 values are shown in Figure 5. 14 (a) (b)           
+
+> Figure 6: Time-averaged residual error distribution for the oscillating electron beam system over the parameter space. Each square corresponds to one two-dimensional parameter θ= [ B0Ne]⊤, colored by the time-averaged residual error obtained over a 1000 time step prediction horizon. Training θsamples are marked in black with a white ×symbol.
+
+Next, we consider a more challenging two-dimensional parameter setting (i.e., we have two parameters of interest) where θ = [ B0 Ne]⊤, with h1(θ) = B0, the external sinusoidal magnetic field amplitude, and h2(θ) = Ne, the electron injection rate. We select B0 values from the set B0 ∈ { 15 , 20 , 25 , 30 , 35 } mT. To vary Ne, we vary the superparticle ratio rsp by choosing values from the set rsp ∈ { 1 × 10 4, 1.5 × 10 4, 2 × 10 4, 2.5 × 10 4, 3 × 10 4}. Since we inject 12 superparticles per time step, this gives us varying Ne ∈ { 1.2 × 10 5, 1.8 × 10 5, 2.4 ×
+
+10 5, 3.0 × 10 5, 3.6 × 10 5} per time step. Therefore, we have 25 total combinations/pairs of 
+
+B0 and Ne. Both B0 and Ne samples are normalized to be between 0 and 0.01. To maintain persistency of excitation across both B0 and Ne, out of those 25 parameter samples we choose a small set of 4 values of θ as our training samples which exhibit sufficient variation in both 
+
+B0 and Ne, and leave the rest for testing (i.e., we have 4 training and 21 test parameter samples). As before, we discard the first 500 time steps due to transients, choose the next 200 time steps from each training sample (i.e., T = 200 ), and predict over a 1000 time step horizon for each test parameter. We once again choose ˜r = ˆr = 40 , and benchmark against stacked DMD and rKOI methods. However, rKOI fails to converge for several test parameters, and the time-averaged residual error blows up exponentially. This is likely due to the fact that the smooth variation assumption of the DMD operators with respect to the parameters breaks down when we consider more than one parameter. Hence, we have not included those results here. Figure 6 displays the time-averaged residual error for the test parameter samples across the two-dimensional parameter space for piDMD and stacked DMD. 
+
+4.3. Virtual cathode oscillations 
+
+We now consider a more complex plasma systems example of virtual cathode oscillations. A virtual cathode is obtained when the total current of the electron beam exceeds the space-charge limit, causing the formation of a potential barrier. The EMPIC setup of 4.2 is 15 Figure 7: Virtual cathode snapshot at 33 .6 ns with rsp = 1 .5 × 10 6 and superparticle injection rate of 100 per time step. Each superparticle is colored based on its instantaneous velocity |v|.    
+
+> Figure 8: Time-averaged residual errors for exact DMD, piDMD and stacked parametric DMD for virtual cathode oscillations over the test Nevalues.
+
+adopted with the following modifications. We increase the current injection by increasing the superparticle injection rate to 100 per time step. The superparticles are injected at the bottom in the region [0.4 cm, 0.6 cm]. Instead of a transverse oscillating magnetic flux, we apply a strong confining magnetic field B = By ˆy along the y-direction, with By = 20 T.We choose θ = h1(θ) = Ne as our parameter of interest, and vary it by changing the superparticle ratio rsp from 1 × 10 6 to 2 × 10 6 in increments of 1 × 10 5. Figure 7 shows the superparticle distribution for the virtual cathode at time 33.6 ns, for rsp = 1 .5 × 10 6 and superparticle injection rate of 100 per time step, with each superparticle colored according to its instantaneous velocity. Since superparticles are injected at the rate of 100 per time step, 16 (a) θ∗ = Ne = 1 .3 × 10 8         
+
+> (b) θ∗=Ne= 1 .8×10 8
+> Figure 9: Electric field snapshots for virtual cathode oscillations at the final prediction time step for two different test values of Ne. Each row shows the ground truth, piDMD reconstruction, and pointwise absolute error.
+
+this results in Ne ∈ { 1 × 10 8, 1.1 × 10 8, 1.2 × 10 8, . . . , 2 × 10 8} per time step. We normalize the Ne values to be between 0 to 0.01. We choose Ne = {1 × 10 8, 1.5 × 10 8, 2 × 10 8}, as our training parameters and the rest for testing (i.e., we have 3 training and 8 test parameter samples). We discard the first 1500 time steps due to transient behavior, choose the next 
+
+1000 time steps from each training parameter (i.e., T = 1000 ), and predict over a horizon of 2000 time steps for each test parameter. We select ˜r = ˆr = 60 , and benchmark against stacked DMD and rKOI methods. However, rKOI fails to converge for several of the test parameters, and the time-averaged residual error blows up exponentially, highlighting its sensitivity to choice of training parameters, in addition to the dimension of parameter space. The time-averaged residual error results are shown in Figure 8, and the ground truth vs prediction comparisons at the final prediction time step for piDMD at various test Ne values are shown in Figure 9. 
+
+5. Conclusion 
+
+This paper introduced parameter-interpolated dynamic mode decomposition ( piDMD ), a parametric DMD framework that learns a parameter-affine Koopman surrogate model of complex nonlinear systems from data. This method embeds known parameter functions 17 directly into the regression step, instead of relying on interpolating modes, eigenvalues, or reduced operators. Across high-dimensional benchmarks in nonlinear dynamics such as flow past cylinder and kinetic plasma systems such as oscillating electron beams and virtual cathode oscillations, piDMD demonstrated consistently strong predictive performance and improved robustness in settings with limited training parameter samples, where other interpolation-based approaches can fail to converge. Despite its advantages, piDMD has its limitations. The assumption that the parameter-affine functions are known a priori 
+
+is somewhat restrictive. Future work will focus on extending the piDMD framework using neural networks to automate the selection of Koopman observables and the learning of parameter-affine functions. 
+
+Acknowledgment 
+
+This work was funded in part by the Department of Energy Grant DE-SC0022982 through the NSF/DOE Partnership in Basic Plasma Science and Engineering, by the OSU-COE Strategic Research Research Initiative Grant GR138806, and by the Ohio Supercomputer Center Grants PAS-0061 and PAS-2709. 
+
+References 
+
+[1] D. Silver, J. Schrittwieser, K. Simonyan, I. Antonoglou, A. Huang, A. Guez, T. Hubert, L. Baker, M. Lai, A. Bolton, et al., Mastering the game of go without human knowledge, nature 550 (7676) (2017) 354–359. [2] G. Hinton, L. Deng, D. Yu, G. E. Dahl, A.-r. Mohamed, N. Jaitly, A. Senior, V. Van-houcke, P. Nguyen, T. N. Sainath, et al., Deep neural networks for acoustic modeling in speech recognition: The shared views of four research groups, IEEE Signal processing magazine 29 (6) (2012) 82–97. [3] A. Fawzi, M. Balog, A. Huang, T. Hubert, B. Romera-Paredes, M. Barekatain, A. Novikov, F. J. R. Ruiz, J. Schrittwieser, G. Swirszcz, et al., Discovering faster matrix multiplication algorithms with reinforcement learning, Nature 610 (7930) (2022) 47–53. [4] Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations, Journal of Computational physics 378 (2019) 686–707. [5] S. Greydanus, M. Dzamba, J. Yosinski, Hamiltonian neural networks, Advances in neural information processing systems 32 (2019). [6] M. Cranmer, S. Greydanus, S. Hoyer, P. Battaglia, D. Spergel, S. Ho, Lagrangian neural networks, arXiv preprint arXiv:2003.04630 (2020). 18 [7] I. Nayak, A. Chakrabarti, M. Kumar, F. L. Teixeira, D. Goswami, Temporally consistent koopman autoencoders for forecasting dynamical systems, Scientific Reports 15 (1) (2025) 22127. [8] P. J. Schmid, Dynamic mode decomposition of numerical and experimental data, Journal of Fluid Mechanics 656 (2010) 5–28. [9] C. W. Rowley, I. Mezić, S. Bagheri, P. Schlatter, D. S. Henningson, Spectral analysis of nonlinear flows, Journal of Fluid Mechanics 641 (2009) 115–127. [10] B. O. Koopman, Hamiltonian systems and transformation in Hilbert space, Proceedings of National Academy of Sciences 17 (1931) 315–318. [11] J. H. Tu, Dynamic mode decomposition: Theory and applications, Princeton University, 2013. [12] P. J. Schmid, Dynamic mode decomposition and its variants, Annual Review of Fluid Mechanics 54 (1) (2022) 225–254. [13] M. O. Williams, I. G. Kevrekidis, C. W. Rowley, A data–driven approximation of the Koopman operator: extending Dynamic Mode Decomposition, Journal of Nonlinear Science 25 (6) (2015) 1307–1346. [14] M. Kamb, E. Kaiser, S. L. Brunton, J. N. Kutz, Time-delay observables for koopman: Theory and applications, SIAM Journal on Applied Dynamical Systems 19 (2) (2020) 886–917. [15] S. L. Brunton, B. W. Brunton, J. L. Proctor, E. Kaiser, J. N. Kutz, Chaos as an intermittently forced linear system, Nature communications 8 (1) (2017) 19. [16] F. Takens, Detecting strange attractors in turbulence, in: Dynamical Systems and Turbulence, Warwick 1980: proceedings of a symposium held at the University of Warwick 1979/80, Springer, 2006, pp. 366–381. [17] B. Lusch, J. N. Kutz, S. L. Brunton, Deep learning for universal linear embeddings of nonlinear dynamics, Nature communications 9 (1) (2018) 4950. [18] O. Azencot, N. B. Erichson, V. Lin, M. Mahoney, Forecasting sequential data using consistent koopman autoencoders, in: International Conference on Machine Learning, PMLR, 2020, pp. 475–485. [19] M. S. Hemati, M. O. Williams, C. W. Rowley, Dynamic mode decomposition for large and streaming datasets, Physics of Fluids 26 (11) (2014). [20] H. Zhang, C. W. Rowley, E. A. Deem, L. N. Cattafesta, Online dynamic mode decom-position for time-varying systems, SIAM Journal on Applied Dynamical Systems 18 (3) (2019) 1586–1609. 19 [21] A. Kale, M. Netto, X. Zhou, Efficient streaming dynamic mode decomposition, IEEE Control Systems Letters (2025). [22] J. L. Proctor, S. L. Brunton, J. N. Kutz, Dynamic mode decomposition with control, SIAM Journal on Applied Dynamical Systems 15 (1) (2016) 142–161. [23] S. E. Otto, C. W. Rowley, Linearly recurrent autoencoder networks for learning dynamics, SIAM Journal on Applied Dynamical Systems 18 (1) (2019) 558–593. [24] D. Goswami, D. A. Paley, Global bilinearization and controllability of control-affine non-linear systems: A Koopman spectral approach, in: 2017 IEEE 56th Annual Conference on Decision and Control, 2017, pp. 6107–6112. [25] D. Goswami, D. A. Paley, Bilinearization, reachability, and optimal control of control-affine nonlinear systems: A koopman spectral approach, IEEE Transactions on Automatic Control 67 (6) (2022) 2715–2728. doi:10.1109/TAC.2021.3088802. [26] A. Chakrabarti, I. Nayak, D. Goswami, Temporally-consistent bilinearly recurrent autoencoders for control systems, in: 2025 American Control Conference (ACC), IEEE, 2025, pp. 174–179. [27] M. Korda, I. Mezić, Optimal construction of Koopman eigenfunctions for prediction and control, ArXiv e-prints (2018). arXiv:1810.08733. [28] E. Kaiser, J. N. Kutz, S. L. Brunton, Data-driven discovery of koopman eigenfunctions for control, Machine Learning: Science and Technology 2 (3) (2021) 035023. [29] A. Mauroy, Y. Susuki, I. Mezic, Koopman operator in systems and control, Vol. 484, Springer, 2020. [30] P. J. Schmid, L. Li, M. P. Juniper, O. Pust, Applications of the dynamic mode decom-position, Theoretical and computational fluid dynamics 25 (1) (2011) 249–259. [31] R. Taylor, J. N. Kutz, K. Morgan, B. A. Nelson, Dynamic mode decomposition for plasma diagnostics and validation, Review of Scientific Instruments 89 (5) (2018). [32] I. Nayak, F. L. Teixeira, D.-Y. Na, M. Kumar, Y. A. Omelchenko, Accelerating particle-in-cell kinetic plasma simulations via reduced-order modeling of space-charge dynamics using dynamic mode decomposition, Physical Review E 109 (6) (2024) 065307. [33] I. Nayak, F. L. Teixeira, R. J. Burkholder, On-the-fly dynamic mode decomposition for rapid time-extrapolation and analysis of cavity resonances, IEEE Transactions on Antennas and Propagation 72 (1) (2023) 131–146. [34] Y. Susuki, I. Mezic, Nonlinear koopman modes and coherency identification of coupled swing dynamics, IEEE Transactions on Power Systems 26 (4) (2011) 1894–1904. 20 [35] J. L. Proctor, P. A. Eckhoff, Discovering dynamic patterns from infectious disease data using dynamic mode decomposition, International health 7 (2) (2015) 139–145. [36] J. Mann, J. N. Kutz, Dynamic mode decomposition for financial trading strategies, Quantitative Finance 16 (11) (2016) 1643–1655. [37] I. Abraham, T. D. Murphey, Active learning of dynamics for data-driven control using koopman operators, IEEE Transactions on Robotics 35 (5) (2019) 1071–1083. [38] C. Folkestad, S. X. Wei, J. W. Burdick, Koopnet: Joint learning of koopman bilinear models and function dictionaries with application to quadrotor trajectory tracking, in: 2022 International Conference on Robotics and Automation (ICRA), IEEE, 2022, pp. 1344–1350. [39] A. M. Avila, I. Mezić, Data-driven analysis and forecasting of highway traffic dynamics, Nature Communications 11 (1) (2020) 2090. doi:10.1038/s41467-020-15582-5. [40] B. W. Brunton, L. A. Johnson, J. G. Ojemann, J. N. Kutz, Extracting spatial–temporal coherent patterns in large-scale neural recordings using dynamic mode decomposition, Journal of neuroscience methods 258 (2016) 1–15. [41] R. V. Raut, Z. P. Rosenthal, X. Wang, H. Miao, Z. Zhang, J.-M. Lee, M. E. Raichle, A. Q. Bauer, S. L. Brunton, B. W. Brunton, et al., Arousal as a universal embedding for spatiotemporal brain dynamics, Nature 647 (8089) (2025) 454–461. [42] T. Sayadi, P. J. Schmid, F. Richecoeur, D. Durox, Parametrized data-driven decomposi-tion for bifurcation analysis, with application to thermo-acoustically unstable systems, Physics of Fluids 27 (3) (2015). [43] Q. A. Huhn, M. E. Tano, J. C. Ragusa, Y. Choi, Parametric dynamic mode decomposition for reduced order modeling, Journal of Computational Physics 475 (2023) 111852. [44] L. Du, S. Zhang, R. Zhang, S. Zhang, Interpolation-based parametric reduced-order models with dynamic mode decomposition, Journal of Computational Physics (2025) 114436. [45] F. Andreuzzi, N. Demo, G. Rozza, A dynamic mode decomposition extension for the forecasting of parametric dynamical systems, SIAM Journal on Applied Dynamical Systems 22 (3) (2023) 2432–2458. [46] Y. Guo, M. Korda, I. G. Kevrekidis, Q. Li, Learning parametric koopman decompositions for prediction and control, SIAM Journal on Applied Dynamical Systems 24 (1) (2025) 744–781. [47] I. Nayak, F. L. Teixeira, M. Kumar, Koopman autoencoder architecture for current density modeling in kinetic plasma simulations, in: 2021 International Applied Compu-tational Electromagnetics Society (ACES) Symposium, ACES, Hamilton, ON, Canada, 2021. 21 [48] D. Na, H. Moon, Y. A. Omelchenko, F. L. Teixeira, Local, explicit, and charge-conserving electromagnetic particle-in-cell algorithm on unstructured grids, IEEE Transactions on Plasma Science 44 (8) (2016) 1353–1362. [49] A. Mauroy, I. Mezić, Global stability analysis using the eigenfunctions of the Koopman operator, IEEE Transactions on Automatic Control 61 (11) (2016) 3356–3369. [50] R. Mohr, I. Mezić, Construction of eigenfunctions for scalar-type operators via Laplace averages with connections to the Koopman operator, ArXiv e-prints (Mar. 2014). arXiv:1403.6559. URL arxiv.org/abs/1403.6559 
+
+[51] M. Budisić, R. Mohr, I. Mezić, Applied Koopmanism, Chaos: An Interdisciplinary Journal of Nonlinear Science 22 (4) (2012). [52] K. Taira, T. Colonius, The immersed boundary method: a projection approach, Journal of Computational Physics 225 (2) (2007) 2118–2137. 22

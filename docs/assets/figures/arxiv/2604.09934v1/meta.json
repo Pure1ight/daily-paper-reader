@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.09934v1/fig-001.webp",
+      "caption": "Figure 4: Test 2. Convergence history of the Picard iteration. The left image shows the relative changes relU(k) and relP(k), while the right image shows the relative residuals ResU(k) and ResP(k).",
+      "page": 25,
+      "index": 1,
+      "width": 856,
+      "height": 295
+    },
+    {
+      "url": "assets/figures/arxiv/2604.09934v1/fig-002.webp",
+      "caption": "Figure 5: Test 3. First row: true initial velocity components and pressure. Second row: reconstructed initial velocity components and pressure. Third row: pointwise relative reconstruction errors.",
+      "page": 26,
+      "index": 2,
+      "width": 806,
+      "height": 778
+    },
+    {
+      "url": "assets/figures/arxiv/2604.09934v1/fig-003.webp",
+      "caption": "Figure 1: Test 1. First row: true velocity components and initial pressure. Second row: reconstructed velocity components and initial pressure. Third row: pointwise relative reconstruction errors.",
+      "page": 22,
+      "index": 3,
+      "width": 806,
+      "height": 780
+    },
+    {
+      "url": "assets/figures/arxiv/2604.09934v1/fig-004.webp",
+      "caption": "Figure 2: Test 1. Convergence history of the Picard iteration. The left image shows the relative changes relU(k) and relP(k), while the right image shows the relative residuals ResU(k) and ResP(k).",
+      "page": 23,
+      "index": 4,
+      "width": 870,
+      "height": 310
+    },
+    {
+      "url": "assets/figures/arxiv/2604.09934v1/fig-005.webp",
+      "caption": "Figure 6: Test 3. Convergence history of the Picard iteration. The left image shows the relative changes relU(k) and relP(k), while the right image shows the relative residuals ResU(k) and ResP(k).",
+      "page": 27,
+      "index": 5,
+      "width": 856,
+      "height": 295
+    },
+    {
+      "url": "assets/figures/arxiv/2604.09934v1/fig-006.webp",
+      "caption": "Figure 3: Test 2. First row: true initial velocity components and pressure. Second row: reconstructed initial velocity components and pressure. Third row: pointwise relative reconstruction errors.",
+      "page": 24,
+      "index": 6,
+      "width": 806,
+      "height": 781
+    }
+  ]
+}
