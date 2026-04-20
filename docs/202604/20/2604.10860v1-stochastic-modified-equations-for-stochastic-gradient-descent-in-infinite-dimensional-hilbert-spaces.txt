@@ -1,0 +1,1805 @@
+Title: Stochastic Modified Equations for Stochastic Gradient Descent in Infinite-Dimensional Hilbert Spaces
+
+URL Source: https://arxiv.org/pdf/2604.10860v1
+
+Published Time: Tue, 14 Apr 2026 01:54:14 GMT
+
+Number of Pages: 28
+
+Markdown Content:
+# Stochastic Modified Equations for Stochastic Gradient Descent in Infinite-Dimensional Hilbert Spaces 
+
+## Sandra Cerrai, Qin Li, Anjali Nair, Jaeyoung Yoon April 14, 2026 
+
+Abstract 
+
+Inverse problems in scientific computing often require optimization over infinite-dimensional Hilbert spaces. A commonly used solver in such settings is stochastic gradient descent (SGD), where gradients are approximated using randomly sampled sub-objective functions. In this work we study the continuous-time limit of SGD in the small step-size regime. We show that the discrete dynamics can be approximated by a stochastic differential equation (SDE) driven by cylindrical Brownian motion. The analysis extends diffusion-approximation results previously established in Euclidean spaces [14] to the infinite-dimensional setting. Two analytical difficulties arise in this extension. First, the cylindrical nature of the noise requires establishing well-posedness of the resulting stochastic evolution equation through ap-propriate structural conditions on the covariance operator. Second, since the randomness in SGD originates from discrete sampling while the limiting equation is driven by Gaussian noise, the comparison between the two dynamics must be carried out in a weak sense. We therefore introduce a suitable class of smooth functionals on the Hilbert space and prove that the discrep-ancy between SGD and the limiting SDE, when evaluated through these functionals, is of second order in the step size. Numerical experiments confirm the predicted convergence behavior. 
+
+# 1 Introduction 
+
+Optimization in infinite-dimensional spaces presents challenges beyond those encountered in finite dimensions. Many numerical solvers possess a computational complexity that depends explicitly on the ambient dimension d, rendering their direct extension to the case d = ∞ ill-defined. Yet, many optimization problems are naturally posed over Hilbert spaces, so the dimension has to be infinity. A big source of such applications are inverse problems [27, 7, 28, 10, 25]. Inverse problems are ubiquitous in scientific computing, where measurements are collected to infer unknown parameters by minimizing the mismatch between simulated data and observations. Examples include classical X-ray tomography, optical tomography, and inverse scattering, where the unknowns are functions rather than finite vectors [20, 1, 5, 2]. In all these settings, the parameter belongs naturally to a function space, and the associated optimization problem is posed over an infinite-dimensional Hilbert space H. Extending optimization solvers from Euclidean space to H requires a rigorous examination of operator compactness, regularity, and well-posedness. In this work, we investigate one such extension: Stochastic Gradient Descent (SGD) in a Hilbert space. In finite dimensions, SGD is widely used when the objective function is composed of many (possibly infinitely many) sub-objective functions [23, 3, 12]. At each iteration, the algorithm updates the iterate using a small step in the direction of the gradient of a randomly selected sub-objective, providing an unbiased estimator of the full gradient. Its low per-iteration cost, ease of implementa-tion, and favorable stability properties have made it a very popular tool in large-scale optimization [26, 9, 29, 11, 19, 24]. 1
+
+> arXiv:2604.10860v1 [math.OC] 12 Apr 2026
+
+A powerful perspective for understanding SGD’s performance is the continuous-in-time approx-imation: under suitable scaling of the step size η, the discrete SGD iteration can be approximated by a stochastic differential equation (SDE), often termed a Stochastic Modified Equation (SME) [13, 14]. This viewpoint provides insight into understanding SGD performance, including the fluctu-ation behavior, convergence in iterations, and long-time statistical properties, and has led to refined algorithmic modifications in the finite-dimensional setting [17, 13, 14, 15]. The goal of this paper is to extend this framework to infinite-dimensional Hilbert spaces, where the limiting object is an infinite-dimensional stochastic evolution equation (sometimes referred to as an SPDE) driven by cylindrical noise. One immediate difficulty lies in the lost of well-posedness of the limiting equation. In the infinite-dimensional setting, the covariance structure of the stochastic gradient must be represented by an operator on the Hilbert space, and the noise appears as a cylindrical Brownian motion. Controlling the variance of the resulting SPDE therefore requires careful control of the covariance operator to ensure the limiting SPDE makes sense. Furthermore, the two dynamics are equipped with different random sources: the randomness in SGD arises from discrete sampling while the limiting SPDE is driven by Gaussian noise, the approximation cannot be understood pathwise. Instead, the comparison must be carried out in a weak sense, through evaluation against suitable smooth functionals. This necessitates a precise identification of the appropriate class of test functionals on the Hilbert space. We nevertheless provide an affirmative answer in a weak sense. More precisely, we define 
+
+• ϕn: the n-th step SGD iterates, 
+
+• φ(t): the solution to the associated SPDE at time t, and 
+
+• eφn: the Euler-Maruyama (EM) discretization evaluated at tn = nη where η is a small time-stepping. We measure the difference between these quantities against smooth test functionals g : H → R.We find E(g(ϕn)) − Eg( eφn) is of second order in η. This is a somewhat surprising conclusion. Indeed it is well-established that the EM discretization is only a first-order weak approximation of the continuous SPDE, namely eφn ≈ φ(tn) only up to O(η). Yet, the actual SGD algorithm 
+
+ϕn aligns with the EM discretization to a higher order ( O(η2))! This higher-order agreement is noteworthy because it suggests that “vanilla” SGD possesses a high-fidelity affinity to its numerical proxy without the need for complex high-order schemes. Two ingredients are crucial in this analysis. First, the covariance operator associated with the stochastic gradient plays a central role. Under natural structural assumptions on the sub-objective functions, this operator is compact, which allows the cylindrical noise to be interpreted within the classical theory of infinite-dimensional stochastic evolution equations. Second, the weak-error anal-ysis requires the propagation of smoothness along both the discrete and continuous dynamics. Even if the test functional g is smooth initially, its composition with the flow can deteriorate regularity; therefore, careful control of higher-order derivatives is required to close the estimates and ensure the 
+
+O(η2) bound holds. We summarize our main contributions of this paper. We rigorously derive the SPDE limit for SGD in H and establish the well-posedness of the resulting evolution equation under cylindrical white noise. We prove that ϕn and eφn coincide up to O(η2) in the weak sense, provided certain smoothness of the test functional g, justifying the SME as a high-fidelity proxy for algorithmic behavior. Finally, we provide experiments on inverse problems confirming the O(η2) error slope in infinite-dimensional settings. The remainder of the paper is organized as follows. In Section 2 we review the functional analytic and probabilistic preliminaries. In Section 3 we derive the SPDE limit and establish its well-posedness. Section 4 is devoted to the weak error analysis comparing SGD and the SPDE. Section 5 presents numerical evidence illustrating the theoretical results. 22 Preliminaries 
+
+This section collects the technical ingredients required for the analysis. Two main components are needed: the probabilistic framework for stochastic evolution equations in Hilbert spaces, and the theory of high order differentiation for functionals defined on infinite-dimensional spaces. These tools are essential for formulating the limiting SPDE and for carrying out the weak error analysis between the discrete SME dynamics and SGD solver. For completeness and to fix notation, we briefly review the relevant concepts and results that will be used throughout the paper. 
+
+## 2.1 Stochastic Framework in a Hilbert Space 
+
+We summarize the notions needed for establishing probabilistic framework in a Hilbert space. Defi-nitions are mostly follow [6, 22, 16, 8]. Over a probability space (Ω , F, P), we first define a Hilbert space 
+
+L2Ω := {u : Ω → R E[u(ω)2] < ∞} , (1) equipped with the inner product ⟨u1, u 2⟩L2Ω = E[u1(ω)u2(ω)]. This definition can be extended to higher-dimensional space. Denote H a real separable Hilbert space, endowed with the inner product ⟨· , ·⟩ H and the associated norm ∥ · ∥ H , and let B(H) be its Borel σ-algebra. When there is no risk for ambiguity, we drop the subscript H. Then over the same probability space (Ω , F, P), we collect all H-valued F-measurable random variables X : Ω → H, and for every 1 ≤ p < ∞, define 
+
+∥X∥Lp(Ω ,H ) := ( E ∥X∥p)1/p =
+
+Z 
+
+> Ω
+
+∥X(ω)∥pdP(ω)
+
+1/p 
+
+,
+
+and define a Banach space: 
+
+Lp(Ω , H ) = {X : Ω → H , E ∥X∥p < ∞} .
+
+We can also define second-order structures of an H-valued random variable X.
+
+Definition 2.1. A linear operator Q : H → H is called the covariance operator of an H-valued random variable X if 
+
+⟨Qϕ, ψ ⟩ = Cov ( ⟨X, ϕ ⟩, ⟨X, ψ ⟩), ϕ, ψ ∈ H. 
+
+We note that ⟨X, ϕ ⟩ is a scalar, so Cov (⟨X, ϕ ⟩, ⟨X, ψ ⟩) is understood in the usual sense. 
+
+Definition 2.2. An H-valued random variable X is called Gaussian if ⟨X, ϕ ⟩ is a real-valued Gaus-sian random variable, for all ϕ ∈ H.
+
+In what follows, for every H, K separable Hilbert spaces, we denote by L(H, K ) the space of bounded linear operators from H to K. If H = K, we use the notation L(H). We denote by 
+
+L2(H, K ) the subspace of all operators Q ∈ L (H, K ) such that 
+
+∥Q∥2 =
+
+> ∞
+
+X
+
+> i=1
+
+∥Qe i∥2
+
+> K
+
+!1/2
+
+< ∞,
+
+where {ei}i∈ N is any orthonormal basis of H. If this series converges, the value of ∥Q∥2 is independent of the chosen basis. Operators in L2(H, K ) are called Hilbert-Schmidt operators on H with values 3in K. Next, we denote by L+(H) ⊂ L (H) consisting of all non-negative and self-adjoint operators. For every Q ∈ L +(H), the trace of Q is defined by Tr Q =
+
+> ∞
+
+X
+
+> i=1
+
+⟨Qe i, e i⟩,
+
+where {ei}i∈ N is any orthonormal basis of H. Also in this case, if this series converges, the value of Tr Q is independent of the chosen basis, and we say that Q belongs to L+1 (H), the space of trace-class 
+
+operators on H. Finally, we would like to remark that if Q, R ∈ L 2(H, K ), then R⋆Q ∈ L +1 (H) and 
+
+⟨R, Q ⟩L2(H,K ) = Tr ( R⋆Q) = Tr ( Q⋆R),
+
+defines an inner product in L2(H, K ), whose associated norm is the norm ∥ · ∥ 2.The following result summarizes standard properties of covariance operators associated with square-integrable random variables. 
+
+Lemma 2.3. Let X be a random variable in L2(Ω , H ), with mean μ ∈ H and covariance operator 
+
+Q ∈ L (H). Then, the operator Q belongs to L+1 (H), with 
+
+Tr Q = E ∥X − μ∥2.
+
+We next introduce the cylindrical Wiener process , which will provide the driving noise for the stochastic differential equations considered in this paper. 
+
+Definition 2.4. Let {ei}i∈ N be an orthonormal basis of the separable Hilbert space H and let 
+
+{βi(t)}i∈ N be a sequence of mutually independent standard Brownian motions, all defined on the stochastic basis (Ω , F, {F t}t≥0, P). We define 
+
+Wt =
+
+> ∞
+
+X
+
+> i=1
+
+βi(t)ei, t ≥ 0. (2) It can be easily checked that series above converges in L2(Ω; K) for any K, an Hilbert space such that the embedding H → K belongs to the space of Hilbert-Schmidt operators L2(H, K ). Moreover, 
+
+∥Wt∥2 
+
+> L2(Ω ,K )
+
+= t
+
+> ∞
+
+X
+
+> i=1
+
+∥ei∥2 
+
+> K
+
+.
+
+## 2.2 Differentiation and Expansion in Hilbert Spaces 
+
+Since we are evaluating functionals over function spaces, the notions of Fr´ echet differentiation and Taylor expansion in Hilbert spaces are essential. We review these concepts and unify notations, following [4, 6]. Throughout the paper, when the context is clear, we do not distinguish functionals and functions. Let E and F be Banach spaces, and let Eo ⊂ E be an open set. 
+
+Definition 2.5. A function f : Eo → F is said to be Fr´ echet differentiable at a ∈ Eo if there exists a bounded linear map Df (a) ∈ L (E, F ) such that 
+
+lim 
+
+> h→0
+> a+h∈Eo
+
+∥f (a + h) − f (a) − Df (a)∥F
+
+∥h∥E
+
+= 0 . (3) In case E = H, for some Hilbert space H, and F = R, Df (a) is H-valued, and we denote it 
+
+∇f (a) ∈ H.Next, we examine higher order differentiability. 4Definition 2.6. A function f : Eo → F is twice differentiable at a ∈ U if Df : Eo → L (E, F )
+
+is differentiable at a. The second derivative D2f (a) is the derivative of Df at a and belongs to 
+
+L(E; L(E, F )) = L2(E, F ). Higher-order derivatives are defined inductively, with the n-th derivative 
+
+Dnf (a) belonging to Ln(E; F ).
+
+Note that according to this definition, for every n ∈ N, Ln(E; F ) is the space of continuous 
+
+n-linear maps from En = E × · · · × E into F . Akin to directional derivative, we also have high-order Gateaux derivatives as well. For h1, . . . , h n ∈ E, we write 
+
+Dnf (a) ( h1, . . . , h n) ∈ F , 
+
+as the evaluation of the multilinear map Dnf (a) at ( h1, . . . , h n) ∈ En. When h1 = h2 = · · · = hn,we condense the expression to be Dnf (a) ( h). These notations are useful to express functional Taylor expansion below. This formula will be shown to be of core use in the weak error analysis in Section 4. 
+
+Theorem 2.7 (Taylor Formula with the Integral Remainder) . Let f : Eo → F be a function with sufficient smoothness, and assume that the line segment [a, a + h] is contained in Eo. Then, 
+
+f (a + h) = f (a) + Df (a) h + 12 D2f (a) ( h) + · · · + 1
+
+n! Dnf (a) ( h)+
+
+Z 10
+
+(1 − t)n
+
+n! Dn+1 f (a + th ) ( h)dt. 
+
+Lastly, we recall a standard well-posedness result for stochastic evolution equations driven by cylindrical Wiener noise introduced in (2). Let U and H be separable Hilbert spaces, let Wt be a cylindrical Wiener process on U , and consider 
+
+dX t = b(Xt)dt + σ(Xt)dW t, X0 = x ∈ H. (4) 
+
+Theorem 2.8. Let H be a separable Hilbert space and consider equation (4) . Assume that b : H → H
+
+and σ : H → L 2(U, H ) are locally Lipschitz continuous, and there exists c > 0 such that 
+
+⟨b(x), x ⟩ + ∥σ(x)∥2 
+
+> L2(H)
+
+≤ c (1 + ∥x∥2), x ∈ H. (5) 
+
+Then for every x ∈ H there exists a unique global adapted continuous solution Xt with X0 = x such that 
+
+E sup  
+
+> t∈[0 ,T ]
+
+∥Xt∥2p ≤ cp(T )(1 + ∥x∥2p), ∀ T > 0, p ≥ 1. (6) This is a classical result in the case of finite-dimensional spaces, and we show how it adapts easily to the case of general Hilbert spaces in Section A, following the same arguments used e.g. in [18, Theorem 2.3.5]. 
+
+# 3 Stochastic Gradient Descent and Modified Equations in Infinite Dimensions 
+
+In this section we follow the strategy of [14] to derive a stochastic modified equation (SME) for stochastic gradient descent (SGD) in an infinite-dimensional Hilbert space. We begin by formulating the SGD algorithm in this setting and analyzing the statistical properties of the stochastic gradients; see Section 3.1. Based on these properties, we then derive a corresponding continuous-time stochastic evolution equation by matching the mean and covariance of the discrete stochastic gradients; see Section 3.2. Finally, we address the well-posedness of the resulting stochastic differential equation. In particular, we identify conditions on the diffusion operator that ensure existence and uniqueness of solutions; see Section 3.3. 53.1 SGD in Hilbert Spaces and Noise Structure 
+
+Consider the following optimization problem defined on an infinite-dimensional Hilbert space H:min  
+
+> ϕ∈H
+
+F(ϕ) := E Fγ (ϕ), (7) where {F γ : γ ∈ Γ} is a family of functionals from H to R, and γ is a Γ-valued random variable representing the source of uncertainty. The expectation is taken with respect to the distribution of 
+
+γ.A standard approach for solving (7) is gradient descent (GD), 
+
+ϕn+1 = ϕn − η ∇F (ϕn) = ϕn − η E ∇F γ (ϕn), n ≥ 0, (8) where η > 0 is the learning rate and ∇F denotes the Fr´ echet derivative of F. For the iteration (8) to be well-defined, we assume (A1) F is Fr´ echet differentiable on H, (A2) the initial iterate ϕ0 belongs to H.In practice, evaluating the full gradient 
+
+∇F (ϕ) = E ∇F γ (ϕ)requires computing an expectation over all realizations of γ, which can be computationally expensive, or even infeasible. To reduce this cost, one typically replaces the full gradient by a stochastic approximation and considers the stochastic gradient descent (SGD) 
+
+ϕn+1 = ϕn − η ∇F γn (ϕn) , n ≥ 0 , (9) where {γn}n≥0 is a sequence of i.i.d. random variables with the same distribution as γ.To facilitate the derivation of the continuous-time approximation, we rewrite the iteration (9) in the perturbation form 
+
+ϕn+1 = ϕn − η ∇F (ϕn) + η V (ϕn; γn) , (10) where the intrinsic noise term is defined by 
+
+V (ϕ; γ) := ∇F (ϕ) − ∇F γ (ϕ).
+
+By construction, the process {V (ϕn; γn)}n≥0 satisfies the martingale difference property with respect to the natural filtration Fn = σ(γ0, . . . , γ n−1), namely 
+
+E[V (ϕn; γn) | Fn] = 0 , n ≥ 1 .
+
+The randomness introduced by the stochastic gradients induces fluctuations in the dynamics. To quantify these fluctuations, we characterize the covariance structure of the noise. For every ϕ ∈ H,we define the covariance operator Q(ϕ) : H → H by 
+
+⟨Q(ϕ)u, v ⟩ = Cov  ⟨V (ϕ; γ), u ⟩, ⟨V (ϕ; γ), v ⟩, ∀u, v ∈ H. 
+
+or formally written as: 
+
+Q(ϕ) = Eγ
+
+V (ϕ; γ) ⊗ V (ϕ; γ) .
+
+It is immediate to check that Q(ϕ) is a bounded and non-negative selfadjoint linear operator in 
+
+H, for every ϕ in H. In what follows, we shall assume (A3) For every ϕ ∈ H, the stochastic gradient has finite second moment 
+
+Eγ ∥∇F γ (ϕ)∥2 < ∞.
+
+This implies that Q(ϕ) ∈ L +1 (H), as Tr Q(ϕ) = 
+
+> ∞
+
+X
+
+> i=1
+
+Eγ |⟨ V (ϕ; γ), e i⟩| 2 = Eγ ∥V (ϕ; γ)∥2 
+
+> H
+
+≤ Eγ ∥∇F γ (ϕ)∥2.
+
+63.2 Derivation of Infinite-Dimensional SMEs 
+
+We now derive a stochastic differential equation on the Hilbert space H that approximates the dis-crete SGD trajectory (10). Following the diffusion-approximation viewpoint, we seek a continuous-time stochastic evolution whose drift and covariance agree with those of the SGD updates. We propose the following stochastic modified equation (SME): 
+
+dφ t = −∇F (φt) dt + √η σ (φt) dW t, (11) where Wt is the cylindrical Wiener process introduced in Definition 2.4, and σ is to be defined. It is worth noting that the space of σ and Wt are not fixed yet, and they will be selected to ensure the consistency between (11) and (10). To relate (11) to SGD, we discretize it by the Euler–Maruyama scheme with step size η:˜φn+1 = ˜ φn − η ∇F ( ˜ φn) + √η σ ( ˜ φn) W(n+1) η − Wnη 
+
+. (12) Comparing (12) with the perturbation form of SGD in (10), we see immediately that the drift terms coincide, and that both noise terms have mean zero. It remains to compare their covariance structures. For any u, v ∈ H,Cov 
+
+ √η σ (ϕ) W(n+1) η − Wnη 
+
+, u , √η σ (ϕ) W(n+1) η − Wnη 
+
+, v 
+
+
+
+= η E
+
+h
+
+W(n+1) η − Wnη , σ (ϕ)∗u W(n+1) η − Wnη , σ (ϕ)∗v
+
+i
+
+= η2⟨σ(ϕ)σ(ϕ)∗u, v ⟩ .
+
+Therefore, in order for the Euler–Maruyama discretization of the SME (12) to match the first two moments of the SGD increment (10), we need: Cov 
+
+√η σ (ϕ) W(n+1) η − Wnη 
+
+
+
+= η2σ(ϕ)σ(ϕ)∗ = η2Q(ϕ) = Cov  ηV n(ϕ). (13) Since the randomness in (10) arises from sampling γ ∈ Γ, whereas the SME is driven by Gaussian noise, agreement at the level of these statistical quantities is the natural notion of approximation. Now we aim to make the definition of σ and Wt explicit that satisfies (13). To do so, we recall the definition in (1) and define U := L2Γ. The diffusion kernel σ : U → H becomes: 
+
+σ(ϕ)u := Eγ
+
+ V (ϕ; γ)u(γ), u ∈ U. (14) This also suggests that Wt is U -valued. In the following lemma, we clarify that this construction is appropriate and satisfy (13). Throughout the section, unless otherwise specified, vector norms and inner products are taken in H. Norms on operator spaces, such as L2(U, H ) or U , are indicated explicitly. 
+
+Lemma 3.1. Let σ be defined as in (14) . Then, σ(ϕ) satisfies (13) and belongs to L2(U, H ), for each ϕ.Proof. Note that for each h ∈ H,
+
+⟨σ(ϕ)u, h ⟩ = E  V (ϕ; γ)u(γ), h = E   ⟨V (ϕ; γ), h ⟩ u(γ) = ⟨V (ϕ; γ), h ⟩, u U ,
+
+which indicates: 
+
+ σ(ϕ)∗h(γ) = ⟨V (ϕ; γ), h ⟩.
+
+Thus, one can check that σσ ∗ = Q as follows 
+
+σ(ϕ)σ(ϕ)∗h = Eγ
+
+ V (ϕ; γ)⟨V (ϕ; γ), h ⟩ = Q(ϕ)h. 
+
+7This definition naturally leads to the fact that σ is a Hilbert-Schmidt operator. Denote ( ek) an orthonormal basis of U , we have 
+
+⟨σ(ϕ)ek, h ⟩ = Eγ
+
+ ⟨V (ϕ, γ ), h ⟩ek(γ) = ⟨V (ϕ; γ), h ⟩, e k U ,
+
+and this implies 
+
+X
+
+> k
+
+|⟨ σ(ϕ)ek, h ⟩| 2 = X
+
+> k
+
+| ⟨V (ϕ; γ), h ⟩, e k U |2 = ∥⟨ V (ϕ; γ), h ⟩∥ 2
+
+> U
+
+For an orthonormal basis ( fj ) of H, we get 
+
+∥σ(ϕ)∥2 
+
+> L2(U,H )
+
+= X
+
+> k
+
+∥σ(ϕ)ek∥2 = X
+
+> k
+
+X
+
+> j
+
+|⟨ σ(ϕ)ek, f j ⟩| 2 = X
+
+> j
+
+∥⟨ V (ϕ; γ), f j ⟩∥ 2
+
+> U
+
+= X
+
+> j
+
+E ⟨V (ϕ; γ), f j ⟩2 = E∥V (ϕ; γ)∥2 < ∞,
+
+where the last inequality comes from (A3). This ends the proof. 
+
+## 3.3 Existence and Uniqueness of Strong Solution to SME 
+
+With the stochastic modified equation formally derived in (11), it remains to verify that the equation is well-posed. Recalling Theorem 2.8, existence and uniqueness of solutions follow provided the drift and diffusion coefficients satisfy appropriate local Lipschitz and growth conditions. To this end we introduce the following assumption. (A4) There exist random variables CL(γ) ∈ L2(Γ) and CG(γ) ∈ L1(Γ) such that for each ϕ, ψ ∈ H,
+
+∥∇F γ (ϕ) − ∇F γ (ψ)∥ ≤ CL(γ)∥ϕ − ψ∥, ⟨∇F γ (ϕ), ϕ ⟩ ≤ CG(γ)(1 + ∥ϕ∥2) .
+
+Under this assumption the SME (11) is well-posed. 
+
+Theorem 3.2. Assume (A4) . Then for every initial condition ϕ0 ∈ H, equation (11) with σ defined as (14) admits a unique adapted strong solution 
+
+ϕt = ϕ0 −
+
+Z t
+
+> 0
+
+∇F (ϕs) ds + √η
+
+Z t
+
+> 0
+
+σ(ϕs) dW (s), t ≥ 0,
+
+such that 
+
+ϕ ∈ Lp(Ω; C([0 , T ]; H)) 
+
+for every p ≥ 1 and T > 0. Moreover, 
+
+E sup  
+
+> t∈[0 ,T ]
+
+∥ϕt∥p ≤ cp(T ) 1 + ∥ϕ0∥p.
+
+Proof. By Theorem 2.8, it is enough to show the local Lipschitz continuity and linear growth for both ∇F and σ in (11). 
+
+Condition for ∇F . We can compute the Lipschitz continuity and linear growth of ∇F ∥∇F (ϕ) − ∇F (ψ)∥ ≤ E∥∇F γ (ϕ) − ∇F γ (ψ)∥ ≤ ECL(γ) ∥ϕ − ψ∥,
+
+and 
+
+⟨∇F (ϕ), ϕ ⟩ = E⟨∇F γ (ϕ), ϕ ⟩ ≤ ECG(γ) (1 + ∥ϕ∥2).
+
+8Noting that |ECL(γ)|2 ≤ EC2
+
+> L
+
+(γ) < ∞ by Jensen, and by (A4), conditions for the velocity field are satisfied in Theorem 2.8. 
+
+Condition for σ. For any orthonormal basis ( ek) and ( fj ) for U and H, respectively, we use Parseval’s identity to derive 
+
+∥σ(ϕ) − σ(ψ)∥2 
+
+> L2(U,H )
+
+= X
+
+> k
+
+∥ σ(ϕ) − σ(ψ)ek∥2 = X
+
+> k
+
+E  V (ϕ; γ) − V (ψ; γ)ek(γ) 2
+
+= X
+
+> k,j
+
+E    V (ϕ; γ) − V (ψ; γ)ek(γ), f j
+
+> 2
+
+= X
+
+> k,j
+
+ E  ⟨V (ϕ; γ) − V (ψ; γ), f j ⟩ek(γ) 2
+
+= X
+
+> j
+
+E |⟨ V (ϕ; γ) − V (ψ; γ), f j ⟩| 2 = E∥V (ϕ; γ) − V (ψ; γ)∥2.
+
+Using the above relation, one can derive: 
+
+∥σ(ϕ) − σ(ψ)∥2 
+
+> L2(U,H )
+
+= E∥V (ϕ; γ) − V (ψ; γ)∥2
+
+= E∥∇F γ (ϕ) − ∇F γ (ψ)∥2 − (E∥∇F γ (ϕ) − ∇F γ (ψ)∥)2
+
+≤ E∥∇F γ (ϕ) − ∇F γ (ψ)∥2 ≤ ECL(γ)2 ∥ϕ − ψ∥2,
+
+with (A4), the Lipschitz continuity of σ is confirmed. Now, it only remains to check the linear growth of σ. Through Jensen’s inequality, 
+
+∥σ(ϕ)∥2 
+
+> L2(U,H )
+
+= E∥V (ϕ; γ)∥2 ≤ 2∥∇F (ϕ)∥2 + 2 E∥∇F γ (ϕ)∥2 ≤ 4E∥∇F γ (ϕ)∥2. (15) Note that 
+
+E∥∇F γ (ϕ)∥2 ≤ 2E∥∇F γ (ϕ) − ∇F (0) ∥2 + 2 ∥∇F (0) ∥2
+
+≤ 2 ECL(γ)2 ∥ϕ∥2 + 2 E∥∇F γ (0) ∥2 ≲ (1 + ∥ϕ∥2),
+
+where we used (A4). Plugging this back in (15) we justify the condition for σ being satisfied in Theorem 2.8, and hence complete the proof. 
+
+# 4 Weak Error Analysis 
+
+In this section, we analyze the weak error between the SGD iteration and the discretized SME. Our main objective is to establish a second-order weak approximation result, showing that the discrepancy between the two dynamics is of order O(η2) on finite time intervals. This justifies the use of SME as a mean to understand SGD solver. We rewrite ϕn as the SGD iterate and ˜ φn as the discretized SME: 
+
+ϕn+1 = ϕn + ηb (ϕn) + ηV (ϕn), (16a) ˜φn+1 = ˜ φn + ηb ( ˜ φn) + ησ ( ˜ φn)∆ W (16b) where σ is chosen as in Section 3, so that for every ϕ ∈ H the covariance of σ(ϕ)∆ W matches that of the stochastic gradient noise V (ϕ). To quantify the weak error, we introduce the class of test functionals G defined by 
+
+G := {g : H → R | ∥Di g∥∞ := sup  
+
+> ϕ∈H
+
+∥Dig(ϕ)∥Li(H) < ∞, i = 1 , 2, 3},
+
+where Dig denotes the i-th Fr´ echet derivative of g. Throughout the section, when the expectation 
+
+E appears, the expectation is taken with respect to both ϕn and ˜ φn, in both γn for ∆ W space. We first present the theorem in an informal manner: 9Theorem 4.1 (informal statement) . Suppose that ϕn and ˜φn are stochastic iterative processes starting from a fixed initial state ϕ0 ∈ H generated by the first and second stochastic iterations in (16a) -(16b) , respectively. Assume that b and σ satisfy certain conditions and let g be a smooth functional, then 
+
+max   
+
+> k=0 ,··· ,⌊T /η ⌋
+
+E g( ˜ φk) − g(ϕk) = O(η2) .
+
+The statement and the conditions are to be made more precise in Theorem 4.5. At first glance, the result may appear somewhat counterintuitive. Indeed, for a stochastic differential equation, the Euler–Maruyama discretization typically achieves only first-order accuracy in the weak sense with respect to the time step η. We emphasize, however, that the two quantities compared in the theorem are ϕk and φk. In particular, we are not comparing a continuous-time SDE solution with its discrete-time approximation. Instead, both ϕk and φk arise from discrete dynamics. The result therefore shows that these two discrete processes approximate each other to second order in the step size. The main strategy of analyzing error comes down to induction. To do so, we first unify two notations: 
+
+• ϕn(ϕ, k ) denotes solution to (16a) at tn = nη with the initial condition ϕk = ϕ placed at tk;
+
+• eφn(ϕ, k ) denotes solution to (16b) at tn = nη with the initial condition eφk = ϕ placed at tk.Now we follow [14] and propagate solutions: 
+
+E g( ˜ φk) = E g( ˜ φk(ϕ0, 0)) = E g
+
+
+
+˜φk
+
+  ˜φ1(ϕ0, 0) , 1
+
+− E g
+
+
+
+˜φk(ϕ1, 1) 
+
+
+
++ E g
+
+
+
+˜φk(ϕ1, 1) 
+
+
+
+= E g
+
+
+
+˜φk
+
+  ˜φ1(ϕ0, 0) , 1
+
+− E g
+
+
+
+˜φk(ϕ1, 1) 
+
+
+
++ E g
+
+
+
+˜φk
+
+  ˜φ2(ϕ1, 1) , 2
+
+− E g
+
+
+
+˜φk(ϕ2, 2) 
+
+
+
++ E g
+
+
+
+˜φk(ϕ2, 2) 
+
+
+
+= · · · 
+
+=
+
+> k−1
+
+X
+
+> l=1
+
+
+
+E g
+
+
+
+˜φk
+
+  ˜φl(ϕl−1, l − 1) , l 
+
+− E g
+
+
+
+˜φk(ϕl, l )
+
+ 
+
++ E g
+
+
+
+˜φk(ϕk−1, k − 1) 
+
+
+
+.
+
+As a consequence, 
+
+E g( ˜ φk) − E g(ϕk) = 
+
+> k−1
+
+X
+
+> l=1
+
+
+
+E g  ˜φk
+
+  ˜φl(ϕl−1, l − 1) , l  − E g  ˜φk(ϕl, l )
+
++ E g  ˜φk(ϕk−1, k − 1)  − E g ϕk(ϕk−1, k − 1) 
+
+=
+
+> k−1
+
+X
+
+> l=1
+
+Gl + Gk . (17) For Gk, this is to use g to test ˜ φk(ϕk−1, k − 1) − ϕk(ϕk−1, k − 1). For each Gl, reckoning ϕl =
+
+ϕl(ϕl−1, l − 1), this term comes down to using g  ˜φk(·, l )) to test ˜ φl(ϕl−1, l − 1) − ϕl(ϕl−1, l − 1). This clearly suggests two components to be analyzed: 
+
+• One step error: ˜φl(ϕl−1, l − 1) − ϕl(ϕl−1, l − 1) needs to be small for all l ≤ k.
+
+• Test function regularity: g and g  ˜φk(·, l )) have to belong to the same test function class with the same regularity. We prepare these two pieces in Section 4.1 and sum them up for the full proof in Section 4.2. 10 4.1 One step error and propagation of regularity 
+
+Throughout this section, since all results are local in time with iteration conducted over one step, we suppress the time index n and denote the stochastic gradient noise Vn by V for notational convenience. We emphasize that V is a random mapping due to its dependence on the random variable γ, that is, V (ϕn) represents a stochastic noise. We also suppress the index n in ∆ Wn, the normalized increment of the cylindrical Wiener process Wt, and denote it by ∆ W .The two main pieces for the proof are: 1. analyzing one-step error; and 2. preserving regularity of the test function along iteration. The two results are summarized in the following two lemmas. 
+
+Lemma 4.2 (One-step Error Estimate) . Let ϕ1 and ˜φ1 be the solutions to (16a) -(16b) , starting from the same deterministic data ϕ0 = ˜ φ0 = ϕ. Then, for any g ∈ G ,
+
+E (g(ϕ1) − g( ˜ φ1)) ≤ η3∥D3g∥∞ E  ∥σ(ϕ)(∆ W )∥3 + ∥V (ϕ)∥3 .
+
+Proof. One uses the Taylor expansion to g( ˜ φ1) and g(ϕ1) to derive 
+
+E (g( ˜ φ1) − g(ϕ1)) = E
+
+
+
+g
+
+
+
+ϕ + ηb (ϕ) + ησ (ϕ)(∆ W )
+
+
+
+− g
+
+
+
+ϕ + ηb (ϕ) + ηV (ϕ)
+
+ 
+
+= E  ηDg (ϕ) ( σ(ϕ)(∆ W ) − V (ϕ)) + η2D2g(ϕ)[( σ(ϕ)(∆ W )) 2 − (V (ϕ)) 2]
+
++ η3E
+
+
+
+D3g( ˆ φ(ϕ, ω )) ( σ(ϕ)(∆ W )) 3 − D3g( ˆϕ(ϕ, ω )) ( V (ϕ)) 3
+
+for some ˆ φ(ϕ, ω ), ˆϕ(ϕ, ω ) ∈ H depending on the sample ω ∈ Ω. Since σ(ϕ) is set to be the same in the expectation and covariance with V (ϕ), the first and second order terms are cancelled. Thus, we use the boundedness of the third derivative in g to obtain the desired result. The second component needed for our proof is the propagation of regularity of the test functional, so that the functional space G is invariant along the iterate. Formally, for every g we define the functional A(g) as: 
+
+A(g)( ·) : H → R with A(g)( ϕ) := E g( ˜ φ1(ϕ, 0)) , (18) and thus A is an operator that takes values in g ∈ G to produce another functional. We are to show 
+
+A is invariant in G in the sense that A(g) ∈ G also. To quantify them, we define some quantities: 
+
+Ci(b, σ, η ) = ( ai + η∥Dib∥∞)2 + η2∥Diσ∥2
+
+> ∞
+
+, i = 1 , 2, 3, (19) 
+
+C4(b, σ, η ) = (1 + η∥Db ∥∞)4 + 6 η2(1 + η∥Db ∥∞)2∥Dσ ∥2 
+
+> ∞
+
++ 3 η4∥Dσ ∥4 
+
+> ∞
+
+,
+
+for the constants a1 = 1 and a2 = a3 = 0. The propagation of regularity is summarized in the following lemma. 
+
+Lemma 4.3. Suppose that g ∈ G and define a functional u = A(g) according to (18) , then: 
+
+u(ϕ) := E g( ˜ φ1(ϕ, 0)) = E (g (ϕ + ηb (ϕ) + ησ (ϕ)(∆ W ))) .
+
+Then, we have u ∈ G . In particular, we have the following control over derivatives: 
+
+∥Du ∥∞ ≤ pC1∥Dg ∥∞ ,
+
+∥D2u∥∞ ≤ C1∥D2g∥∞ + pC2∥Dg ∥∞ ,
+
+∥D3u∥∞ ≤ C4∥D3g∥∞ + pC1C2∥D2g∥∞ + pC3∥Dg ∥∞ .
+
+11 Proof. We split the proof into two parts. 
+
+Step 1. Here, we estimate the upper bound for the norm of Fr´ echet derivatives of the function ˜φ1(·, 0) in the expectation sense: 
+
+E ∥Di ˜φ1(ϕ)( h)∥2 and E
+
+
+
+∥D ˜φ1(ϕ)h∥∥ D ˜φ1(ϕ)k∥∥ D ˜φ1(ϕ)l∥
+
+
+
+.
+
+Theses are required to obtain the upper bound of u(i) in Step 2 . One can apply the chain rule to ˜ φ1
+
+to see, according to definition (3): 
+
+D ˜φ1(ϕ)h = h + ηDb (ϕ)h + η Dσ (ϕ)h (∆ W )
+
+D2 ˜φ1(ϕ)( h, k ) = ηD 2b(ϕ)( h, k ) + ηD 2σ(ϕ)( h, k ) (∆ W ),D3 ˜φ1(ϕ)( h, k, l ) = ηD 3b(ϕ)( h, k, l ) + ηD 3σ(ϕ)( h, k, l ),
+
+for all h, k, l ∈ H. Due to the regularity of b and σ, we obtain 
+
+E∥Di ˜φ1(ϕ)( h1, · · · , h i)∥2 ≤ Ci(b, σ, η )∥h1∥2 · · · ∥ hi∥2, ∀ i = 1 , 2, 3,
+
+where we call the definition in (19). On the other hand, denote 
+
+D ˜φ1(ϕ)h =: Uh + Vh(∆ W ),
+
+which satisfies 
+
+∥Uh∥ ≤ ∥ h∥(1 + η∥Db ∥∞), ∥Vh∥ ≤ η∥Dσ ∥∞∥h∥. (20) Hence, one has 
+
+E∥D ˜φ1(ϕ)h∥4 = E
+
+
+
+∥Uh∥2 + 2 ⟨Uh, V h(∆ W )⟩ + ∥Vh(∆ W )∥22
+
+≤ ∥ Uh∥4 + 6 ∥Uh∥2E∥Vh(∆ W )∥2 + E∥Vh(∆ W )∥4
+
+≤ ∥ Uh∥4 + 6 ∥Uh∥2∥Vh∥2 + 3 ∥Vh∥4.
+
+(21) By combining (20) and (21), one gets 
+
+E∥D ˜φ1(ϕ)h∥4 ≤ C4(b, σ, η )∥h∥4, (22) where C4(b, σ, η ) is defined in (19). Now, we use H¨ older’s inequality, the Lyapunov inequality and the relation (22) to obtain 
+
+E
+
+
+
+∥D ˜φ1(ϕ)h∥∥ D ˜φ1(ϕ)k∥∥ D ˜φ1(ϕ)l∥
+
+
+
+≤  E∥D ˜φ1(ϕ)h∥31/3  E∥D ˜φ1(ϕ)k∥31/3  E∥D ˜φ1(ϕ)l∥31/3
+
+≤  E∥D ˜φ1(ϕ)h∥41/4  E∥D ˜φ1(ϕ)k∥41/4  E∥D ˜φ1(ϕ)l∥41/4 ≤ C4(b, σ, η )∥h∥∥ k∥∥ l∥.
+
+12 Step 2. Now, we compute the upper bound of Fr´ echet derivatives of u. Using the chain rule, one gets 
+
+|Du (ϕ)h| = E
+
+
+
+Dg ( ˜ φ1(ϕ)) D ˜φ1(ϕ)h
+
+
+
+≤ E
+
+
+
+∥Dg ( ˜ φ1(ϕ)) ∥∥ D ˜φ1(ϕ)h∥
+
+
+
+≤ pC1∥Dg ∥∞∥h∥ ,
+
+where we use the boundedness of Dg and the result in Step 1 . The estimate for the second order derivative is similar as follows 
+
+D2u(ϕ)( h, k ) = E
+
+
+
+D2g( ˜ φ1(ϕ))  D ˜φ1(ϕ)h, D ˜φ1(ϕ)k + Dg ( ˜ φ1(ϕ)) D2 ˜φ1(ϕ)( h, k )
+
+
+
+≤ ∥ D2g∥∞E
+
+
+
+∥D ˜φ1(ϕ)h∥∥ D ˜φ1(ϕ)k∥
+
+
+
++ ∥Dg ∥∞E∥D2 ˜φ1(ϕ)( h, k )∥≤ C1(b, σ, η )∥D2g∥∞∥h∥∥ k∥ + C2(b, σ, η )∥Dg ∥∞∥h∥∥ k∥,
+
+where the last inequality from the H¨ older’s inequality and the result in Step 1 . Lastly, the third order derivative can be estimated by the similar method as first and second order derivative. For readers’ convenience, we provide the explicit form of the third derivative 
+
+D3u(ϕ)( h, k, l ) = E
+
+
+
+D3g( ˜ φ1(ϕ)) ( D ˜φ1(ϕ)h, D ˜φ1(ϕ)k, D ˜φ1(ϕ)l)+ D2g( ˜ φ1(ϕ))  D2 ˜φ1(ϕ)( h, k ), D ˜φ1(ϕ)l + D2g( ˜ φ1(ϕ))  D2 ˜φ1(ϕ)( h, l ), D ˜φ1(ϕ)k
+
++ D2g( ˜ φ1(ϕ))  D2 ˜φ1(ϕ)( k, l ), D ˜φ1(ϕ)h + Dg ( ˜ φ1(ϕ)) D3 ˜φ1(ϕ)( h, k, l )
+
+
+
+.
+
+We omit the detail and complete the proof. An immediate corollary follows. Through induction, we let 
+
+gn+1 = A(gn), n ≥ 0 .
+
+Then clearly all gn ∈ G , and we summarize an explicit bound. 
+
+Corollary 4.4. Suppose that gn ∈ G , for n ≥ 1, are generated by A starting from g0 ∈ G . Then, we have the upper bound of ∥D3gn∥∞ as follows 
+
+∥D3gn∥∞ ≤ A1Cn 
+
+> 4
+
++ A2Cn 
+
+> 1
+
++ A3Cn/ 21 ,
+
+where Ci = Ci(b, σ, η ) were defined in (19) and Ai = Ai(g, b, σ, η ) are: 
+
+A1(g, b, σ, η ) = ∥D3g0∥∞ − A2 − A3,A2(g, b, σ, η ) = ∥D2g0∥∞ + ∥Dg 0∥∞C1/22
+
+C1 − C1/21
+
+!
+
+(C1C2)1/2
+
+C1 − C4
+
+,A3(g, b, σ, η ) = 1
+
+C1/21 − C4
+
+∥Dg 0∥∞C1/22
+
+C1/21 − C1
+
+(C1C2)1/2 + ∥Dg 0∥∞C1/23
+
+!
+
+.
+
+Proof. Set 
+
+z(1)  
+
+> n
+
+:= ∥Dg n∥∞, z(2)  
+
+> n
+
+:= ∥D2gn∥∞, z(3)  
+
+> n
+
+:= ∥D3gn∥∞.
+
+13 By Theorem 4.3, these quantities satisfy 
+
+z(1)  
+
+> n+1
+
+≤ pC1 z(1)  
+
+> n
+
+,z(2)  
+
+> n+1
+
+≤ C1z(2)  
+
+> n
+
++ pC2 z(1)  
+
+> n
+
+,z(3)  
+
+> n+1
+
+≤ C4z(3)  
+
+> n
+
++ pC1C2 z(2)  
+
+> n
+
++ pC3 z(1)  
+
+> n
+
+.
+
+Solving these recursions successively yields the stated bound. 
+
+## 4.2 Global Convergence Rate in Infinite Dimensions 
+
+With all pieces ready, we can assemble Theorem 4.2 and Theorem 4.4 to finalize the total error analysis. To do so, we first simplify our notations slightly: 
+
+|Ai(η)| ≤ ¯Ai(η), ∀ i = 1 , 2, 3. (23) The explicit formula for ¯Ai will be provided in Section B. In addition, we set simple notation: 
+
+Ji :=  ∥Dib∥2 
+
+> ∞
+
++ ∥Diσ∥2
+
+> ∞
+
+1/2 , ∀ i = 1 , 2, 3.
+
+The final theorem we have is the following: 
+
+Theorem 4.5 (Error Estimate) . Suppose that ϕn and ˜φn are stochastic iterative processes starting from a fixed initial state ϕ0 ∈ H generated by the first and second stochastic iterations in (16a) -(16b) ,respectively. Assume that b and σ have bounded derivatives up to the third order and satisfy 
+
+sup 
+
+> ϕ∈H
+
+E
+
+
+
+∥σ(ϕ)(∆ W )∥3 + ∥V (ϕ)∥3
+
+=: D < ∞.
+
+Then, for each ¯η ≥ 0, there exists a constant Cg,b,σ (¯ η) such that 
+
+max   
+
+> k=0 ,··· ,⌊T /η ⌋
+
+E g( ˜ φk) − g(ϕk) ≤ η2DC g,b,σ (¯ η), ∀ η ∈ [0 , ¯η].
+
+The function ¯η 7 → C g,b,σ (¯ η) is defined as follows: 
+
+Cg,b,σ (¯ η) := ¯A1(¯ η) exp  T  4∥Db ∥∞ + 6¯ ηJ 21
+
+ − 14∥Db ∥∞
+
++ ¯A2(¯ η) exp  T  2∥Db ∥∞ + ¯ ηJ 21
+
+ − 12∥Db ∥∞
+
++ ¯A3(¯ η) exp  T  2∥Db ∥∞ + ¯ ηJ 21
+
+ /2 − 1
+
+∥Db ∥∞
+
+!
+
+.
+
+Proof. By induction (17), we have the definition of Gl and we write them in a conditional form: 
+
+(Gk = E E g  ˜φk(ϕk−1, k − 1)  ϕk−1
+
+ − E E g ϕk(ϕk−1, k − 1)  ϕk−1
+
+ 
+
+Gl = E
+
+
+
+E E g  ˜φk( ˜ φl) − g  ˜φk(ϕl) ˜φl(ϕl−1, l − 1) , ϕ l(ϕl−1, l − 1)  ϕl−1
+
+ (24) We control these two terms separately. 
+
+Estimate of Gk. Apply Theorem 4.2, we have 
+
+Gk = E E g  ˜φk(ϕk−1, k − 1)  ϕk−1
+
+ − E E g ϕk(ϕk−1, k − 1)  ϕk−1
+
+ 
+
+≤ E  E g  ˜φk(ϕk−1, k − 1)  − g ϕk(ϕk−1, k − 1)  ϕk−1
+
+  
+
+≤ η3∥D3g∥∞E ∥σ(ϕk−1)(∆ W )∥3 + ∥V (ϕk−1)∥3 ≤ η3∥D3g∥∞D.
+
+(25) 14 Estimate of Gl. The value Gl represents the comparison of the two states propagated to step k
+
+starting from the slightly different states ϕl and ˜ φl at step l, which are generated from the common previous state ϕl−1 via the stochastic iterations in (16a)–(16b). In this construction, by Theorem 4.3, we can inductively generate new test functions gn for n = 1 , · · · , k − l via the operator A defined in (18), thereby reducing the propagation and obtaining the one-step error representation. Under the conditional expectation with ϕl−1 is fixed, we take g0 = g and express the subsequent relation accordingly 
+
+E
+
+
+
+g0
+
+  ˜φk( ˜ φl) − g0
+
+  ˜φk(ϕl) ˜φl(ϕl−1, l − 1) , ϕ l(ϕl−1, l − 1) 
+
+
+
+= E
+
+
+
+E g0
+
+  ˜φk( ˜ φk−1( ˜ φl, l )) − g0
+
+  ˜φk( ˜ φk−1(ϕl, l ))  ˜φk−1( ˜ φl, l ), ˜φk−1(ϕl, l ) ˜φl(ϕl−1, l − 1) , ϕ l(ϕl−1, l − 1) 
+
+
+
+= E
+
+
+
+g1
+
+  ˜φk−1( ˜ φl, l ) − g1
+
+  ˜φk−1(ϕl, l ) ˜φl(ϕl−1, l − 1) , ϕ l(ϕl−1, l − 1) 
+
+
+
+= · · · = E
+
+
+
+gk−l
+
+  ˜φl( ˜ φl, l ) − gk−l
+
+  ˜φl(ϕl, l )
+
+
+
+˜φl(ϕl−1, l − 1) , ϕ l(ϕl−1, l − 1) 
+
+
+
+= E
+
+
+
+gk−l( ˜ φl) − gk−l(ϕl) ˜φl(ϕl−1, l − 1) , ϕ l(ϕl−1, l − 1) 
+
+
+
+.
+
+Then, we again use the one-step error estimate in Theorem 4.2 to get 
+
+Gl ≤ η3∥D3gk−l∥∞E
+
+
+
+E ∥σ(ϕl−1)(∆ W )∥3 + ∥V (ϕl−1)∥3 ϕl−1
+
+
+
+≤ η3∥D3gk−l∥∞D. (26) Finally, we combine (17), (25) and (26) to deduce 
+
+|E g( ˜ φk) − E g(ϕk)| ≤ η3D ∥D3g0∥∞ +
+
+> k−1
+
+X
+
+> l=1
+
+∥D3gk−l∥∞
+
+!
+
+= η3D
+
+> k−1
+
+X
+
+> m=0
+
+∥D3gm∥∞
+
+≤ η3D A1
+
+Ck 
+
+> 4
+
+− 1
+
+C4 − 1 + A2
+
+Ck 
+
+> 1
+
+− 1
+
+C1 − 1 + A3
+
+Ck/ 21 − 1
+
+C1/21 − 1
+
+!
+
+,
+
+(27) where we use Theorem 4.4 in the last inequality. Note that this upper bound increases as k grows. Therefore, it suffices to show that the upper bound is O(η2) when k = ⌊T /η ⌋.By the definition of ¯Ai in (23), we may write RHS of (27) ≤ η3D ¯A1(η) CT /η  
+
+> 4
+
+− 1
+
+C4 − 1 + ¯A2(η) CT /η  
+
+> 1
+
+− 1
+
+C1 − 1 + ¯A3(η) CT / 2η 
+
+> 1
+
+− 1
+
+C1/21 − 1
+
+!
+
+.
+
+We use 1 + x ≤ ex and C4 − 1 ≥ 4η∥Db ∥∞ to get 
+
+η CT /η  
+
+> 4
+
+− 1
+
+C4 − 1 ≤ exp  T  4∥Db ∥∞ + 6¯ ηJ 21
+
+ − 14∥Db ∥∞
+
+, ∀ η ∈ [0 , ¯η].
+
+By the similar way, one can derive the desired result, which ends the proof. 
+
+Remark 4.6. In Theorem 4.5, we assume that the derivatives up to 3rd of the drift b and the diffusion σ are uniformly bounded. This assumption is inherently tied to our discrete telescoping argument, as it prevents the degree of the test functions from exploding during the iterative composi-tions. However, thanks to the uniform moment bounds established in estimate (6) , it is theoretically plausible to relax this condition to allow for polynomial growth. Such an extension would likely re-quire shifting from the current discrete framework to continuous-time stochastic analysis tools, such as the Kolmogorov Backward Equation, which we leave as a direction for future work. 
+
+15 5 Numerical Experiments 
+
+In this section we present numerical experiments that validate the theoretical prediction in The-orem 4.5, which establishes an O(η2) weak convergence rate between the SGD iterates and the discretized stochastic modified equation (SME). We begin in Section 5.1 with a quadratic optimization problem subject to homogeneous noise. This simplified setting allows us to clearly compare three dynamics: the SGD iterates, the continuous-time SDE limit (SME), and its time-discretized counterpart. We then turn in Section 5.2 to a nonlinear inverse problem with inhomogeneous (state-dependent) noise. In practice, three sources contribute to the numerical error: 
+
+• Finite-dimensional approximation error. Functions in the Hilbert space H require in-finitely many coefficients for an exact representation and therefore cannot be simulated directly. In practice we represent functions using a truncated basis expansion. Let H = span {ei}∞
+
+> i=1
+
+denote the underlying basis and define the truncated space HD = span {ei}Di=1 , where D is the number of basis functions used in the simulation. 
+
+• Monte Carlo sampling error. The weak error (30) is defined in expectation. In numerical experiments each realization produces a different outcome. To approximate the expectation, we run both the SGD and the discrete-SME dynamics independently N times and estimate the error by comparing the empirical means. 
+
+• Discretization error. According to Theorem 4.5, the weak discretization error scales as 
+
+O(η2). 
+
+• Choice of diffusion factorization in the numerical scheme. In Section 3.2, the diffusion operator σ is constructed in the form σ : L2 
+
+> γ
+
+→ H in order to ensure well-posedness of the SME. For the numerical implementation, however, we generate the Gaussian noise in the discrete-SME scheme through a square-root (e.g., Cholesky) factorization of the projected covariance operator. This does not affect the discrete-time approximation, since at the numerical level the distribution of the Gaussian increment, and hence the weak error behavior, is determined only by the covariance, not by the particular factorization used to realize it. The primary objective of the experiments is to verify this discretization error. To isolate this effect, the influence of the truncation error and the Monte Carlo error must be kept sufficiently small. In practice, we choose N large enough to reduce the sampling error, and we report convergence results for several values of the truncation dimension D. We claim the second order discretization error is captured if the convergence rate is observed across all values of D before saturating (when MC error dominates). Details of these choices are provided in the two examples below. 
+
+## 5.1 Example 1: Homogeneous Noise (Quadratic Example) 
+
+We consider a model problem where the Hilbert space H is endowed with an orthonormal basis 
+
+{ei}∞ 
+
+> i=1
+
+and the objective function F is quadratic. Specifically, let 
+
+F(ϕ) := Eγ [Fγ (ϕ)] , with Fγ (ϕ) := ⟨ϕ − γ, Λ( ϕ − γ)⟩H , ∀γ ∈ H, 
+
+where Λ ∈ L +(H). Assuming the random variable γ satisfies E[γ] = 0 and the covariance operator 
+
+E[γ ⊗ γ] = Q, the objective function can be written as F(ϕ) = ⟨ϕ, Λϕ⟩ + Tr(Λ Q). The SGD iteration is given by 
+
+ϕn+1 = ϕn − η∇F (ϕn) + η ∇F (ϕn) − ∇F γn (ϕn), (28) 16 where {γn} are i.i.d. samples. Due to the quadratic structure of Fγ , the stochastic noise term simplifies to 
+
+∇F (ϕn) − ∇F γn (ϕn) = −2Λ γn.
+
+Notably, this noise term is independent of the state ϕn. Consequently, the corresponding SME takes on the form of (11) with a constant Hilbert-Schmidt diffusion operator σ satisfying 
+
+σσ ∗ = Var(2Λ γ) = 4Λ QΛ∗.
+
+The discretized version of the SME is ˜φn+1 = ˜ φn − η∇F ( ˜ φn) + ησ ∆Wn, (29) where ∆ Wn are i.i.d. increments of a Q-Wiener process. In our numerical experiments, we use the following configurations: 
+
+⟨ei, Λej ⟩ = (0 .8) |i−j|, ⟨ei, Qe j ⟩ = δij 
+
+i2 , and γ =
+
+> ∞
+
+X
+
+> i=1
+
+ζi
+
+i ei,
+
+where ζi are Bernoulli-type random variables satisfying P(ζi = −0.5) = 0 .8 and P(ζi = 2) = 0 .2. For the simulation, we set ϕ0 = 0 with a terminal time T = 1 .0, and we measure the weak error via the test function g(ϕ) = ∥ϕ∥4:
+
+Eweak = E[g(ϕT /η )] − E[g( ˜ φT /η )] . (30) Since the objective function is quadratic, the SME admits an analytical solution. The standard Euler–Maruyama scheme predicts a discretization error of order O(η), which we verify numerically in Figure 1. To observe the statistical behavior of the SGD solver, we run N = 5 × 10 6 independent trajectories and plot the average. 
+
+stepsize η
+
+> 1
+> N
+> PNl=1 [g(ϕ(l)
+> T /η  ) − Eg(φT )
+
+Figure 1: (Example 1, MC SGD vs. SME) Weak error between the SGD iterate and the exact SME expectation estimated using N = 5 × 10 6 Monte Carlo samples. Results are shown for different truncation dimensions D of the Hilbert space. The dotted line indicates the reference slope O(η). To validate the theory and visualize the convergence rate in η, we ensure that the impact of the Monte Carlo sampling error is negligible. We examine the number of samples N required for the error to reach a plateau. As shown in Figure 2, for all fixed η, as N increases, the error initially decays at the standard Monte Carlo rate of 1 /√N before entering a plateau regime where the discretization 17 number of Monte Carlo trials N
+
+> 1
+> N
+> PNl=1  g( ˜ φ(l)
+> T /η  ) − Eg(φT )
+
+Figure 2: (Example 1, MC discretized SME vs. SME) Convergence of the Monte Carlo esti-mator with respect to the number of trials N for different stepsizes η, averaged over 50 independent runs. For small N , the error decreases at the Monte Carlo rate O(N −1/2) till the error saturates and plateaus at a place where discretization error dominates for large N . The dashed line indicates the reference slope O(N −1/2). The experiment is performed with truncation dimension D = 30. error dominates. Based on these results, N = 5 × 10 6 is a sufficiently large sample size, and we employ this value for all subsequent experiments. In Figure 3, we examine the difference between the SGD iterates (28) and the discretized SME (29). Figure 3b uses a log-log scale, where the straight reference line illustrates the algebraic decay rate O(η2) of the weak error, confirming the prediction in Theorem 4.5. In contrast, Figure 3a adopts a log-linear scale to highlight the monotonic convergence as η decreases. We also include error bars corresponding to the standard deviation of the Monte Carlo estimator; as η decreases, these bars shrink, indicating reduced variability. In both plots, it is clear that the convergence rate is second-order across all choices of D.  
+
+> stepsize η
+> 1
+> N
+> PNl=1
+> 
+> g(ϕ(l)
+> T /η  ) − g( ˜ φ(l)
+> T /η  )
+> 
+> (a) log( x)-regular( y) scale (b) log( x)-log( y) scale
+
+Figure 3: (Example 1, Weak error in the homogeneous noise Setting) The plots show the weak error (30) as a function of the step size η for truncation dimensions D ∈ { 5, 10 , 20 , 30 }. Error bars in the left panel represent the Monte Carlo standard error (MCSE) computed from 5 × 10 6
+
+samples. The dashed line indicates the reference slope O(η2). 18 5.2 Example 2: Inverse Problem 
+
+In this second example, we investigate a setting where the stochastic gradient noise depends explicitly on the current state, leading to a state-dependent diffusion coefficient in the corresponding SME. We consider an inverse problem for an unknown target function ¯ϕ ∈ H = L2([0 , 1] 2). The objective functional is defined as 
+
+F(ϕ) := Ex∼U ([0 ,1] 2)[Fx(ϕ)] , with Fx(ϕ) = 12
+
+ Ax(ϕ) − A x( ¯ϕ)2 ,
+
+where Ax is a sensing operator parameterized by x. This problem originates from the optical ptychography setting [21]. We define Ax via a Gaussian kernel centered at x:
+
+Ax(ϕ) := 
+
+Z
+
+> [0 ,1] 2
+
+Kε(x, y ) ϕ(y) dy, with Kε(x, y ) = 12πε 2 exp 
+
+
+
+− ∥x − y∥2
+
+2ε2
+
+
+
+,
+
+where ε > 0 is a fixed small parameter representing the resolution of the measurement at location 
+
+x.The gradients ∇F and ∇F x can be computed explicitly using the linearity of the sensing operator and the spectral representation of the Gaussian kernel. We expand H using the standard sinusoidal basis {ek}:
+
+ek(x1, x 2) = 2 sin( k1πx 1) sin( k2πx 2), k = ( k1, k 2) ∈ N2, (31) with associated eigenvalues λk = π2∥k∥2 for the Laplacian. We denote the coefficients of the expansion as: 
+
+ck(ϕ) = ⟨ϕ, e k⟩ and ¯ck = ⟨ ¯ϕ, e k⟩, ∀k ∈ N2.
+
+Consequently, the stochastic gradient is given by: 
+
+∇F x(ϕ) = Kε(x, ·)
+
+Z
+
+> [0 ,1] 2
+
+Kε(x, y )( ϕ(y) − ¯ϕ(y)) dy 
+
+= X
+
+> k∈N2
+
+exp 
+
+
+
+− ε2λk
+
+2
+
+
+
+(ck(ϕ) − ¯ck)ek(x) X
+
+> l∈N2
+
+exp 
+
+
+
+− ε2λl
+
+2
+
+
+
+el(x)el.
+
+Taking the expectation over x ∈ [0 , 1] 2 yields: 
+
+∇F (ϕ) = X
+
+> k∈N2
+
+(ck(ϕ) − ¯ck) exp( −ε2λk)ek.
+
+The noise term in the basis representation is then: 
+
+⟨∇F (ϕ) − ∇F x(ϕ), e k⟩ = ( ck(ϕ) − ¯ck)e−ε2λk − X
+
+> l∈N2
+
+e− ε2(λl+λk )2 (cl(ϕ) − ¯cl)el(x)ek(x).
+
+From this, the entries of the state-dependent covariance operator Q(ϕ) can be computed as: 
+
+E [⟨∇ (F − F x)( ϕ), e k⟩⟨∇ (F − F x)( ϕ), e k′ ⟩]= ( ck(ϕ) − ¯ck)( ck′ (ϕ) − ¯ck′ )e−ε2(λk +λk′ )
+
+− X
+
+> l,l ′
+
+e− ε2(λl+λl′ +λk +λk′ )2 (cl(ϕ) − ¯cl)( cl′ (ϕ) − ¯cl′ )E [el(x)ek(x)el′ (x)ek′ (x)] .
+
+19 This expression defines the covariance matrix used to formulate the diffusion term in the SME. In the numerical implementation, the expectation with respect to x ∼ U ([0 , 1] 2) is approximated using a uniform grid Gx = {xm}Nx×Nx 
+
+> m=1
+
+on [0 , 1] 2. At each SGD step, the location x is also sampled from the grid points in Gx. In the simulations, Nx = 30 is used for Figure 4, Figure 5 and Figure 6, and Nx = 10 for Figure 7. To construct the covariance operator Q(ϕ), we evaluate the basis functions {ek(xm)} on the grid and compute empirical averages of the corresponding products over Gx. In particular, all expectations appearing in the covariance expression are obtained numerically through grid averaging, rather than by evaluating the integrals analytically. For the numerical simulation, we choose a target function ¯ϕ given by: ¯ϕ(x1, x 2) = x1(1 − x1)x2(1 − x2)
+
+> 3
+
+X
+
+> n=1
+
+an exp  −βn
+
+ (x1 − cn, 1)2 + ( x2 − cn, 2)2 ,
+
+with parameters: (a1, a 2, a 3) = (1 , 0.8, 0.65) , (β1, β 2, β 3) = (35 , 30 , 28) ,c1 = (0 .2, 0.8) , c2 = (0 .6, 0.4) , c3 = (0 .3, 0.2) .
+
+The reference solution is visualized in Figure 4, which exhibits three localized peaks with smooth decay towards the boundary. 
+
+K = 20 Figure 4: (Example 2: Target function) Heatmap of the target function ¯ϕ used in the inverse problem, visualized using a truncation level K = 20. We initialize at ϕ0 = 0 and use the test function g(ϕ) = ∥ϕ∥4 to evaluate the weak error. To demonstrate that the convergence is uniform with respect to discretization, we truncate H using the first K × K modes, for K ∈ { 2, 3, 4, 6, 8}. To illustrate the effect of the truncation, Figure 5 shows the gradient ∇F (0) reconstructed using different values of K. As the truncation level increases, the representation becomes more localized and better resolves the underlying structure of the objective functional. In Figure 6, we further plot an example of the stochastic gradient ∇F x(0). Compared with the full gradient ∇F (0) (shown in Figure 5), the stochastic gradient exhibits a strong spatial concentration around the measurement location. The resulting weak errors are presented in Figure 7. The error decreases with a clear slope of O(η2) across all truncation dimensions K, which is in excellent agreement with the theoretical 20 K = 2 K = 4 K = 8 Figure 5: (Example 2: Gradient of the objective functional) Heatmap of ∇F (ϕ) evaluated at ϕ = 0, reconstructed using different truncation levels K.
+
+K = 2 K = 4 K = 8 Figure 6: (Example 2: Stochastic gradient) Heatmap of the stochastic gradient ∇F x(ϕ) eval-uated at ϕ = 0 for a sampled location x (orange dot). The plots show the reconstruction using different truncation levels K.prediction of Theorem 4.5. Notably, as K increases, the error curves remain consistent and do not show any degradation in the convergence rate. This suggests that the O(η2) scaling is robust to the dimension of the subspace and is expected to persist in the infinite-dimensional limit. 
+
+## 5.3 Example 3: Restoration of the Cameraman Image 
+
+In this subsection, we keep the inverse-problem setting of Section 5.2 and replace only the smooth synthetic target by the standard cameraman test image. The test image Icam ∈ [0 , 1] 512 ×512 is a grayscale image that is normalized to take values in [0 , 1]. Here we use the standard grayscale convention: black corresponds to 0 and white to 1. It is a finite-dimensional object, and this subsection is devised completely for exploration purpose. Since the groundtruth image is not an object in an Hilbert space, we are to process the data and map it to one. To do so, we first resample this array onto an Nx ×Nx computational grid by Lanczos interpolation, and interpret the resulting array I(Nx) ∈ [0 , 1] Nx×Nx as grid values of the target and project it onto the first K × K modes of the sine basis (31). The produced function thus becomes 
+
+u† 
+
+> Nx,D
+
+(x, y ) = 
+
+> K
+
+X
+
+> k1=1
+> K
+
+X
+
+> k2=1
+
+ck1,k 2 ek1,k 2 (x, y ),
+
+where the coefficients ck1,k 2 are obtained from the discrete L2-projection of the resampled image 
+
+I(Nx) onto the span of the first K × K sine modes, and D = K2 is the number of basis functions. 21 stepsize η
+
+> 1
+> N
+> PNl=1
+> 
+> g(ϕ(l)
+> T /η  ) − g( ˜ φ(l)
+> T /η  )
+> 
+
+Figure 7: (Example 2: Weak error in the inhomogeneous noise setting) The plot shows the difference between the SGD iterate and the discretized SME as a function of the step size η for different truncation levels K. The dashed line indicates the reference slope O(η2). All results are obtained using 10 6 Monte Carlo trials with smoothing parameter ε = 0 .1. 
+
+Original Image Resampled Image Projected Target Figure 8: From left to right: the standard cameraman test image on a 512 × 512 grid, its Lanczos-resampled version on a 128 ×128 grid, and the corresponding sine-basis approximation with D = 40 2.This projected target is illustrated in Figure 8. Note that this final target is not identical to the raw resampled image due to the artificial effect of the basis functions. We first report the quantitative weak-error result. We use the same numerical setting as in Figure 7, except that the smooth synthetic target is replaced by the cameraman target described above. To show the error plot, we use a lower-resolution target with Nx = 10 and D = 8 2, together with N = 10 6 Monte Carlo samples. The result is shown in Figure 9. The same O(η2) decay is clearly visible, across all values of D = K2, indicating that the second-order weak matching between SGD and the discretized SME is still observed when the smooth synthetic target is replaced by a standard benchmark image with sharp edges. We also run the optimization over a higher-resolution target with Nx = 128, D = 40 2, ε = 0 .01, and η = 10 −3, starting from the zero initial condition. The results are presented in Figure 10. In the upper row, we plot the reconstruction generated by SGD, and the lower row shows the one generated by the discretized SME, at times t = 1 , 3, 6, 15. Although this figure is not intended as a pathwise validation of the theory, it shows that both dynamics recover the same large-scale features of the 22 stepsize η
+
+> 1
+> N
+> PNl=1
+>  g(φ(l)
+> T /η  ) − g( ˜ϕ(l)
+> T /η  )
+
+Figure 9: Weak error between SGD and the discretized SME for the cameraman target. The numerical setting is the same as in Figure 7, except that the smooth synthetic target is replaced by the cameraman image. The dashed line indicates the reference slope O(η2). image over time. 
+
+# 6 Conclusion 
+
+In this paper, we derived a stochastic modified equation (SME) for stochastic gradient descent (SGD) in infinite-dimensional Hilbert spaces. We successfully identified the appropriate space for the cylindrical Brownian motion and characterized the diffusion coefficients necessary to establish the system’s well-posedness. A key finding of this work is the refined error analysis between the SGD iterates and the SME. While classical results typically suggest that the Euler-Maruyama discretiza-tion yields first-order weak accuracy, we demonstrate that the weak discrepancy between the SGD iterates and the continuous SME scales as O(η2). This result significantly extends existing weak approximation theories from finite-dimensional settings to the infinite-dimensional regime. Our the-oretical framework was further validated through numerical experiments across both homogeneous and inhomogeneous noise regimes, confirming the predicted scaling laws. Several avenues for future research remain open. One natural extension involves the study of the long-time behavior of the SME, specifically regarding its stability properties and the charac-terization of invariant measures as they relate to the asymptotic behavior of SGD. It would also be of interest to extend the present analysis to more general stochastic optimization schemes, such as momentum-based or adaptive methods, where the infinite-dimensional setting introduces unique analytical challenges. From a theoretical perspective, broadening the applicability of this framework may require relaxing the regularity assumptions on the drift and diffusion operators or allowing for weaker moment conditions on the stochastic gradient noise. Finally, a quantitative analysis of discretization and truncation effects remains essential to clarify the complex interaction between infinite-dimensional dynamics and their finite-dimensional numerical approximations. 23 SGD SME 
+
+t = 1 t = 3 t = 6 t = 15 Figure 10: A single sample-path illustration of the reconstruction dynamics for the cameraman target. The upper row corresponds to SGD and the lower row to the discretized SME. 
+
+# A Proof of Theorem 2.8 
+
+For every n ∈ N, we define the truncation operator 
+
+πn(x) = 
+
+
+
+x, ∥x∥ ≤ n, n x
+
+∥x∥ , ∥x∥ > n, 
+
+and we set 
+
+bn(x) = b(πn(x)) , σn(x) = σ(πn(x)) .
+
+It is immediate to check that bn and σn satisfy (5), for some constant independent of n, namely 
+
+⟨bn(x), x ⟩ + ∥σn(x)∥2 
+
+> L2
+
+≤ c(1 + ∥x∥2). (32) Moreover, bn and σn are globally Lipschitz continuous, so that the equation 
+
+dX nt = bn(Xnt ) dt + σn(Xnt ) dW t, Xn 
+
+> 0
+
+= x, 
+
+admits a unique global adapted solution Xnt ∈ Lp(Ω; C([0 , T ]), for every p ≥ 1 and T > 0. Now, we fix p ≥ 1 and apply Itˆ o’s formula to Xnt and Φ( u) = ∥u∥2p. Since 
+
+DΦ( u)h = 2 p∥u∥2p−2⟨u, h ⟩,
+
+and 
+
+D2Φ( u)( h, k ) = 2 p(2 p − 2) ∥u∥2p−4⟨u, h ⟩⟨ u, k ⟩ + 2 p∥u∥2p−2⟨h, k ⟩.
+
+we get 
+
+∥Xnt ∥2p = ∥x∥2p + 2 p
+
+Z t
+
+> 0
+
+∥Xns ∥2p−2⟨Xns , b n(Xns )⟩ ds + p
+
+Z t
+
+> 0
+
+∥Xns ∥2p−2∥σn(Xns )∥2 
+
+> L2
+
+ds 
+
++ 2 p(p − 1) 
+
+Z t
+
+> 0
+
+∥Xns ∥2p−4∥σn(Xns )∗Xns ∥2ds + Mt,
+
+where 
+
+Mt := 2 p
+
+Z t
+
+> 0
+
+∥Xns ∥2p−2⟨Xns , σ n(Xns ) dW s⟩.
+
+24 By using 
+
+∥σ∗(y)y∥ ≤ ∥ σ(y)∥L2 ∥y∥,
+
+we get 
+
+∥Xn∥2p−4∥σ∗(Xn)Xnt ∥2 ≤ ∥ Xn∥2p−2∥σ(Xnt )∥2 
+
+> L2
+
+.
+
+Hence, thanks to (32), we have 
+
+∥Xns ∥2p−2⟨Xns , b n(Xns )⟩ + ∥Xns ∥2p−4∥σn(Xns )∗Xns ∥2 ≤ cp
+
+ 1 + ∥Xns ∥2p ,
+
+so that 
+
+∥Xnt ∥2p ≤ ∥ x∥2p + cp
+
+Z t
+
+> 0
+
+(1 + ∥Xns ∥2p)ds + Mt.
+
+Now, if we take the supremum with respect to t first, and then the expectation, we obtain 
+
+E sup 
+
+> t≤T
+
+∥Xnt ∥2p ≤ ∥ x∥2p + cp
+
+Z T
+
+> 0
+
+
+
+1 + E sup 
+
+> r≤s
+
+∥Xnr ∥2p
+
+ds + E sup 
+
+> t≤T
+
+|Mt|.
+
+Since 
+
+⟨M ⟩T = 4 p2
+
+Z T
+
+> 0
+
+∥Xns ∥4p−4∥σn(Xns )∗Xns ∥2ds ≤ cp
+
+Z T
+
+> 0
+
+∥Xns ∥4p−2∥σn(Xns )∥2 
+
+> L2
+
+ds, 
+
+we obtain 
+
+E sup 
+
+> t≤T
+
+|Mt| ≤ 12 E sup 
+
+> t≤T
+
+∥Xnt ∥2p + c
+
+Z T
+
+> 0
+
+
+
+1 + E sup 
+
+> r≤s
+
+∥Xnr ∥2p
+
+
+
+ds. 
+
+This allows to conclude 
+
+E sup 
+
+> t≤T
+
+∥Xnt ∥2p ≤ cp
+
+
+
+∥x∥2p + 1 + 
+
+Z T
+
+> 0
+
+E sup 
+
+> r≤s
+
+∥Xnr ∥2pds 
+
+
+
+.
+
+and Gronwall’s lemma implies 
+
+E sup 
+
+> t≤T
+
+∥Xnt ∥2p ≤ cp(T )(1 + ∥x∥2p), (33) with cp(T ) independent of n.Next, if for every n ∈ N we define 
+
+τn = inf {t : ∥Xnt ∥ ≥ n},
+
+according to (33), we have 
+
+P
+
+
+
+τ∞ := lim  
+
+> n→∞
+
+τn = + ∞
+
+
+
+= 1 . (34) Actually, for every T > 0 we have 
+
+P (τn ≤ T ) ≤ 1
+
+n2p E sup 
+
+> t≤T
+
+∥Xnt ∥2p ≤ cp(T )
+
+n2p (1 + ∥x∥2p),
+
+so that lim  
+
+> n→∞
+
+P (τn ≤ T ) ,
+
+and (34) follows. In view of (34), for every ( t, ω ) ∈ [0 + ∞) × { τ∞ = + ∞} , there exists some n = n(ω, t ) ∈ N such that t ≤ τn(ω) and we define 
+
+Xt(ω) = Xnt (ω).
+
+25 Since for every n ≤ m we have 
+
+∥x∥ ≤ n =⇒ bn(x) = bm(x) = b(x),
+
+this is a good definition and Xt is a global solution of equation (4). Moreover, due to (33), estimate (6) holds. Finally, as far as the uniqueness is concerned, if X and eX are two solutions with the same initial condition, we define 
+
+ρn := inf {t ≥ 0 : ∥Xt∥ ∨ ∥ eXt∥ ≥ n}.
+
+On [0 , ρ n], both processes remain in the ball of radius n, where b and σ are Lipschitz; standard estimates yield Xt = eXt for all t ≤ ρn a.s. Letting n → ∞ yields X = eX a.s. on every finite interval, hence globally. 
+
+# B Explicit formula for ¯Ai
+
+We recall the constants from Theorem 4.4: 
+
+C1 = 1 + 2 η∥Db ∥∞ + η2J21 , Ci = η2J2 
+
+> i
+
+, i = 2 , 3.
+
+One can estimate the denominators appearing in A2 and A3:
+
+C1 − C1/21 = C1 − 11 + C−1/21
+
+≥ C1 − 12 ≥ η∥Db ∥∞,C4 − C1 ≥ 2η∥Db ∥∞, C4 − C1/21 = C4 − C1 ≥ 2η∥Db ∥∞.
+
+These bounds gives the lower bound of the absolute value of the denominators. Using the above estimates, we obtain 
+
+|A2| = ∥D2g0∥∞ + ∥Dg 0∥∞C1/22
+
+C1 − C1/21
+
+!
+
+(C1C2)1/2
+
+C4 − C1
+
+,
+
+≤
+
+
+
+∥D2g0∥∞ + ∥Dg 0∥∞J2
+
+∥Db ∥∞
+
+ J2C1/21 (η)2∥Db ∥∞
+
+=: ¯A2(η),
+
+|A3| = 1
+
+C4 − C1/21
+
+∥Dg 0∥∞C1/22
+
+C1 − C1/21
+
+(C1C2)1/2 + ∥Dg 0∥∞C1/23
+
+!
+
+≤ 12∥Db ∥∞
+
+∥Dg 0∥∞J22 C1/21 (η)2∥Db ∥∞
+
++ ∥Dg 0∥∞J3
+
+!
+
+=: ¯A3(η),
+
+and 
+
+|A1| ≤ ∥ D3g0∥∞ + ¯A2(η) + ¯A3(η) =: ¯A1(η).
+
+# References 
+
+[1] S. Arridge , Optical tomography in medical imaging , Inverse problems, 15 (1999), pp. R41–R93. [2] S. Arridge, P. Maass, O. ¨Oktem, and C.-B. Sch¨ onlieb , Solving inverse problems using data-driven models , Acta numerica, 28 (2019), pp. 1–174. 26 [3] L. Bottou, F. E. Curtis, and J. Nocedal , Optimization methods for large-scale machine learning , SIAM Review, 60 (2018), pp. 223–311. [4] H. Cartan , Differential forms , Courier Corporation, 2012. [5] D. L. Colton and R. Kress , Inverse acoustic and electromagnetic scattering theory , vol. 93, Springer, 1998. [6] G. Da Prato and J. Zabczyk , Stochastic Equations in Infinite Dimensions , Encyclopedia of Mathematics and its Applications, Cambridge University Press, 2nd ed., 2014. [7] H. W. Engl, M. Hanke, and A. Neubauer , Regularization of inverse problems , vol. 375, Springer, 1996. [8] L. Gawarecki and V. Mandrekar , Stochastic differential equations in infinite dimensions: with applications to stochastic partial differential equations , Springer, 2010. [9] M. Hardt, B. Recht, and Y. Singer , Train faster, generalize better: Stability of stochastic gradient descent , in Proceedings of the 33rd International Conference on Machine Learning, Proceedings of Machine Learning Research, PMLR, 2016, pp. 1225–1234. [10] J. P. Kaipio and E. Somersalo , Statistical and computational inverse problems , Springer, 2005. [11] N. S. Keskar, D. Mudigere, J. Nocedal, M. Smelyanskiy, and P. T. P. Tang , On large-batch training for deep learning: Generalization gap and sharp minima , arXiv:1609.04836, (2016). [12] Y. LeCun, L. Bottou, G. B. Orr, and K.-R. M¨ uller , Efficient backprop , in Neural networks: Tricks of the trade, Springer, 2002, pp. 9–50. [13] Q. Li, C. Tai, and W. E , Stochastic modified equations and adaptive stochastic gradient algorithms , in Proceedings of the 34th International Conference on Machine Learning, vol. 70 of Proceedings of Machine Learning Research, PMLR, 06–11 Aug 2017, pp. 2101–2110. [14] , Stochastic modified equations and dynamics of stochastic gradient algorithms I: Mathe-matical foundations , Journal of Machine Learning Research, 20 (2019), pp. 1–47. [15] Z. Li, S. Malladi, and S. Arora , On the validity of modeling SGD with stochastic differential equations (SDEs) , Advances in Neural Information Processing Systems, 34 (2021), pp. 12712– 12725. [16] G. J. Lord, C. E. Powell, and T. Shardlow , An Introduction to Computational Stochastic PDEs , Cambridge Texts in Applied Mathematics, Cambridge University Press, 2014. [17] S. Mandt, M. D. Hoffman, and D. M. Blei , Stochastic gradient descent as approximate bayesian inference , Journal of Machine Learning Research, 18 (2017), pp. 1–35. [18] X. Mao , Stochastic differential equations and applications , Horwood Publishing Limited, Chich-ester, 2nd ed., 2008. [19] S. Mei, A. Montanari, and P.-M. Nguyen , A mean field view of the landscape of two-layer neural networks , Proceedings of the National Academy of Sciences, 115 (2018), pp. E7665– E7671. [20] F. Natterer , The mathematics of computerized tomography , SIAM, 2001. [21] F. Pfeiffer , X-ray ptychography , Nature Photonics, 12 (2018), pp. 9–17. 27 [22] C. Pr´ evˆ ot and M. R¨ ockner , A Concise Course on Stochastic Partial Differential Equations ,Springer, 2007. [23] H. Robbins and S. Monro , A stochastic approximation method , The annals of mathematical statistics, 22 (1951), pp. 400–407. [24] J. Sirignano and K. Spiliopoulos , Mean field analysis of deep neural networks , Mathematics of Operations Research, 47 (2022), pp. 120–152. [25] A. M. Stuart , Inverse problems: a bayesian perspective , Acta Numerica, 19 (2010), pp. 451– 559. [26] I. Sutskever, J. Martens, G. Dahl, and G. Hinton , On the importance of initialization and momentum in deep learning , in International conference on machine learning, pmlr, 2013, pp. 1139–1147. [27] A. Tarantola , Inverse problem theory and methods for model parameter estimation , SIAM, 2005. [28] C. R. Vogel , Computational methods for inverse problems , SIAM, 2002. [29] C. Zhang, S. Bengio, M. Hardt, B. Recht, and O. Vinyals , Understanding deep learning requires rethinking generalization , arXiv:1611.03530, (2016). 28

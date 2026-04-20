@@ -1,0 +1,70 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.16232v1/fig-001.webp",
+      "caption": "Figure 4: The numerical trajectories of the ground truth and predicted ODEs of Benchmark 3.",
+      "page": 15,
+      "index": 1,
+      "width": 932,
+      "height": 1136
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16232v1/fig-002.webp",
+      "caption": "Figure 2: Violin plots of Benchmark 1, where the distribution is shown in blue and single values as red dots.",
+      "page": 7,
+      "index": 2,
+      "width": 640,
+      "height": 445
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16232v1/fig-003.webp",
+      "caption": "Figure 3: The numerical trajectories of the ground truth and predicted ODEs of Benchmark 2.",
+      "page": 14,
+      "index": 3,
+      "width": 802,
+      "height": 1267
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16232v1/fig-004.webp",
+      "caption": "Figure 1: Overview of the training of the GQAE with the semantic loss of the Wasserstein distance W2.",
+      "page": 3,
+      "index": 4,
+      "width": 856,
+      "height": 296
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16232v1/fig-005.webp",
+      "caption": "Table 7: Hyperparameters of PySR for Benchmark 3.",
+      "page": 13,
+      "index": 5,
+      "width": 806,
+      "height": 211
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16232v1/fig-006.webp",
+      "caption": "Table 6: Details of ODEs of Benchmark 3.",
+      "page": 13,
+      "index": 6,
+      "width": 966,
+      "height": 279
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16232v1/fig-007.webp",
+      "caption": "Table 4: Relative L2 errors and complexity of the predicted ODEs by PySR and LGF for all ODE examples of Benchmark 3.",
+      "page": 8,
+      "index": 7,
+      "width": 564,
+      "height": 664
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16232v1/fig-008.webp",
+      "caption": "Table 5: Overview of the varying hyperparameters of LGF across the three benchmarks.",
+      "page": 12,
+      "index": 8,
+      "width": 666,
+      "height": 189
+    }
+  ]
+}

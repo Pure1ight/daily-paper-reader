@@ -1,0 +1,86 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.10860v1/fig-001.webp",
+      "caption": "Figure 5: (Example 2: Gradient of the objective functional) Heatmap of ∇F(ϕ) evaluated at ϕ = 0, reconstructed using different truncation levels K.",
+      "page": 21,
+      "index": 1,
+      "width": 815,
+      "height": 273
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10860v1/fig-002.webp",
+      "caption": "Figure 6: (Example 2: Stochastic gradient) Heatmap of the stochastic gradient ∇Fx(ϕ) evaluated at ϕ = 0 for a sampled location x (orange dot). The plots show the reconstruction using different truncation levels K.",
+      "page": 21,
+      "index": 2,
+      "width": 815,
+      "height": 275
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10860v1/fig-003.webp",
+      "caption": "Figure 8: From left to right: the standard cameraman test image on a 512× 512 grid, its Lanczosresampled version on a 128×128 grid, and the corresponding sine-basis approximation with D = 402.",
+      "page": 22,
+      "index": 3,
+      "width": 901,
+      "height": 279
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10860v1/fig-004.webp",
+      "caption": "Figure 7: (Example 2: Weak error in the inhomogeneous noise setting) The plot shows the difference between the SGD iterate and the discretized SME as a function of the step size η for different truncation levels K. The dashed line indicates the reference slope O(η2). All results are obtained using 106 Monte Carlo trials with smoothing parameter ε = 0.1.",
+      "page": 22,
+      "index": 4,
+      "width": 584,
+      "height": 414
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10860v1/fig-005.webp",
+      "caption": "Figure 2: (Example 1, MC discretized SME vs. SME) Convergence of the Monte Carlo estimator with respect to the number of trials N for different stepsizes η, averaged over 50 independent runs. For small N , the error decreases at the Monte Carlo rate O(N−1/2) till the error saturates and plateaus at a place where discretization error dominates for large N . The dashed line indicates the reference slope O(N−1/2). The experiment is performed with truncation dimension D = 30.",
+      "page": 18,
+      "index": 5,
+      "width": 579,
+      "height": 341
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10860v1/fig-006.webp",
+      "caption": "Figure 3: (Example 1, Weak error in the homogeneous noise Setting) The plots show the weak error (30) as a function of the step size η for truncation dimensions D ∈ {5, 10, 20, 30}. Error bars in the left panel represent the Monte Carlo standard error (MCSE) computed from 5 × 106 samples. The dashed line indicates the reference slope O(η2).",
+      "page": 18,
+      "index": 6,
+      "width": 893,
+      "height": 333
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10860v1/fig-007.webp",
+      "caption": "Figure 9: Weak error between SGD and the discretized SME for the cameraman target. The numerical setting is the same as in Figure 7, except that the smooth synthetic target is replaced by the cameraman image. The dashed line indicates the reference slope O(η2).",
+      "page": 23,
+      "index": 7,
+      "width": 584,
+      "height": 405
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10860v1/fig-008.webp",
+      "caption": "Figure 1: (Example 1, MC SGD vs. SME) Weak error between the SGD iterate and the exact SME expectation estimated using N = 5×106 Monte Carlo samples. Results are shown for different truncation dimensions D of the Hilbert space. The dotted line indicates the reference slope O(η).",
+      "page": 17,
+      "index": 8,
+      "width": 579,
+      "height": 385
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10860v1/fig-009.webp",
+      "caption": "Figure 10: A single sample-path illustration of the reconstruction dynamics for the cameraman target. The upper row corresponds to SGD and the lower row to the discretized SME.",
+      "page": 24,
+      "index": 9,
+      "width": 766,
+      "height": 364
+    },
+    {
+      "url": "assets/figures/arxiv/2604.10860v1/fig-010.webp",
+      "caption": "Figure 4: (Example 2: Target function) Heatmap of the target function ϕ̄ used in the inverse problem, visualized using a truncation level K = 20.",
+      "page": 20,
+      "index": 10,
+      "width": 411,
+      "height": 408
+    }
+  ]
+}

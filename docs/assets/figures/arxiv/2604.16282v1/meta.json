@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.16282v1/fig-001.webp",
+      "caption": "Table 5: Full ablation under rotation drift (N=50, 10 seeds, medians). Bold = best per column.",
+      "page": 26,
+      "index": 1,
+      "width": 860,
+      "height": 667
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16282v1/fig-002.webp",
+      "caption": "Table 1: Ablation study on the paraboloid, 10 seeds, medians reported. Bold = best per column. ∗∗p<0.01 vs. baseline, paired Wilcoxon test. E : tangent-space fidelity; Eb, EΛ: true end-to-end ambient drift and covariance errors from the full pipeline. F and C coincide at MB D=201: without tangent alignment, both collapse across all 10 seeds to a degenerate chart with near-zero decoder-Jacobian singular values, underscoring the need for the tangent-bundle penalty.",
+      "page": 18,
+      "index": 2,
+      "width": 826,
+      "height": 506
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16282v1/fig-003.webp",
+      "caption": "Figure 1: Reconstruction error vs extrapolation distance δ beyond the [−1, 1]2 training domain (D=11, 10 seeds, mean ± std). T+F extrapolates best on all four surfaces.",
+      "page": 19,
+      "index": 3,
+      "width": 949,
+      "height": 245
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16282v1/fig-004.webp",
+      "caption": "Table 6: Full ablation under MB Langevin (N=200, 10 seeds, medians). Bold = best per column.",
+      "page": 27,
+      "index": 4,
+      "width": 1005,
+      "height": 888
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16282v1/fig-005.webp",
+      "caption": "Table 3: Per-pair MFPT error (%) under MB Langevin (N=200, δ-net landmarks, 10 seeds, median). Only W0→W1 and W0→W2 reported, since all trajectories start at W0. Bold = lowest error per row. ∗p<0.05 vs. baseline, one-sided paired Wilcoxon with common noise.",
+      "page": 20,
+      "index": 5,
+      "width": 648,
+      "height": 321
+    }
+  ]
+}
