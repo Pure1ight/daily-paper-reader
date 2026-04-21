@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.18414v1/fig-001.webp",
+      "caption": "Figure 1: Schematic of the BG-SINDy method. (a) Spatio-temporal data sampling and derivative estimation via numerical differentiation or automatic differentiation. (b) Construction of the linear system Ut = Φξ. (c) Regression and term importance calculation. (d) Progressive pruning by iteratively discarding the least significant terms. (e) Identification of the optimal sparse model based on the evolution of residuals.",
+      "page": 11,
+      "index": 1,
+      "width": 804,
+      "height": 331
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18414v1/fig-002.webp",
+      "caption": "Figure 3: Heatmap of the coefficient error in the BG-SINDy discovery of the KdV equation across different noise levels and sampling data sizes, computed according to Eq. (13). The colormap ranges from light red (low error) to dark red (high error). Gray cells indicate failed discovery of the correct equation structure.",
+      "page": 15,
+      "index": 2,
+      "width": 473,
+      "height": 344
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18414v1/fig-003.webp",
+      "caption": "Figure 6: Results for the 2D reaction–diffusion equation (u component). (a) History of residual in the sparsification process. The red circle denotes the discovered equation. (b) Comparison of solution snapshots from the reference and discovered equations at t = 1.0 and t = 3.0. The relative L2 error, computed over the entire time domain, is 0.22%. (c) Discovered equation by BG-SINDy and comparison with SINDy and PDE-FIND. BGSINDy accurately recovers the reference equation, whereas SINDy and PDE-FIND fail to identify the equation structure. 19",
+      "page": 21,
+      "index": 3,
+      "width": 802,
+      "height": 1038
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18414v1/fig-004.webp",
+      "caption": "Figure 7: Results for the 2D reaction–diffusion equation (v component). (a) History of residual in the sparsification process. The red circle denotes the discovered equation. (b) Comparison of solution snapshots from the reference and discovered equations at t = 1.0 and t = 3.0. The relative L2 error, computed over the entire time domain, is 0.14%. (c) Discovered equation by BG-SINDy and comparison with SINDy and PDE-FIND. BGSINDy accurately recovers the reference equation, whereas SINDy and PDE-FIND fail to identify the equation structure. 20",
+      "page": 22,
+      "index": 4,
+      "width": 802,
+      "height": 1038
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18414v1/fig-005.webp",
+      "caption": "Figure 2: Results for the KdV equation. (a) History of residual in the sparsification process. The red circle denotes the discovered equation. (b) Heatmap of term importance in the sparsification process. (c) Comparison of the solutions obtained from the reference equation and the discovered equation. The relative L2 error is 1.19%. (d) Discovered equation by BG-SINDy and comparison with SINDy and PDE-FIND. BG-SINDy accurately recovers the reference KdV equation, while SINDy and PDE-FIND fail.",
+      "page": 14,
+      "index": 5,
+      "width": 802,
+      "height": 715
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18414v1/fig-006.webp",
+      "caption": "Figure 5: Results for the modified KS equation. (a) History of residual in the sparsification process. The red circle denotes the discovered equation. (b) Comparison of the solutions obtained from the reference equation and the discovered equation. The relative L2 error below 0.01%. (c) Discovered equation by BG-SINDy and comparison with SINDy and PDE-FIND. BG-SINDy accurately recovers the reference modified KS equation, whereas SINDy only recovers the two terms with small coefficients, and PDE-FIND fails to identify any of the small-coefficient terms.",
+      "page": 19,
+      "index": 6,
+      "width": 802,
+      "height": 850
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18414v1/fig-007.webp",
+      "caption": "Figure 4: Results for the modified Burgers equation. (a) History of residual in the sparsification process. The red circle denotes the discovered equation. (b) Heatmap of term importance in the sparsification process. (c) Comparison of the solutions obtained from the reference equation and the discovered equation. The relative L2 error is less than 0.01%. (d) Discovered equation by BG-SINDy and comparison with SINDy and PDE-FIND. BGSINDy accurately recovers the reference equation, while SINDy and PDE-FIND fail to identify the small-coefficient term.",
+      "page": 17,
+      "index": 7,
+      "width": 802,
+      "height": 775
+    }
+  ]
+}
