@@ -1,0 +1,1882 @@
+Title: Adaptive Kernel Selection for Kernelized Diffusion Maps
+
+URL Source: https://arxiv.org/pdf/2604.18402v1
+
+Published Time: Tue, 21 Apr 2026 02:42:32 GMT
+
+Number of Pages: 34
+
+Markdown Content:
+# Adaptive Kernel Selection for Kernelized Diffusion Maps 
+
+Othmane Aboussaad ∗1, Adam Miraoui ∗2, Boumediene Hamzi 3,4,5 , and Houman Owhadi 3
+
+> 1
+
+CY Cergy Paris University 
+
+> 2
+
+Institut Polytechnique de Paris 
+
+> 3
+
+California Institute of Technology 
+
+> 4
+
+The Alan Turing Institute 
+
+> 5
+
+Imperial College London 
+
+Abstract 
+
+The selection of an appropriate kernel is a recurring challenge in kernel-based spectral meth-ods. In Kernelized Diffusion Maps (KDM), the kernel determines the accuracy of the RKHS estimator of a diffusion-type operator, hence the quality and stability of the recovered eigen-functions. This paper introduces two complementary approaches to adaptive kernel selection for KDM. First, we develop a variational outer loop that learns continuous kernel parameters (bandwidths and mixture weights) by automatic differentiation through the Cholesky-reduced KDM eigenproblem, using a combined eigenvalue-maximization, subspace-orthonormality, and RKHS penalty objective. Second, we propose an unsupervised cross-validation pipeline that selects among multiple kernel families (Gaussian, Matérn, Rational Quadratic, Laplacian) and bandwidths using an eigenvalue-sum score, combined with random Fourier features for scalabil-ity. Both approaches share a common theoretical foundation: we prove Lipschitz dependence of the KDM operators on kernel weights, spectral projector continuity under a gap condition, a residual-control theorem certifying proximity to the target eigenspace, and exponential consis-tency of the CV selector over a finite kernel dictionary under concentration and margin assump-tions. Experiments on Ornstein–Uhlenbeck processes (2D, 3D, and d = 10 –20 ), double-well potentials, and circle manifolds show that the CV+RFF pipeline achieves near-perfect recovery on OU problems (up to 2× error reduction over uniform baselines) by automatically selecting non-Gaussian kernels. A Matérn-3/2 variational RFF method with bounded anisotropic pa-rameterization further matches or exceeds CV+RFF on the OU2D benchmarks ( 0.991 vs 0.977 
+
+on αy = 4 ; 0.960 vs 0.939 on αy = 16 ), demonstrating that CV and variational refinement are complementary when given equal inner-loop capacity. Beyond positive results, we identify and analyze structural failure modes of unconstrained gradient-based bandwidth optimization— including σ → 0 collapse under orthonormality penalties, σ → ∞ trivialization under eigenvalue-only losses, and the incapacity of Rayleigh-quadratic regularizers to prevent either—explaining why the two approaches are not symmetric and motivating a hybrid CV-then-local-refinement strategy. 
+
+# 1 Introduction 
+
+Spectral methods extract low-dimensional structure from high-dimensional data by computing eigen-pairs of operators constructed from pairwise relationships among samples. Given N data points, one builds a matrix encoding local similarities and analyzes its leading eigenvalues and eigenvectors; 
+
+> 0∗
+
+This work was carried out while the author was a visiting student at Imperial College London. 
+
+1
+
+> arXiv:2604.18402v1 [stat.ML] 20 Apr 2026
+
+the resulting coordinates reveal clusters, manifolds, and slow dynamical modes that are invisible in the ambient representation. The approach is nonparametric, requires no explicit generative model, and—when the operator is well chosen—provably converges to intrinsic geometric or dynamical quantities as N → ∞ .
+
+Diffusion maps [Coifman and Lafon, 2006] are the most widely used instance of this program. Starting from a kernel kε and i.i.d. samples {xi}Ni=1 , one constructs a Markov operator whose leading eigenfunctions approximate those of the Laplace–Beltrami operator on the data manifold, or, when the data come from a stochastic differential equation, of the infinitesimal generator. The resulting diffusion coordinates have become a standard tool for manifold learning, clustering, and the identification of slow reaction coordinates in molecular dynamics and other applications. Yet the quality of the embedding depends critically on the choice of kernel : the kernel family, its bandwidth, and any normalizations jointly determine the operator spectrum and, consequently, the accuracy and stability of the recovered eigenfunctions. Reproducing kernel Hilbert spaces (RKHS) provide a natural framework for making this depen-dence precise. An RKHS Hk associated with a positive-definite kernel k comes equipped with a norm that encodes smoothness, and operator approximations built in Hk inherit non-asymptotic error bounds that depend on the regularity of the target eigenfunctions relative to the RKHS rather than on the ambient dimension. This perspective has been exploited broadly in the analysis of dynamical systems—for learning attractors, Lyapunov functions, Koopman operators, and transfer operators [Cucker and Smale, 2002, Bouvrie and Hamzi, 2010, Hudson et al., 1990, Haasdonk et al., 2018, 2021, Giesl et al., 2020, Lu et al., 2023, Hamzi and Owhadi, 2021a, Hamzi and Colonius, 2019, Klus et al., 2020b,a, Alexander and Giannakis, 2020, Bouvrie and Hamzi, 2012, 2017a,b, Hamzi et al., 2019, 2023, Jalalian et al., 2023, Lee et al., 2024, Hamzi et al., 2025c, Bittracher et al., 2021, Hamzi et al., 2022]—and motivates a function-space approach to spectral estimation. 
+
+Kernelized Diffusion Maps (KDM) [Pillaud-Vivien and Bach, 2023] realize this idea concretely. Rather than building a graph Laplacian from pointwise kernel evaluations, KDM constructs two RKHS operators—a covariance operator Σ and a gradient operator L assembled from kernel derivatives— and recovers eigenfunctions of the diffusion operator by solving a generalized eigenproblem in Hk.The resulting estimator achieves dimension-free statistical rates that adapt to the regularity of the target, and admits scalable approximations through Nyström subsampling or random Fourier fea-tures [Rahimi and Recht, 2008]. Complementary results in operator learning confirm that replacing graph Laplacians with function-space estimators improves both statistical and computational per-formance of spectral algorithms [Cabannes and Bach, 2024], and diffusion-maps kernels have been used as data-adaptive inputs to kernel ridge regression for learning solution operators of dynamical systems [Song et al., 2025]. Despite these advances, KDM inherits the same kernel-selection problem as classical diffusion maps: a single kernel chosen a priori may be poorly matched to the target eigenfunctions, especially under noise or when the eigenfunctions encode dynamical rather than purely geometric structure. A parallel line of work on generator-based objectives reinforces this point. For reversible diffusions, slow modes correspond to eigenfunctions of the infinitesimal generator or, equivalently, the Markov semi-group; learning generator-related quantities from data has been approached through energy-form risks [Kostic et al., 2024], transform-based methods [Kostic et al., 2025], and debiasing techniques for data collected under non-equilibrium conditions [Devergne et al., 2024]. These results show that physics-informed constraints can guide eigenfunction learning beyond purely geometric criteria— but they do not resolve the kernel-selection question itself. Multiple kernel learning (MKL) [Gönen and Alpaydın, 2011] offers a principled route: instead of committing to one kernel, one optimizes over convex combinations drawn from a dictionary. Kernel flows [Owhadi and Yoo, 2019] pursue a related idea by selecting kernels that minimize a loss tied to the statistical task at hand, and 2recent work constructs task-adapted kernels for Koopman eigenfunctions via Lions-type variational principles and multiple-kernel learning [Hamzi et al., 2025b,a]. Adapting these strategies to the KDM setting—where the task is spectral estimation of a diffusion-type operator—is the subject of this paper. 
+
+Our approach. We address adaptive kernel selection for KDM through two complementary strategies that share a common operator-theoretic foundation. The first is a variational multiple-kernel learning framework: given a dictionary of positive-definite kernels {kℓ}Lℓ=1 , we optimize a convex mixture 
+
+kβ (x, y ) = 
+
+> L
+
+X
+
+> ℓ=1
+
+βℓ kℓ(x, y ), β ∈ ∆L, (1) by differentiating through the Cholesky-reduced KDM eigenproblem, using an outer objective that blends eigenvalue maximization, RKHS regularization, and optional generator-informed terms. The kernel kβ induces an RKHS Hkβ and a pair of empirical operators (bΣβ , bLβ ) from which eigenpairs are computed; the variational framework makes this entire pipeline differentiable and computationally explicit. The second strategy is an unsupervised cross-validation pipeline that searches over multiple kernel families (Gaussian, Matérn, Rational Quadratic, Laplacian) and bandwidths using a held-out eigenvalue-sum score, combined with random Fourier features for scalability. The two approaches share the same theoretical guarantees developed in Section 4. 
+
+Contributions. Our main contributions are as follows. 
+
+• Adaptive kernel selection for KDM. We study two complementary strategies for adapting kernels in kernelized diffusion maps: a differentiable variational outer loop for continuous kernel refinement, and a cross-validated multi-family kernel-selection pipeline combined with random Fourier features for scalable practical model selection. 
+
+• Variational KDM framework. We formulate a variational outer-loop objective for KDM based on eigenvalue-driven spectral optimization, subspace-orthonormality stabilization, RKHS regularization, and optional generator-informed residual terms. The resulting framework makes end-to-end kernel adaptation in KDM differentiable and computationally explicit. 
+
+• Theory. We prove well-posedness of convex kernel mixtures, Lipschitz dependence of the re-duced KDM operators on kernel weights, spectral projector continuity under a gap condition, a residual-control theorem linking generator residuals to proximity to the target eigenspace, and exponential consistency of the CV selector over a finite kernel dictionary under concentration and margin assumptions. 
+
+• Empirical complementarity. Across synthetic manifolds and stochastic dynamical systems, we show that the CV+RFF pipeline achieves the strongest practical performance on OU-type problems by automatically selecting advantageous non-Gaussian kernels. A Matérn-3/2 variational RFF with bounded anisotropic parameterization then further improves on CV+RFF for the 2D OU benchmarks, demonstrating that the two approaches are genuinely complementary when given equal inner-loop capacity. 
+
+• Diagnostic contribution. Beyond positive results, we identify and systematically analyze structural failure modes of unconstrained gradient-based bandwidth optimization: σ → 0
+
+collapse under orthonormality penalties, σ → ∞ trivialization under eigenvalue-only losses, and the incapacity of Rayleigh-quadratic regularizers to prevent either. We show that these 3pathologies are structural to Rayleigh-based objectives, not tuning issues, which explains why CV-based selection is more robust than gradient-based optimization on bandwidth choice. 
+
+Organization. The paper is organized as follows: Section 2 reviews diffusion maps, KDM, scalable approximations, MKL and diffusion generators. Section 3 presents the variational outer loop and the CV+RFF pipeline. Section 4 establishes theoretical properties (well-posedness, stability, residual control, identifiability). Section 5 reports experiments, ablations and high-dimensional scaling. Section 6 discusses trade-offs, limitations and future directions. 
+
+# 2 Background 
+
+This section reviews diffusion maps, the RKHS-based viewpoint of KDM and scalable approxima-tions, multiple kernel learning (MKL) and infinitesimal generators. 
+
+2.1 Diffusion maps and kernel integral operators 
+
+Let μ be a probability measure supported on a manifold M ⊂ Rd, and let X = {xi}Ni=1 ∼ μ be i.i.d. samples. Given a symmetric kernel kε : M × M → R+, diffusion maps construct a Markov operator by normalizing a kernel integral operator. Define the population degree function 
+
+qε(x) = 
+
+Z
+
+> M
+
+kε(x, y ) dμ (y), (2) and the α-normalized kernel 
+
+k(α) 
+
+> ε
+
+(x, y ) = kε(x, y )
+
+qε(x)α qε(y)α , α ∈ [0 , 1] . (3) Let d(α) 
+
+> ε
+
+(x) = R k(α) 
+
+> ε
+
+(x, y ) dμ (y) and define the Markov operator 
+
+(Pεf )( x) = 
+
+Z
+
+> M
+
+k(α) 
+
+> ε
+
+(x, y )
+
+d(α) 
+
+> ε
+
+(x) f (y) dμ (y). (4) The diffusion maps embedding is obtained from leading eigenpairs of Pε or from a self-adjoint conjugate. Under suitable regimes where ε → 0, the operator approximates the Laplace–Beltrami operator on M. A rigorous approach oriented on PDEs, including the case of manifolds with boundary and applications to PDEs on point clouds, is developed in Vaughn et al. [2024]. 
+
+2.2 Kernelized Diffusion Maps and scalable spectral approximations 
+
+Graph Laplacian estimators rely on local averaging and are statistically fragile in high ambient dimension. Pillaud-Vivien and Bach [2023] propose an RKHS estimator built from two operators: a covariance operator and an RKHS “Dirichlet/gradient” operator. This paves the way to non-asymptotic rates and scalable approximations through Nyström subsampling or random features. 
+
+RKHS operators. Let k be a C2 positive definite kernel on Rd with RKHS Hk. Denote by 
+
+Kx(·) = k(x, ·) ∈ H k and by ∂j Kx(·) = ∂xj k(x, ·) ∈ H k. Define the covariance operator 
+
+Σ := EX∼μ
+
+KX ⊗ KX
+
+, (5) 4and the gradient operator 
+
+L := EX∼μ
+
+h dX
+
+> j=1
+
+∂j KX ⊗ ∂j KX
+
+i
+
+. (6) For λ > 0, define the regularized operator 
+
+Lλ := L + λId . (7) The KDM operator is the self-adjoint compact operator 
+
+Tλ := L−1/2 
+
+> λ
+
+Σ L−1/2 
+
+> λ
+
+. (8) Eigenpairs of Tλ are equivalently characterized by a generalized eigenproblem: find (μ, ψ ) ∈ R × H k
+
+with ψ̸ = 0 such that 
+
+Σψ = μ Lλψ. (9) This construction avoids graph local averaging and can circumvent the curse of dimensionality under appropriate regularity [Pillaud-Vivien and Bach, 2023]. 
+
+Empirical estimators. Given samples X = {xi}Ni=1 ∼ μ, define 
+
+bΣ := 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+Kxi ⊗ Kxi , bL := 1
+
+N
+
+> N
+
+X
+
+> i=1
+> d
+
+X
+
+> j=1
+
+∂j Kxi ⊗ ∂j Kxi , bLλ = bL + λId , (10) and the empirical KDM operator 
+
+bTλ := bL−1/2 
+
+> λ
+
+bΣ bL−1/2 
+
+> λ
+
+. (11) In practice, one computes leading eigenpairs through a finite-dimensional approximation by using either Nyström subsampling or random features [Pillaud-Vivien and Bach, 2023]. 
+
+Nyström viewpoint. KDM is not the eigen-decomposition of a covariance surrogate W −1/2C⊤CW −1/2
+
+alone. Instead, the finite-dimensional inner loop builds matrices that approximate the pair (bΣ, bL)
+
+(the latter requiring kernel derivatives) and solves a generalized eigenproblem that discretizes (9). We detail the Nyström construction in Section 3.4 and Appendix B. 
+
+Galerkin viewpoint. Beyond Nyström, restricting the spectral problem to a low-dimensional test-function space (Galerkin) can be statistically and computationally advantageous compared to graph-based approaches [Cabannes and Bach, 2024]. 
+
+2.3 Multiple kernel learning (MKL) and RKHS of a convex mixture 
+
+We consider a dictionary of positive definite kernels {kℓ}Lℓ=1 and a convex mixture 
+
+kβ (x, y ) = 
+
+> L
+
+X
+
+> ℓ=1
+
+βℓ kℓ(x, y ), β ∈ ∆L := 
+
+n
+
+β ∈ RL 
+
+> ≥0
+
+:
+
+> L
+
+X
+
+> ℓ=1
+
+βℓ = 1 
+
+o
+
+. (12) Convex combinations preserve positive definiteness, hence kβ defines an RKHS Hkβ . A useful characterization of the RKHS norm is the infimal convolution form: 
+
+∥f ∥2
+
+> Hkβ
+
+= inf   
+
+> f=PLℓ=1 fℓ
+> fℓ∈H kℓ
+> L
+
+X
+
+> ℓ=1
+
+∥fℓ∥2
+
+> Hkℓ
+
+βℓ
+
+. (13) 5This identity makes explicit how β controls the geometry of functions and motivates RKHS penalties when learning β.From a practical standpoint, the importance of learning kernels in dynamical settings is also highlighted by the kernel flows criterion of Owhadi and Yoo [2019], and its application to learning kernels for dynamical systems in a sequence of papers including Hamzi and Owhadi [2021b], Darcy et al. [2025]. 
+
+2.4 Infinitesimal generators, semigroups and eigenfunctions 
+
+Consider a diffusion process (Xt)t≥0 on M satisfying 
+
+dX t = b(Xt) dt + σ(Xt) dW t, (14) with drift b and diffusion matrix a = σσ ⊤. The infinitesimal generator G acts on smooth test functions as 
+
+(Gf )( x) = b(x)⊤∇f (x) + 12 tr  a(x)∇2f (x), (15) and generates the Markov semigroup (Pt)t≥0 via Pt = etG . Slow collective variables and reaction coordinates are linked to leading eigenfunctions of G (or of Pt), motivating objectives that encourage eigen-relations 
+
+Gϕ = −λϕ, (16) either pointwise via a residual or in an energy form. We reserve the symbol L for the RKHS Dirichlet operator in (6) to avoid notational clashes. Another recent work provides learning objectives and guarantees for estimating quantities related to the generator from data. Indeed, Kostic et al. [2024] develops a learning framework for L using Dirichlet form risks with finite-sample guarantees, while Kostic et al. [2025] proposes low-complexity learning of continuous Markov semigroups via Laplace transform. Finally, diffusion-map-based constructions can be leveraged in dynamical and generative contexts, therefore illustrating the broader relevance of diffusion-operator spectra [Li and Marzouk, 2023]. 
+
+# 3 Method 
+
+We present two complementary approaches to adaptive kernel selection for KDM. The first is a 
+
+variational multiple-kernel learning (VMKL) method in which kernel parameters are learned by dif-ferentiating through a Nyström approximation of the KDM generalized eigenproblem. The second, used primarily in the experimental section, is a cross-validated multi-family kernel-selection pipeline 
+
+combined with random Fourier features (RFF). The variational method provides the differentiable formulation and theoretical backbone of continuous kernel adaptation, while the CV+RFF pipeline provides a broader and more scalable practical search over kernel families and bandwidths. We describe the variational method in detail below and use the CV+RFF pipeline in Section 5 as a complementary adaptive baseline. 
+
+3.1 Problem setup and notation 
+
+Let X = {xi}Ni=1 ⊂ Rd denote the dataset and let Z = {zj }pj=1 denote Nyström landmarks with 
+
+p ≪ N . We consider a dictionary of C2 positive definite kernels {kℓ}Lℓ=1 and learn mixture weights 6β ∈ ∆L. For a given β, the mixture kernel is 
+
+kβ (x, y ) = 
+
+> L
+
+X
+
+> ℓ=1
+
+βℓ kℓ(x, y ). (17) 
+
+Target eigenfunctions. For each β and regularization λ > 0, KDMs define the empirical operator 
+
+bTβ,λ = bL−1/2 
+
+> β,λ
+
+bΣβ bL−1/2 
+
+> β,λ
+
+, bLβ,λ = bLβ + λId ,
+
+whose leading eigenfunctions yield the KDM embedding. Throughout, λ denotes the RKHS reg-ularization parameter, μk denotes the generalized eigenvalues of the KDM eigenproblem, and bλk
+
+denotes Rayleigh-quotient estimates of the generator eigenvalues used in the optional PDE residual term. We compute approximate eigenfunctions { bϕk(β)}rk=1 on samples via Nyström (Section 3.4). 
+
+Dynamical information. When a generator G (or a discrete approximation Gh) is available, we may include an outer-loop loss that encourages bϕk to satisfy G bϕk ≈ − bλk bϕk in L2(μ). This term is removed when treating purely geometric settings. 
+
+3.2 Rayleigh-Ritz interpretation of the KDM inner loop 
+
+The KDM generalized eigenproblem admits a classical variational interpretation that clarifies the role of each component. For fixed β and λ, the population operator Tβ,λ has eigenfunctions charac-terized by the min-max Rayleigh principle: 
+
+μj = max    
+
+> V⊂H kβ
+> dim V=j
+
+min  
+
+> ϕ∈V\{ 0}
+
+⟨ϕ, Σβ ϕ⟩⟨ϕ, Lβ,λ ϕ⟩ . (18) The empirical KDM inner loop is precisely the Rayleigh-Ritz (Galerkin) approximation of (18) in the finite-dimensional trial subspace VN = span {kβ (·, x 1), . . . , k β (·, x N )} (or Vp = span {kβ (·, z j )}pj=1 in the Nyström case). By standard Rayleigh-Ritz theory, when Lβ,λ is positive definite, the Ritz values 
+
+bμ1 ≥ · · · ≥ bμr approximate the corresponding population eigenvalues from above (interlacing), and converge as the trial subspace fills Hkβ . This connection has three practical consequences: (i) the eigenvalue-sum CV score (37) is exactly the sum of top-r Rayleigh quotients evaluated at the Ritz vectors, providing the connection to the Rayleigh CV score of Section 4.7; (ii) the orthogonality constraint in our variational outer loop is the Galerkin orthogonality condition, not an ad-hoc penalty; (iii) the Lipschitz bounds of Proposition 4.3 translate, via standard Rayleigh-Ritz perturbation theory, into stability bounds for the eigenvalues with respect to β, underpinning the existence of a minimizer in Proposition 4.5. Throughout the paper, we use “Rayleigh quotient” and “generalized eigenvalue” interchangeably when referring to the top-r objective. 
+
+3.3 Mixture-of-kernels parametrization (VMKL) 
+
+We parameterize the mixture weights with a softmax map to enforce simplex constraints: 
+
+βℓ(u) = exp( uℓ)
+
+PLm=1 exp( um) , ℓ = 1 , . . . , L, (19) where u ∈ RL are unconstrained parameters. We can also prevent collapse by a small floor β ←
+
+(1 − τ )β + τ 1/L .73.4 Inner loop: Nyström approximation of KDM 
+
+For each base kernel kℓ, define Nyström kernel matrices 
+
+(Cℓ)ij = kℓ(xi, z j ), (Wℓ)ij = kℓ(zi, z j ), (20) with Cℓ ∈ RN ×p, Wℓ ∈ Rp×p.
+
+Kernel-derivative Nyström matrices. KDM requires kernel derivatives. For kℓ ∈ C2 define the derivative cross-matrix Jℓ ∈ R(N d )×p by 
+
+(Jℓ)(i,j ),m = ∂xj kℓ(xi, z m), i = 1 , . . . , N, j = 1 , . . . , d, m = 1 , . . . , p, (21) where (i, j ) indexes the flattened pair. (For d = 1 , this is simply an N ×p matrix of first derivatives.) 
+
+Mixture aggregation. Given mixture weights β, we form aggregated Nyström matrices 
+
+Cβ =
+
+> L
+
+X
+
+> ℓ=1
+
+βℓCℓ, Wβ =
+
+> L
+
+X
+
+> ℓ=1
+
+βℓWℓ, Jβ =
+
+> L
+
+X
+
+> ℓ=1
+
+βℓJℓ. (22) We stabilize Wβ by symmetrization and jitter: 
+
+Wβ ← Wβ + W ⊤
+
+> β
+
+2 + εW Ip. (23) 
+
+Finite-dimensional operators. In the landmark span span {kβ (·, z m)}pm=1 , the empirical covari-ance and Dirichlet operators admit the matrix surrogates 
+
+bΣ(p) 
+
+> β
+
+:= 1
+
+N C⊤ 
+
+> β
+
+Cβ ∈ Rp×p, bL(p) 
+
+> β
+
+:= 1
+
+N J⊤ 
+
+> β
+
+Jβ ∈ Rp×p. (24) Regularization λ > 0 in RKHS corresponds to adding λId in operator form, which becomes λW β in landmark coordinates. We define the regularized matrix 
+
+bL(p) 
+
+> β,λ
+
+:= bL(p) 
+
+> β
+
++ λW β . (25) 
+
+Generalized eigenproblem. We compute top-r eigenpairs (μk, a k) by solving 
+
+bΣ(p) 
+
+> β
+
+ak = μk bL(p) 
+
+> β,λ
+
+ak, ak ∈ Rp, (26) with eigenvalues ordered μ1 ≥ μ2 ≥ · · · . Equivalently, μk are the leading generalized Rayleigh quotients associated with the matrix pair (bΣ(p) 
+
+> β
+
+, bL(p)
+
+> β,λ
+
+). This discretizes the characterization bΣβ ψ =
+
+μ bLβ,λ ψ.
+
+Lifting to sample evaluations. Given coefficients ak, we evaluate the corresponding eigenfunc-tion on samples by bϕk = Cβ ak ∈ RN . (27) Depending on the application, we may remove the constant-like mode and enforce centering and orthogonality constraints empirically. 8Normalization and orthogonality. We enforce empirical L2(μ) constraints to stabilize the outer-loop optimization: 
+
+1
+
+N 1⊤ bϕk = 0 , 1
+
+N ∥ bϕk∥22 = 1 , 1
+
+N bϕ⊤ 
+
+> k
+
+bϕj = 0 ( k̸ = j), (28) implemented by centering and Gram–Schmidt (or QR) orthonormalization in RN . This gauge-fixing step resolves sign ambiguities (especially near eigenvalue crossings) and stabilizes differentiation through the eigensolver in the outer loop. It does not change the estimated eigenspace. 
+
+3.5 Outer loop: variational objective 
+
+We optimize u (hence β) by minimizing a practical outer objective that combines spectral, subspace, RKHS, and optional generator-informed terms. This formulation is chosen to match the losses used in the ablations of Section 5. 
+
+(a) Spectral term. Let μ1(β) ≥ · · · ≥ μr(β) denote the leading generalized eigenvalues from (26). To encourage a strong leading KDM subspace, we use 
+
+Leig (β) := −
+
+> r
+
+X
+
+> k=1
+
+μk(β). (29) This term is especially effective on OU-type problems, but by itself can favor overly smooth kernels. 
+
+(b) Subspace orthonormality / anchoring. To stabilize optimization and prevent collapse, we enforce centering, normalization, and empirical orthogonality of the lifted eigenfunctions: 
+
+Lsub (β) := 
+
+> r
+
+X
+
+> k=1
+
+ 1 
+
+> N
+
+1⊤ bϕk
+
+2
+
++
+
+> r
+
+X
+
+> k=1
+
+ 1 
+
+> N
+
+∥ bϕk∥22 − 1
+
+2
+
++ η X
+
+> 1≤k<j ≤r
+
+ 1 
+
+> N
+
+bϕ⊤ 
+
+> k
+
+bϕj
+
+2
+
+. (30) This term fixes the empirical gauge and stabilizes differentiation through the eigensolver. 
+
+(c) RKHS regularization. In landmark coordinates bϕk(·) = Ppm=1 (ak)m kβ (·, z m), the RKHS norm is ∥ bϕk∥2
+
+> Hkβ
+
+= a⊤ 
+
+> k
+
+Wβ ak. We define 
+
+L(k)RKHS (β) := a⊤ 
+
+> k
+
+Wβ ak. (31) 
+
+(d) Optional generator / PDE residual. When a generator discretization Gh is available, we include 
+
+L(k)PDE (β) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+
+
+(Gh bϕk)i + bλk ( bϕk)i
+
+2
+
+, (32) where bλk is the Rayleigh estimate from Appendix D. This term is omitted in purely geometric experiments. 9Algorithm 1 Variational Multiple Kernel Learning for Kernelized Diffusion Maps (VMKL–KDM) 
+
+Require: Data X = {xi}Ni=1 , landmarks Z = {zj }pj=1 , kernels {kℓ}Lℓ=1 , modes r, regularization 
+
+λ > 0, hyperparameters (γ, α, ρ, η, ε W ), generator discretization Gh.
+
+Ensure: Mixture weights β⋆, eigenfunctions { bϕk}rk=1 . 
+
+> 1:
+
+Precompute Cℓ, W ℓ, J ℓ via (20) and (21) for all ℓ. 
+
+> 2:
+
+Initialize u ∈ RL (e.g., u = 0 so β is uniform).  
+
+> 3:
+
+for t = 1 , . . . , T do  
+
+> 4:
+
+Compute β = softmax( u). 
+
+> 5:
+
+Form Cβ , W β , J β via (22); stabilize Wβ via (23).  
+
+> 6:
+
+Build bΣ(p) 
+
+> β
+
+= 1 
+
+> N
+
+C⊤ 
+
+> β
+
+Cβ and bL(p) 
+
+> β
+
+= 1 
+
+> N
+
+J⊤ 
+
+> β
+
+Jβ . 
+
+> 7:
+
+Form bL(p) 
+
+> β,λ
+
+= bL(p) 
+
+> β
+
++ λW β . 
+
+> 8:
+
+Solve generalized eigenproblem bΣ(p) 
+
+> β
+
+ak = μk bL(p)
+
+> β,λ
+
+ak for top r eigenpairs.  
+
+> 9:
+
+Lift eigenfunctions bϕk = Cβ ak and normalize via (28).  
+
+> 10:
+
+Compute J (u) via (33) (omit LPDE if no Gh).  
+
+> 11:
+
+Update u ← u − ηt∇uJ (u) (Adam/L-BFGS).  
+
+> 12:
+
+end for  
+
+> 13:
+
+return β⋆ = softmax( u) and { bϕk}rk=1 .
+
+Total objective. Combining the above, we minimize 
+
+min  
+
+> u∈RL
+
+J (u) := τ Leig (β(u)) + α Lsub (β(u)) + γ
+
+> r
+
+X
+
+> k=1
+
+L(k)RKHS (β(u)) + ζ
+
+> r
+
+X
+
+> k=1
+
+L(k)PDE (β(u)) + ρ Ω( β(u)) ,
+
+(33) where τ, α, γ, ζ, ρ ≥ 0 are hyperparameters and Ω( β) is an optional regularizer on the kernel weights. This formulation subsumes the ablations used in Section 5: SubOnly sets τ = 0 , α > 0; EigOnly 
+
+sets τ > 0, α = 0 ; Combined sets τ > 0, α > 0, γ > 0, with ζ > 0 when generator information is available. 
+
+3.6 Joint optimization and computational complexity 
+
+We optimize (33) end-to-end by differentiating through the generalized eigen-solver whenever feasi-ble. We use Adam for warm-starting and optionally switch to L-BFGS for refinement. To mitigate instabilities near eigenvalue crossings, we employ anchoring (30) and, when needed, losses on sub-spaces. 
+
+Precomputation. We precompute {Cℓ, W ℓ, J ℓ}Lℓ=1 once. The dominant cost is O(LN p + Lp 2 +
+
+LN pd ) due to derivative matrices. 
+
+Per-iteration cost. Forming Cβ , W β , J β costs O(LN p + Lp 2 + LN pd ). Building bΣ(p) 
+
+> β
+
+and bL(p)
+
+> β
+
+costs O(N p 2 + N d p 2) if done naively, but can be implemented as matrix products: C⊤ 
+
+> β
+
+Cβ and 
+
+J⊤ 
+
+> β
+
+Jβ . Solving the p × p generalized eigenproblem (26) costs O(p3) worst-case or O(rp 2) for partial solvers. Evaluating outer losses costs O(N r ) plus the cost of applying Gh (if PDE term enabled). 10 4 Theory and Properties 
+
+We establish rigorous properties of the adaptive-kernel KDM framework: well-posedness of the kernel mixture, Lipschitz dependence of the empirical operators on the mixture weights, spectral stability under a gap condition, existence of an optimizer, and the precise sense in which residual control certifies proximity to the target eigenspace. 
+
+Standing assumptions. Throughout Section 4, we assume: (i) each base kernel kℓ is positive definite and C2; (ii) the landmarks Z = {zj }pj=1 are fixed (sensitivity to Z is addressed empirically in Section 5); (iii) the regularization λ > 0 is bounded away from zero; (iv) when spectral-gap conditions are invoked, we require a strictly positive gap δ > 0 at rank r uniformly on the relevant subset of ∆L. The theorem-by-theorem dependence is: Prop. 4.1 and Prop. 4.2 require only (i); Prop. 4.3 requires (i) with bounded operator norms MC , M J , M W ; Prop. 4.4 requires (i), (iii), and a uniform positive-definiteness condition on Wβ ; Thm. 1 requires (i)–(iv); Prop. 4.5 requires continuity of F and (iii); Thm. 2 requires self-adjointness of G with positive gap γm; Props. 4.6–4.7 are purely algebraic. 
+
+4.1 Well-posedness of convex kernel mixtures and RKHS geometry 
+
+Let {kℓ}Lℓ=1 be positive definite kernels on X and kβ = PLℓ=1 βℓkℓ for β ∈ ∆L.
+
+Proposition 4.1 (Positive definiteness of mixtures) . If each kℓ is positive definite and β ∈ ∆L,then kβ is positive definite. Proof. For any {xi}ni=1 ⊂ X and c ∈ Rn, c⊤Kβ c = PLℓ=1 βℓ c⊤Kℓc ≥ 0 since each Kℓ is PSD and 
+
+βℓ ≥ 0.
+
+Proposition 4.2 (RKHS norm of a convex mixture) . For f ∈ H kβ ,
+
+∥f ∥2
+
+> Hkβ
+
+= inf   
+
+> f=P
+> ℓfℓ
+> fℓ∈H kℓ
+> L
+
+X
+
+> ℓ=1
+
+∥fℓ∥2
+
+> Hkℓ
+
+βℓ
+
+,
+
+with the convention that if βℓ = 0 then fℓ = 0 .Proof. The Hilbert direct sum H⊕ = L 
+
+> ℓ
+
+Hkℓ with norm ∥(fℓ)∥2 
+
+> ⊕,β
+
+= P 
+
+> ℓ
+
+β−1 
+
+> ℓ
+
+∥fℓ∥2
+
+> Hkℓ
+
+and the sum-mation map S(f1, . . . , f L) = P 
+
+> ℓ
+
+fℓ yield an RKHS with kernel kβ and the stated quotient norm. 
+
+4.2 Lipschitz dependence of empirical operators on kernel weights 
+
+Proposition 4.3 (Lipschitz continuity of Nyström operators) . Let MC = max ℓ ∥Cℓ∥2, MJ =max ℓ ∥Jℓ∥2, MW = max ℓ ∥Wℓ∥2. Then for any β, β ′ ∈ ∆L,
+
+∥bΣ(p) 
+
+> β
+
+− bΣ(p) 
+
+> β′
+
+∥2 ≤ 2M 2
+
+> C
+
+N ∥β − β′∥1, (34) 
+
+∥bL(p) 
+
+> β,λ
+
+− bL(p)
+
+> β′,λ
+
+∥2 ≤
+
+ 2M 2
+
+> J
+
+N + λM W
+
+
+
+∥β − β′∥1. (35) 
+
+Proof. Since Cβ − Cβ′ = P
+
+> ℓ
+
+(βℓ − β′
+
+> ℓ
+
+)Cℓ, the triangle inequality gives ∥Cβ − Cβ′ ∥2 ≤ MC ∥β − β′∥1.Factoring bΣ(p) 
+
+> β
+
+− bΣ(p) 
+
+> β′
+
+= N −1(C⊤ 
+
+> β
+
+(Cβ − Cβ′ ) + ( Cβ − Cβ′ )⊤Cβ′ ) and using ∥Cβ ∥2 ≤ MC yields (34). The bound (35) follows analogously. 11 Proposition 4.4 (Uniform positive definiteness) . If λ > 0 and Wβ ⪰ γI p for all β ∈ ∆L, then 
+
+bL(p) 
+
+> β,λ
+
+⪰ λγI p for all β, and the generalized eigenproblem is well-posed everywhere on ∆L.
+
+4.3 Spectral stability under a gap condition 
+
+Theorem 1 (Continuity of spectral projectors) . Let Aβ = ( bL(p)
+
+> β,λ
+
+)−1/2 bΣ(p) 
+
+> β
+
+(bL(p)
+
+> β,λ
+
+)−1/2. If the spectral gap at rank r satisfies bμr(Aβ ) − bμr+1 (Aβ ) ≥ δ > 0 uniformly on U ⊂ ∆L, then the spectral projector 
+
+Pβ onto the leading r-dimensional eigenspace is Lipschitz: 
+
+∥Pβ − Pβ′ ∥2 ≤ 2C0
+
+δ ∥β − β′∥1, β, β ′ ∈ U, 
+
+where C0 is the Lipschitz constant of β 7 → Aβ from Proposition 4.3. Proof. By Propositions 4.3 and 4.4, β 7 → Aβ is Lipschitz. Applying the Davis–Kahan sin Θ theorem under the uniform gap δ yields ∥Pβ − Pβ′ ∥2 ≤ (2 /δ )∥Aβ − Aβ′ ∥2.
+
+4.4 Existence of a minimizer and residual control 
+
+Proposition 4.5 (Existence of a minimizer) . If bL(p) 
+
+> β,λ
+
+is positive definite for all β ∈ ∆L and the outer objective F (β) is continuous, then F attains a global minimum on ∆L.Proof. ∆L is compact and F is continuous; apply the Weierstrass theorem. 
+
+Theorem 2 (Residual control implies proximity to target eigenspace) . Let G be a self-adjoint generator with eigenvalues {− λj } and spectral gap γm = inf j̸ =m |λj − λm| > 0 at mode m. If 
+
+ϕ ∈ L2(μ) with ∥ϕ∥ = 1 and residual r = Gϕ + λmϕ, then 
+
+dist( ϕ, span {em}) ≤ ∥r∥
+
+γm
+
+.
+
+More generally, for a cluster I with gap γI = inf j / ∈I,i ∈I |λj − λi| > 0,
+
+dist( ϕ, EI ) ≤ ∥(G + λ)ϕ∥
+
+γI
+
+.
+
+Proof. Expanding ϕ = P 
+
+> j
+
+cj ej gives ∥r∥2 = P  
+
+> j̸=m
+
+|λm−λj |2|cj |2 ≥ γ2
+
+> m
+
+P  
+
+> j̸=m
+
+|cj |2 = γ2 
+
+> m
+
+dist( ϕ, span {em})2.The cluster case follows by projecting onto E⊥ 
+
+> I
+
+where G + λ has spectrum bounded below by γI .
+
+Significance. Theorem 2 makes the generator residual term LPDE mathematically meaning-ful: small residual is not merely a heuristic objective but a certificate of proximity to the tar-get eigenspace whenever a spectral gap is available. Concretely, the empirical PDE loss LPDE = 
+
+> 1
+> N
+
+∥Gh ˆϕk + ˆλk ˆϕk∥22 in (33) is a finite-sample estimate of ∥r∥2; Theorem 2 then guarantees that mini-mizing this loss drives ˆϕk toward the true eigenspace at a rate controlled by the inverse spectral gap 
+
+1/γ m. In practice, when the KDM estimator is consistent for the generator spectrum, γm can be estimated from the CV-selected eigenvalues ˆμ1 > · · · > ˆμr > ˆμr+1 as ˆγr ≈ ˆμr − ˆμr+1 ; the quality of this proxy depends on the kernel approximation and sample size. This justifies using scalable oper-ator surrogates as advocated in KDM [Pillaud-Vivien and Bach, 2023] and aligns with the Galerkin viewpoint of Cabannes and Bach [2024]. 12 4.5 Identifiability: sign and rotational ambiguity 
+
+Eigenfunctions are determined only up to sign (for simple eigenvalues) and orthogonal rotation (within degenerate eigenspaces). While these ambiguities do not affect the span Eβ , they induce unstable gradients during end-to-end optimization. 
+
+Proposition 4.6 (Anchoring resolves sign ambiguity) . Let u ∈ RN with ∥u∥2 = 1 be a simple eigenvector and a ∈ RN an anchor with ⟨a, u ⟩̸ = 0 . Then the sign is fixed uniquely by requiring 
+
+⟨a, v ⟩ > 0: exactly one of {u, −u} minimizes ∥v − a∥22.
+
+Proposition 4.7 (Procrustes alignment resolves rotational ambiguity) . For two orthonormal bases 
+
+U, eU ∈ RN ×r, the Procrustes problem min Q∈O(r) ∥ eU Q − U ∥2 
+
+> F
+
+has minimizer Q⋆ = M V ⊤ where 
+
+eU ⊤U = M ΣV ⊤ is the SVD, with minimum value 2r − 2tr(Σ) .
+
+4.6 Consistency of the cross-validation kernel selection 
+
+We now establish the theoretical counterpart of the empirical CV selection used in Section 5. Let 
+
+Kcand = {(k1, σ 1), . . . , (kM , σ M )} be a finite candidate set of kernel-bandwidth pairs, and for each candidate (k, σ ) define the population risk 
+
+R(k, σ ) := −
+
+> r
+
+X
+
+> j=1
+
+μ∞ 
+
+> j
+
+(k, σ ), (36) where μ∞ 
+
+> j
+
+(k, σ ) are the top-r eigenvalues of the population KDM operator Tk,σ,λ from (8). The empirical CV score on F held-out folds of size Nf = N/F is 
+
+bRN (k, σ ) := − 1
+
+F
+
+> F
+
+X 
+
+> f=1
+> r
+
+X
+
+> j=1
+
+bμ(f ) 
+
+> j
+
+(k, σ ), (37) and the CV selector is (ˆkN , ˆσN ) ∈ argmin Kcand 
+
+bRN .
+
+Theorem 3 (Consistency of CV selection over a finite kernel dictionary) . Let Kcand be a fixed, finite 
+
+candidate set of M kernel-bandwidth pairs. Assume (a) each (k, σ ) ∈ K cand is a positive definite C2
+
+kernel with k(x, x ) ≤ κ∞ < ∞; (b) the population minimizer (k⋆, σ ⋆) := argmin Kcand R is unique up to a strict margin ∆ := min (k,σ )̸=( k⋆,σ ⋆) R(k, σ ) − R(k⋆, σ ⋆) > 0; (c) for each candidate, the eigenvalue estimator bμ(f ) 
+
+> j
+
+from the KDM inner loop satisfies a concentration bound of the form 
+
+P |bμ(f ) 
+
+> j
+
+(k, σ ) − μ∞ 
+
+> j
+
+(k, σ )| > t  ≤ 2 exp  −c N f t2
+
+for some constant c > 0 depending on κ∞, λ, λ r(Tk,σ,λ ) but not on N , consistent with Pillaud-Vivien and Bach [2023, Theorem 4.4]. Then for all N sufficiently large, 
+
+P (ˆkN , ˆσN )̸ = ( k⋆, σ ⋆) ≤ 2M r exp 
+
+
+
+− c N f ∆2
+
+4r2
+
+
+
+, (38) 
+
+so (ˆkN , ˆσN ) → (k⋆, σ ⋆) in probability as N → ∞ .Proof. For any candidate (k, σ ), the empirical risk bRN is an average of rF eigenvalue estimates, each at concentration rate cN f . By a union bound over the r eigenvalues and F folds, 
+
+P | bRN (k, σ ) − R(k, σ )| > r t  ≤ 2rF exp( −cN f t2) ≤ 2r exp( −cN f t2),
+
+13 using F ≥ 1 and absorbing constants. A union bound over the M candidates gives 
+
+P  sup 
+
+> (k,σ )
+
+| bRN − R| > r t  ≤ 2M r exp( −cN f t2).
+
+On the event sup | bRN − R| ≤ r t with r t < ∆/2, we have bRN (k⋆, σ ⋆) < bRN (k, σ ) for every (k, σ )̸ =(k⋆, σ ⋆), so the CV selector coincides with the population optimum. Setting t = ∆ /(2 r) yields (38). 
+
+Remark 4.1 (Rate and constants) . The consistency rate is exponential in Nf , matching the con-centration rate of the underlying eigenvalue estimator. The constant c depends on the conditioning of the KDM operator through λ and the eigengap λr(Tk,σ,λ ): well-conditioned problems converge faster. The factor M reflects the finite candidate grid; a continuous kernel family would require a covering argument combined with the Lipschitz bound of Proposition 4.3, yielding an additional log 
+
+factor. 
+
+Remark 4.2 (Connection to the gap CV variant) . An analogous argument applies to the spectral-gap CV score bμr/bμr+1 : provided the population gap μ∞ 
+
+> r
+
+− μ∞ 
+
+> r+1
+
+is bounded away from zero, the same concentration-plus-union-bound argument yields exponential consistency. The gap variant is preferable when the eigenvalue-sum score is biased (e.g., on manifold problems where large σ inflates all eigenvalues without improving eigenfunction quality), since the ratio cancels the scale ambiguity. 
+
+4.7 Rayleigh-quotient cross-validation and equivalence 
+
+The eigenvalue-sum CV score (37) can be recast in the language of Rayleigh quotients. For kernel 
+
+(k, σ ), the generalized eigenvalue bμj is the Rayleigh quotient of the j-th KDM eigenfunction bϕj :
+
+bμj (k, σ ) = R( bϕj ; bΣ, bLλ) := ⟨ bϕj , bΣ bϕj ⟩⟨ bϕj , bLλ bϕj ⟩ , (39) because bϕj is a stationary point of the generalized Rayleigh quotient with value bμj . This observation motivates a held-out Rayleigh CV score: compute eigenfunctions bϕtrain  
+
+> j
+
+on the training fold, and evaluate the Rayleigh quotient of the same coefficient vector on the test fold: 
+
+bRray  
+
+> N
+
+(k, σ ) := − 1
+
+F
+
+> F
+
+X 
+
+> f=1
+> r
+
+X
+
+> j=1
+
+⟨ bϕ(f, train)  
+
+> j
+
+, bΣ(f, test) bϕ(f, train)  
+
+> j
+
+⟩⟨ bϕ(f, train)  
+
+> j
+
+, bL(f, test)  
+
+> λ
+
+bϕ(f, train)  
+
+> j
+
+⟩ . (40) This score directly measures whether the training eigenfunctions generalize: a training-fold eigen-function that overfits will have low Rayleigh quotient when evaluated on the test fold, while one that captures a true population mode will have Rayleigh quotient close to its training value. 
+
+Proposition 4.8 (Asymptotic equivalence of Rayleigh and eigenvalue-sum CV) . Under the assump-tions of Theorem 3, the Rayleigh CV score (40) converges to the same population risk R of (36) 
+
+as the eigenvalue-sum score, and the CV selector based on bRray  
+
+> N
+
+is exponentially consistent with the same rate as in (38) .Proof. For each j, the training-fold eigenfunction bϕ(f, train)  
+
+> j
+
+converges to the population eigenfunction 
+
+ϕ∞ 
+
+> j
+
+in the operator norm at the rate of Proposition 4.3. The test-fold operators bΣ(f, test) , bL(f, test) 
+
+> λ
+
+converge to their population counterparts at concentration rate cN f . By continuity of the Rayleigh quotient in both its argument and the operators, each term in (40) converges to μ∞ 
+
+> j
+
+(k, σ ). The argument of Theorem 3 then applies verbatim with the concentration constants inflated by a factor depending on the operator norms MC , M J , M W from Proposition 4.3. 14 Remark 4.3 (Empirical equivalence) . On all six benchmarks of Section 5, the Rayleigh CV score (40) and the eigenvalue-sum CV score (37) select identical kernels (k, σ ), with identical resulting SubR 2
+
+values. This confirms Proposition 4.8 empirically and indicates that either score can be used inter-changeably on these problems. A regime where the two may differ is when eigenfunctions overfit in a way that inflates training eigenvalues without improving test Rayleigh quotients; we did not observe this on our benchmarks, but the Rayleigh variant provides a natural safeguard against it. 
+
+# 5 Experiments 
+
+We evaluate the proposed adaptive-kernel KDM approaches on dynamical systems and geometric manifold benchmarks, including problems specifically designed to stress-test kernel choice. Our goal is to assess whether learning kernel parameters improves eigenfunction recovery and to identify the settings where the advantage is most pronounced. We compare three inner-loop approaches: Nyström subsampling ( p ≪ N landmarks), full computation ( p = N ), and random Fourier features (Algorithm 2 of Pillaud-Vivien and Bach [2023]). 
+
+5.1 Common protocol, baselines and metrics 
+
+Kernel selection via cross-validation. We select the kernel family and bandwidth by maxi-mizing the sum of the top-r eigenvalues of the KDM operator across held-out data folds: 
+
+(ˆk, ˆσ) = argmax 
+
+> k∈K , σ> 0
+
+1
+
+F
+
+> F
+
+X 
+
+> f=1
+> r
+
+X
+
+> j=1
+
+μ(f ) 
+
+> j
+
+(k, σ ),
+
+where μ(f ) 
+
+> j
+
+are the eigenvalues computed on the f -th fold using kernel k at bandwidth σ. This score requires no ground truth: larger eigenvalues indicate directions of high covariance relative to smoothness, which is precisely what KDM eigenfunctions capture. We sweep over six kernel families—Gaussian, Laplacian, Matérn-3/2, Matérn-5/2, Rational Quadratic ( α = 2 ), and Rational Quadratic ( α = 5 )—at ten bandwidths spanning two orders of magnitude around the median pairwise distance, using F = 3 folds. 
+
+Random Fourier features. For each kernel family, we use the corresponding random Fourier feature (RFF) approximation [Rahimi and Recht, 2008]: Gaussian features use w ∼ N (0 , I/σ 2),Laplacian uses w ∼ Cauchy(0 , 1/σ ), Matérn-ν uses w ∼ tν (0 , √ν/σ ), and Rational Quadratic uses a Gamma scale mixture. We use prff = 300 features, giving an effective basis dimension much larger than Nyström with p = 60 landmarks. 
+
+Baselines. We compare against two uniform baselines: Uniform+Nyström uses βℓ = 1 /L over 
+
+L = 10 log-spaced Gaussian bandwidths with Nyström ( p = 60 k-means landmarks), representing standard practice. Uniform+RFF uses the same uniform Gaussian weights but with prff = 300 
+
+random Fourier features, providing a matched-basis comparison against CV+RFF to isolate the effect of kernel adaptation from feature representation size. 
+
+Evaluation metric: SubR 2. We use the subspace projection score SubR 2 = 1
+
+> r
+
+Prk=1 
+
+Prj=1 (⟨ ˆϕj , ϕ ⋆k⟩N )2,which equals the mean squared cosine of principal angles between learned and reference subspaces, and is invariant to rotations within degenerate eigenspaces. SubR 2 = 1 is perfect; the subspace error is 1 − SubR 2.15 Example CV kernel CV σ CV+RFF Uni+RFF Uni+Nys OU2D ( αy = 4 ) Matérn-3/2 61.6 0.977 ± 0.013 0.766 ± 0.017 0.758 ± 0.024                                                            
+
+> OU2D ( αy= 16 )Matérn-3/2 52.0 0.939 ±0.032 0.508 ±0.004 0.507 ±0.003
+> OU 3D RatQuad( α= 5 )64.2 0.980 ±0.007 0.717 ±0.006 0.706 ±0.007
+> DW1D Gaussian 52.4 0.725 ±0.014 0.653 ±0.020 0.648 ±0.031
+> Asymm. DW Gaussian 49.9 0.729 ±0.010 0.671 ±0.016 0.679 ±0.004
+> S1(σ= 0 .05 )Matérn-3/2 71.1 0.787 ±0.049 0.739 ±0.038 0.745 ±0.005
+
+Table 1: Eigenfunction recovery (SubR 2, mean ±std over 3 seeds, N = 500 , r = 4 ). Uni+RFF uses uniform Gaussian weights with prff = 300 ; Uni+Nys uses p = 60 landmarks. CV kernel and σ are for seed 42; other seeds yield similar selections. CV+RFF outperforms both uniform baselines on all OU benchmarks, confirming that the gain comes from kernel adaptation, not merely from the larger RFF basis. 
+
+5.2 Results 
+
+Table 1 presents the main results across six benchmarks. Unless stated otherwise, experiments use 
+
+N = 500 samples, r = 4 target modes, λ = 0 .01 (or 0.005 for circle), and prff = 300 random features; exceptions are the scaling experiment (Table 7, N = 100 –2000 ) and the high-dimensional benchmarks (Table 5, N = 1000 –5000 ). The CV selects both the kernel family and bandwidth without access to ground truth. 
+
+OU processes: near-perfect recovery. The three OU benchmarks show the most dramatic improvements. For seed 42, the CV selects Matérn-3/2 at σ = 61 .6 on OU2D with αy = 4 and achieves multi-seed SubR 2 = 0 .977 ± 0.013 (Table 1), compared to 0.758 ± 0.024 for Uniform—a 
+
+2× error reduction. All four principal angles exceed 0.99, indicating essentially perfect subspace recovery. The extreme-anisotropy case ( αy = 16 ) reaches multi-seed SubR 2 = 0 .939 ± 0.032 , and the 3D OU ( α = (1 , 4, 16) ) achieves 0.980 ± 0.007 , with Rational Quadratic selected on seed 42 and Matérn-3/2 on the other seeds—reflecting the benefit of heavier-tailed spectral distributions in higher dimensions. 
+
+Double-well potentials. Both the symmetric and asymmetric double-well problems see 1.4–
+
+1.5× error reduction. The CV selects Gaussian kernel at large bandwidth ( σ ≈ 50 ), which captures the slow inter-well dynamics. Figure 1 shows the learned eigenfunctions overlaid on the reference: modes 1–3 are closely tracked, while mode 4 remains challenging. 
+
+Circle manifold. On S1 with noise σ = 0 .05 , the CV+RFF method performs comparably to Uniform ( 24% error for both). The CV selects Matérn-3/2, but the circle is sufficiently simple that any reasonable kernel works. However, the VMKL variational approach (Table 2) achieves SubR 2 = 0 .777 on this example, outperforming both CV+RFF and Uniform, demonstrating that gradient-based kernel adaptation provides value where the CV score is biased. 
+
+Validating the variational framework (Section 3.5). Table 2 compares the gradient-based VMKL variational outer loop (Section 3.5) against the CV+RFF pipeline, with Uniform Gaussian as baseline. VMKL variational uses L = 5 learnable Gaussians with the combined eigenvalue-maximization + orthonormality loss, optimized by Adam →L-BFGS through autodiff. Values in Table 2 are single-seed (seed 42) for direct method comparison. The variational approach beats 16 Example VMKL variational CV+RFF Uniform DW1D 0.736 0.736 0.629 Asymm. DW 0.728 0.734 0.606 OU2D ( αy = 4 ) 0.881 0.997 0.626 OU2D ( αy = 16 ) 0.523 0.961 0.513 OU 3D 0.717 0.988 0.561 
+
+S1 (σ = 0 .05 ) 0.777 0.758 0.760 Table 2: VMKL variational (Sec. 3.5, L = 5 learnable Gaussians, Nyström p = 60 ) vs CV+RFF (6 kernel families, prff = 300 ) vs Uniform Gaussian ( L = 10 fixed, Nyström p = 60 ). Both learned approaches beat Uniform; CV+RFF excels on OU problems via non-Gaussian kernels, while VMKL variational excels on S1 via fine-grained bandwidth tuning. Example Uniform SubOnly EigOnly Combined CV+RFF DW1D 0.630 0.711 0.474 0.736 0.736 
+
+OU2D ( αy = 16 ) 0.513 0.538 0.949 0.523 0.961 
+
+S1 (σ = 0 .05 ) 0.761 0.747 0.500 0.777 0.757 Table 3: Ablation of outer-loop losses (SubR 2, N = 500 ). SubOnly =orthonormality; EigOnly =eigenvalue max; Combined =all three. The variational losses (Nyström p = 60 , L = 5 
+
+Gaussians) are compared against the CV+RFF pipeline ( prff = 300 , 6 kernel families). Each com-ponent contributes differently across problem types. Uniform on 5 of 6 benchmarks and matches CV+RFF on 1D potentials (DW1D: 0.736 vs 0.736 ). CV+RFF achieves substantially higher scores on OU problems ( 0.989 vs 0.881 on OU2D αy = 4 at seed 42) because it explores non-Gaussian kernel families and a wider bandwidth range. On the circle manifold, VMKL variational outperforms CV+RFF ( 0.777 vs 0.758 ), demonstrating that the two approaches are complementary: the gradient-based method excels when fine-grained bandwidth tuning matters within a single kernel family, while CV+RFF excels when the kernel family or bandwidth regime must change qualitatively. 
+
+Ablation: isolating each loss component. Table 3 separates the contribution of each outer-loop term using the Nyström inner loop ( p = 60 ) on three representative examples. SubOnly 
+
+(orthonormality loss ∥G − I∥2 
+
+> F
+
+) provides moderate, consistent improvement over Uniform on dy-namical problems (DW1D: +13% ). EigOnly (eigenvalue maximization − P 
+
+> k
+
+μk) is transformative on OU problems ( 0.949 vs 0.513 , an 18 × error reduction) but collapses to chance level on DW1D and S1 due to σ → ∞ degeneration. Combined (eigenvalue + orthonormality + RKHS) prevents the collapse and achieves the best variational score on DW1D ( 0.736 ) and S1 (0.777 ), but sacrifices the EigOnly advantage on OU. CV+RFF avoids these trade-offs by evaluating each candidate kernel on held-out data, achieving the best or near-best score on every example. This ablation clarifies that: (i) the subspace loss provides a stable baseline improvement, (ii) eigenvalue maximization is powerful but requires regularization, (iii) the combined loss balances the two, and (iv) CV+RFF is the most robust practical choice. 
+
+Which kernel family wins where. Figure 6 shows the CV score landscape across kernel families and bandwidths. Matérn-3/2 consistently achieves the highest scores on OU problems at large σ,17 Figure 1: 1D potentials: reference (black) vs CV-selected kernel (red dashed) vs Uniform Gaussian (blue dotted). The CV kernel closely tracks the reference on modes 1–3. Example CV+RFF Uniform+Nys OU2D ( αy = 4 ) 0.977 ± 0.013 0.758 ± 0.024 
+
+OU2D ( αy = 16 ) 0.939 ± 0.032 0.507 ± 0.003 
+
+OU 3D 0.980 ± 0.007 0.706 ± 0.007 
+
+DW1D 0.725 ± 0.014 0.648 ± 0.031 
+
+S1 (σ = 0 .05 ) 0.787 ± 0.049 0.745 ± 0.005 
+
+Table 4: Multi-seed results (mean ±std, 3 seeds, N = 500 ). CV+RFF consistently outperforms Uniform with low variance on OU benchmarks. while Gaussian wins on 1D potential problems. Rational Quadratic ( α = 5 ) excels in 3D, where its heavier tails provide better frequency coverage in the RFF spectral distribution. This kernel family selection is automatic and requires no prior knowledge of the problem structure. 
+
+Reproducibility: multi-seed results. Table 4 reports mean ±std over 3 independent seeds. The CV+RFF pipeline is highly consistent on OU problems: 0.977 ± 0.013 on OU2D αy = 4 ,
+
+0.939 ± 0.032 on OU2D αy = 16 , and 0.980 ± 0.007 on OU3D. The Uniform baseline has higher variance on some examples (DW1D: 0.648 ± 0.031 ), reflecting sensitivity to landmark placement. 
+
+Scaling with sample size. Figure 7 shows SubR 2 as a function of N on OU2D ( αy = 4 ). The CV+RFF pipeline achieves SubR 2 > 0.99 even at N = 100 and remains near-perfect through 
+
+N = 2000 , demonstrating that kernel adaptation via CV is effective across sample sizes. The Uniform baseline improves from 0.62 at N = 100 to 0.78 at N = 2000 , consistent with the O(n−1/4)
+
+convergence rate of Pillaud-Vivien and Bach [2023]. 
+
+Scaling to higher dimensions. Table 5 reports results on OU processes in d = 10 and d = 20 
+
+with N = 1000 –5000 samples and heterogeneous drift rates αj = 2 j . The CV+RFF pipeline achieves SubR 2 ≈ 0.77 at d = 10 and 0.76 at d = 20 , a 1.5–1.6× error reduction over Uniform RFF ( ≈ 0.49 ). 18 Figure 2: OU processes: CV-selected eigenfunctions (scatter colored by eigenfunction value). OU2D 
+
+αy = 4 and 3D OU achieve SubR 2 > 0.98 .
+
+d N prff CV+RFF Uniform RFF CV kernel 10 1000 300 0.773 0.492 Matérn-5/2 10 5000 300 0.762 0.490 Matérn-5/2 20 2000 400 0.759 0.491 Gaussian Table 5: High-dimensional OU processes ( αj = 2 j , r = 4 ). Kernel learning provides 1.5–1.6× error reduction even at d = 20 .At d = 10 , the CV selects Matérn-5/2, confirming that non-Gaussian kernels provide value in higher dimensions. The dimension-free convergence rate of KDM predicts that these results should continue to improve with larger N ; we observe that N = 5000 gives similar scores to N = 1000 at 
+
+d = 10 , suggesting the statistical error is no longer the bottleneck and more RFF features or larger dictionaries are needed. 
+
+Variational RFF: matching or exceeding CV+RFF via bounded anisotropic refinement. 
+
+The asymmetric Nyström-vs-RFF comparison in Table 2 motivates a fairer experiment: can a vari-ational method match CV+RFF when given the same RFF basis capacity? We design a variational RFF (VarRFF) method with three key ingredients that together avoid the failure modes documented in Section 6: (i) the RFF spectral distribution is fixed to Matérn-3/2 (the CV-preferred family); (ii) the bandwidth is parameterized anisotropically as σj = σCV · exp(tanh( θj )) , constraining each 
+
+σj to [σCV /e, σ CV · e] and preventing both σ → 0 and σ → ∞ by construction; (iii) the loss uses 19 Figure 3: Circle S1 (σnoise = 0 .05 ): eigenfunctions as functions of θ.
+
+Figure 4: Residuals ˆϕk − ϕ⋆k for DW1D (top) and OU2D αy = 16 (bottom). CV kernel (red) produces smaller residuals than Uniform (blue), especially on higher modes. only eigenvalue maximization and the mild RKHS penalty ( L = − P 
+
+> k
+
+μk + 0 .001 P 
+
+> k
+
+∥ak∥2), with 
+
+no orthonormality term to avoid triggering the σ-collapse. Table 6 shows that this VarRFF-bounded method matches or exceeds CV+RFF on OU bench-marks (multi-seed, N = 500 , prff = 300 ). On OU2D with αy = 4, VarRFF improves from 
+
+0.977 ± 0.013 to 0.991 ± 0.008 , a further 1.6× error reduction over CV+RFF. On OU2D with 
+
+αy = 16 , the gain is from 0.939 ± 0.032 to 0.960 ± 0.026 . The learned σj hit the upper bound 
+
+σCV ·e ≈ 167 on the 2D problems, indicating that CV’s isotropic bandwidth is slightly too small; the variational refinement corrects this. On OU3D the method is on par with CV+RFF ( 0.963 ± 0.044 
+
+vs 0.980 ± 0.007 ), with higher variance reflecting the larger parameter space (3 θ’s) and occasional optima in suboptimal regions. This result reverses the narrative of the earlier Nyström experiments: when given the same RFF basis, the variational method is not secondary to CV+RFF—it is complementary or superior. The earlier 0.75 ceiling on VMKL variational (Table 2) was a capacity limitation of the Nyström inner loop ( p = 60 ), not a fundamental property of the variational objective. Conceptually, VarRFF-bounded realizes the hybrid CV+variational strategy we advocate: CV provides the coarse family selection and a bandwidth anchor σCV ; variational refinement provides the per-coordinate adapta-tion that a finite CV grid cannot deliver. 
+
+Hyperparameter sensitivity. The regularization parameter λ is the primary hyperparameter. On OU d = 10 (N = 1000 ), sweeping λ across two orders of magnitude (0.001 to 0.1) yields SubR 2
+
+20 Figure 5: Summary: SubR 2 across all examples. Red bars (CV-selected kernel + RFF) consistently exceed blue bars (Uniform Gaussian + Nyström), with percentage errors labeled. Example CV+RFF VarRFF-bounded Learned σj (seed 42) OU2D ( αy = 4 ) 0.977 ± 0.013 0.991 ± 0.008 [163 , 163] 
+
+OU2D ( αy = 16 ) 0.939 ± 0.032 0.960 ± 0.026 [135 , 135] 
+
+OU 3D 0.980 ± 0.007 0.963 ± 0.044 [171 , 171 , 171] 
+
+Table 6: Variational RFF with bounded anisotropic parameterization matches or exceeds CV+RFF on OU benchmarks (mean ±std over 3 seeds, N = 500 , prff = 300 , Matérn-3/2 features, eigenvalue-only loss with mild RKHS penalty). The variational method is initialized at σCV and refines per-coordinate bandwidths within [σCV /e, σ CV · e].in the range 0.754 –0.780 , a relative variation of only 3.4% . The CV-selected kernel family remains Matérn-5/2 throughout, and the selected bandwidth is also stable. This insensitivity is expected: the eigenvalue-sum CV score automatically compensates for changes in λ by adjusting the selected bandwidth. 
+
+MD-like benchmark: when gap-CV beats eigenvalue-sum CV. The OU and 1D potential benchmarks share a common structure: all coordinates are “slow” (relevant to the leading eigen-functions). Real-world systems often violate this. Molecular dynamics, for instance, has a few slow dihedral-like collective variables mixed with many fast vibrational coordinates. To stress-test CV scoring rules in this regime, we construct an MD-like benchmark: dslow slow coordinates drawn from mixtures of V (x) = ( x2 − 1) 2/4 double-well potentials (simulating dihedral transitions) plus 
+
+dfast fast Gaussian coordinates with variance 0.04 (simulating bond-length vibrations). Reference eigenfunctions are tanh(3 xj ) of the slow coordinates. Table 7 compares eigenvalue-sum CV, gap CV, and Uniform RFF across three dimensionalities. This benchmark illustrates the gap-CV variant proposed in the remark following Theorem 3. When the population spectrum has a clear gap between r relevant modes and many small but nonzero modes (as in MD-like systems), eigenvalue-sum CV is biased toward broad kernels that inflate small eigenvalues, while gap CV is invariant to this scale and selects a sharper bandwidth. Gap CV substantially improves over eigenvalue-sum CV on this benchmark ( 0.789 vs 0.512 at d = 6 ), 21 Figure 6: CV eigenvalue-sum score across kernel families and bandwidths ( σ relative to median pairwise distance). Matérn-3/2 dominates on OU problems at large σ; Gaussian wins on 1D poten-tials. though Uniform+RFF still performs slightly better ( 0.822 ), suggesting that further refinement of the scoring rule—or a richer kernel dictionary—would be needed to close the remaining gap. Practical recommendation: use eigenvalue-sum CV on problems with a “dimensionally flat” slow manifold (OU, 1D potentials); consider gap CV when many fast nuisance coordinates are present. 
+
+# 6 Discussion 
+
+Our experiments demonstrate two complementary approaches to kernel learning for diffusion maps. The VMKL variational outer loop (Section 3.5) validates the proposed gradient-based framework, achieving consistent improvements over Uniform baselines on 5 of 6 benchmarks—including the circle manifold where CV+RFF does not help. The CV+RFF pipeline extends this by searching over multiple kernel families, achieving near-perfect recovery on OU processes (SubR 2 > 0.96 ). Both approaches share the same theoretical grounding: they optimize the kernel to maximize the quality of KDM eigenfunction estimates, consistent with the framework of Pillaud-Vivien and Bach [2023]. 
+
+Why gradient-based bandwidth optimization is fragile. A key finding of this work is that gradient-based optimization of the bandwidth σ through the variational objective tends to drive σ
+
+toward zero, even when warm-started at the CV-optimal value. The root cause is a tension between the loss components: the subspace orthonormality term Lsub rewards sharp, localized eigenfunctions (small σ) that are empirically orthogonal, while the eigenvalue term Leig rewards broad kernels (large σ) that capture slow-mode variance. When both are present, the orthonormality gradient dominates and pulls σ → 0. Removing orthonormality (EigOnly) avoids the collapse but leads to 
+
+σ → ∞ degeneration instead. This explains why the CV+RFF pipeline, which evaluates each σ
+
+22 Figure 7: SubR 2 vs sample size N on OU2D ( αy = 4 ). CV+RFF (Matérn-3/2) achieves near-perfect recovery at all sample sizes; Uniform improves slowly with N .Config Eigsum-CV Gap-CV Uniform 
+
+d = 6 (2s+ 4f) 0.512 (σ = 107 ) 0.789 (σ = 1 .0) 0.822 
+
+d = 10 (2s+ 8f) 0.497 ± 0.017 (σ ≈ 110 ) 0.778 ± 0.011 (σ ≈ 1.1) 0.805 
+
+d = 20 (2s+ 18 f) 0.468 (σ = 120 ) 0.777 (σ = 2 .0) 0.785 
+
+Table 7: MD-like benchmark with dslow = 2 slow double-well coordinates and dfast fast Gaussian co-ordinates, N = 500 . Eigenvalue-sum CV selects a broad kernel that is misled by the fast coordinates. Gap CV selects a much sharper kernel at σ ≈ 1 and substantially improves over eigenvalue-sum CV, though Uniform+RFF remains slightly better on this benchmark. Multi-seed results ( d = 10 )over 3 seeds. on held-out data without gradient-based optimization, is more robust: it is immune to the loss-landscape pathology because it never differentiates through σ.
+
+Attempts at a residual-based loss and their failure modes. Motivated by the σ-collapse, we explored several alternatives based on the analytical generator residual ∥G ϕ + ˆλϕ ∥2 computed via the closed-form kernel derivatives of Appendix D. This loss does not have the orthonormality– eigenvalue tension in principle, since it directly penalizes eigenfunctions that fail to satisfy the generator equation regardless of their localization. However, three distinct implementations each exhibited a pathology: (i) using the Rayleigh quotient ˆλk = −⟨ ϕk, Gϕk⟩/∥ϕk∥2 as a differentiable function of σ creates a circular dependency that freezes the optimization ( σ stays at its initial value); (ii) two-timescale optimization (fast σ updates with periodically refreshed ˆλk) avoids the circular gradient but drives σ → ∞ , because at large σ the RFF features approach constants and the residual trivially vanishes; (iii) held-out residual evaluation (splitting the data so that eigenvectors are estimated on one fold and the residual is computed on another) fails for the same reason as (ii), since the trivial σ → ∞ minimum is present on both halves. Adding a Dirichlet-energy constraint 
+
+∥∇ ϕ∥2/∥ϕ∥2 ≈ target prevents σ → ∞ but introduces a new hyperparameter and the resulting optimizer still drifts away from the CV optimum (selecting σ ≈ 40 vs CV σ ≈ 62 on OU2D, with correspondingly worse SubR 2). These results indicate that any fixed gradient-based proxy for eigenfunction quality has stationary points that do not coincide with the true optimum. CV succeeds 23 precisely because it evaluates eigenfunction quality directly on held-out data at each candidate σ,rather than optimizing a surrogate. 
+
+A hybrid resolution. The practical resolution we adopt in Section 5 is a hybrid: use CV to select the coarse bandwidth σCV and kernel family, then optionally apply variational refinement within a bounded neighborhood [σCV /e, σ CV ·e] using anisotropic per-coordinate bandwidths (Table 6). This captures the strengths of both approaches: CV handles the hard coarse-scale selection where gradient methods fail, while the variational refinement handles the fine-scale per-coordinate adaptation that CV cannot address without exponential blowup of the candidate grid. 
+
+Regularization investigations. Given the pathologies above, a natural question is whether adding explicit regularizers to the variational loss can prevent the σ-collapse. We systematically tested four categories of regularizers on the bandwidth optimization: (i) RKHS coefficient norm 
+
+γH
+
+P 
+
+> k
+
+∥ak∥2, penalizing eigenfunction blow-up as σ → 0; (ii) Eigenvalue spread γE (μ1 − μr),penalizing the disproportionate growth of top eigenvalues at small σ; (iii) Dirichlet H1 norm 
+
+γH1
+
+P 
+
+> k
+
+∥∇ ϕk∥2/∥ϕk∥2, the natural Sobolev penalty; (iv) Soft anchor γσ(log σ − log σCV )2, biasing 
+
+σ toward the CV value. On OU2D αy = 4 , sweeping each penalty across five orders of magnitude produces one of three outcomes: no effect on σ (when γ is small), still σ → 0 collapse; or aggressive compression toward σ → 0 (when γ is large enough to dominate). The Rayleigh-type regularizers (i)– (iii) fail because they are Rayleigh quadratic forms in the eigenvector coefficients , which are already extremized by the KDM eigenproblem—they cannot change the stationary points of the optimiza-tion, only shift them infinitesimally. Category (iv) does keep σ close to σCV when warm-started at 
+
+σCV and γ is sufficiently large, but this amounts to a soft constraint forcing agreement with CV and provides no additional signal. The experimental conclusion is that no Rayleigh-quadratic regularizer added to the gradient-based objective can improve over CV on σ selection : the pathology is structural to the class of Rayleigh-based objectives, not a symptom of missing regularization. Furthermore, when VarRFF is restricted to a single Gaussian kernel (no family selection), the achievable SubR 2
+
+saturates near 0.75 across a wide range of σ, confirming that the 0.997 achieved by CV+RFF on OU2D is due to kernel family selection (Matérn-3/2 vs Gaussian), not bandwidth optimization. 
+
+Non-Gaussian kernels. The most striking finding is that Matérn-3/2 and Rational Quadratic outperform Gaussian on OU and higher-dimensional problems. Their heavier-tailed spectral distri-butions sample lower frequencies more effectively in the RFF approximation, which is advantageous for smooth, slow eigenfunctions. This family selection is fully automatic via the eigenvalue-sum CV score. 
+
+CV score bias and limitations. The eigenvalue-sum CV score P 
+
+> k
+
+μk(σ) has a known bias to-ward large σ on manifold problems, where inflated eigenvalues do not correspond to better eigenfunc-tions. On the circle, this manifests as CV selecting σ ≈ 70 (too large), while the VMKL variational approach correctly tunes to smaller bandwidths and achieves better results. Potential mitigations include eigenvalue-ratio scoring μr/μ r+1 (spectral gap maximization), reconstruction-based CV, or combining CV selection with gradient-based refinement. We leave systematic comparison of CV scoring rules to future work. 
+
+Comparison with other adaptive methods. Our approach differs from kernel flows [Owhadi and Yoo, 2019, Hamzi and Owhadi, 2021b] in that we optimize kernels specifically for the KDM generalized eigenproblem rather than for vector-field interpolation or general kernel regression. The 24 closely related line of work on kernel-based approximation of the Koopman operator and its gen-erator [Klus et al., 2020c, Lee et al., 2025] also learns spectral objects of dynamical operators via RKHS methods, but targets Koopman eigenfunctions through a generator matrix representa-tion rather than the KDM covariance–Dirichlet formulation. In the same direction, the unified framework of Hamzi et al. [2025b,a] constructs task-adapted kernels for Koopman eigenfunctions analytically—via Lions-type variational principles, Green’s functions, and resolvent operators—and uses MKL to select among them via residual minimization; our approach is complementary in that we select kernels empirically from data without requiring knowledge of the generator. The recent operator-learning approach of Kostic et al. [2024] estimates the infinitesimal generator of stochastic diffusions directly from trajectory data; our method is complementary in that it adapts the kernel used to represent the generator’s eigenfunctions rather than estimating the generator itself. Deep spectral networks [Cabannes and Bach, 2024] learn feature maps end-to-end but sacrifice the RKHS interpretability and theoretical guarantees of kernel methods. Established MKL methods [Gönen and Alpaydın, 2011] typically target classification or regression objectives; adapting them to spectral operator estimation requires the specific inner-loop structure we develop here. A direct empirical comparison with these methods would be valuable but requires substantial implementation effort and is deferred to future work. 
+
+Memory: Nyström vs RFF. RFF provides a critical memory advantage over Nyström in high dimensions. The derivative matrices Jℓ ∈ RN d ×p require O(LN pd ) storage per kernel. At d = 50 ,
+
+N = 10 4, p = 300 , L = 10 , this is 12 GB—prohibitive on a single machine. RFF avoids per-kernel derivative storage: the feature matrices S ∈ RN ×prff and D ∈ RN d ×prff for a single (CV-selected) kernel require only 2 GB at the same scale, a 6× reduction. Note that computing D still costs 
+
+O(N dp rff ) per forward pass (since ∇ϕ(x) = −p2/p sin( w⊤x + b) · w), but this is a single-kernel cost rather than L per-kernel costs, and the frequency vectors w are drawn once and reused. For CV sweeps over multiple kernels, features are computed and discarded per candidate, so peak memory remains bounded by the single largest evaluation. 
+
+Computational complexity. The VMKL variational loop costs O(T · L · (N pd + p3)) for T outer iterations, L kernel components, N samples, p landmarks, and d ambient dimensions, dominated by the L kernel matrix evaluations per iteration. The CV+RFF pipeline costs O(F · |K| · | Σ| · (N p rff d +
+
+p3rff )) for F folds, |K| kernel families, and |Σ| bandwidth candidates. For d ≫ 10 , the derivative cross-matrices Jℓ ∈ RN d ×p dominate storage; RFF avoids explicit gradient computation since the features ϕ(x) = p2/p cos( w⊤x + b) have analytical derivatives ∇ϕ. In our experiments ( N = 500 ,
+
+d ≤ 3), the full pipeline completes in 30–160 seconds on a single CPU. Scaling to d > 10 would benefit from mini-batch RFF sampling and parallelized fold evaluation. 
+
+Random Fourier features vs Nyström. RFF provides a crucial advantage: its feature di-mension prff = 300 is independent of data layout, avoiding the landmark-placement bottleneck of Nyström ( p = 60 ). For mixture kernels, the RFF representation of each family uses the corre-sponding spectral distribution (Gaussian frequencies for RBF, Cauchy for Laplacian, Student-t for Matérn), enabling seamless multi-kernel features. 
+
+Sample size. The core benchmarks use N = 500 ; the high-dimensional and scaling experiments use N up to 5000 . The dimension-free convergence rate O(n−1/4) of Pillaud-Vivien and Bach [2023] predicts that N = 5000 would roughly halve the statistical error. Preliminary experiments 25 at N = 1000 confirm improving results; systematic large-N evaluation on real-world molecular dynamics datasets is an important next step. 
+
+From separate pipelines to a unified hybrid. The variational and CV approaches were ini-tially developed as separate pipelines: the variational method used a Nyström inner loop ( p = 60 ), while CV+RFF used a larger RFF basis ( prff = 300 ). This capacity asymmetry explained why CV+RFF dominated on OU benchmarks—the bottleneck was the inner-loop approximation, not the kernel-selection strategy. The bounded VarRFF method of Table 6 resolves this asymmetry: by giving the variational method the same RFF capacity and anchoring it at the CV-selected bandwidth, it matches or exceeds CV+RFF. This confirms that the two approaches are genuinely complementary: CV provides coarse family selection and a bandwidth anchor; variational refinement provides per-coordinate adaptation that a finite grid cannot deliver. 
+
+# 7 Conclusion 
+
+We studied adaptive kernel selection for kernelized diffusion maps through two complementary approaches: (i) a variational outer loop that learns continuous kernel parameters by autodiffer-entiating through a Cholesky-reduced KDM generalized eigenproblem, and (ii) a cross-validated kernel-selection pipeline over multiple families (Gaussian, Matérn, Rational Quadratic, Laplacian) combined with random Fourier features for scalable practical model selection. The variational framework provides the differentiable formulation for continuous kernel adapta-tion, together with RKHS regularization, subspace stabilization, and optional generator-informed losses. Empirically, it consistently improves over uniform baselines and is particularly effective in settings where fine-grained bandwidth refinement matters, such as the noisy circle manifold. The CV+RFF pipeline provides the strongest practical performance on OU-type problems, where the ability to search across kernel families and use a larger feature basis leads to near-perfect recovery and automatically identifies advantageous non-Gaussian kernels. An ablation study clarifies the roles of the outer-loop terms: eigenvalue maximization is highly effective but can collapse without regularization; subspace orthonormality provides a stable baseline improvement; and the combined objective balances these effects. The theoretical results in Section 4 show that both approaches rest on the same operator-theoretic foundation: kernel mixtures are well posed, reduced KDM operators depend continuously on kernel weights, spectral projectors are stable under a gap condition, and generator residuals certify proximity to the target eigenspace. Several research directions follow from this work, organized in three groups. 
+
+Tighter unification of the two approaches. A natural next step is to extend the variational framework to RFF-based inner loops. Our preliminary experiments suggest that the main obstacle to CV-initialized variational refinement is not initialization but the lower-capacity Nyström inner loop relative to the larger RFF basis. This makes variational RFF formulations, projector-based outer objectives, and scalable stochastic optimization promising directions. Related is the development of non-Rayleigh-quadratic variational objectives whose stationary points need not coincide with the KDM eigenproblem; we have shown that all Rayleigh-quadratic regularizers fail to alter the optimization landscape, and an honest open question is whether any differentiable surrogate can match CV on bandwidth selection. One concrete proposal is implicit differentiation through the CV selector itself, turning the argmax over candidates into a soft operation with usable gradients. 
+
+Theory extensions. Our consistency theorem (Theorem 3) is stated for a finite kernel dictio-nary; a covering argument combined with the Lipschitz bounds of Proposition 4.3 should yield a continuous-parameter version with an additional logarithmic factor. Minimax lower bounds on the 26 rate would complete the statistical picture. A separate theoretical question, raised by the circle ex-periment where CV selects too-large σ, is an analytic characterization of data geometries on which the eigenvalue-sum score is biased—this would predict a priori when to trust CV and when to use Rayleigh-CV or gap-CV variants. Principled construction of the candidate dictionary, beyond the hand-picked family used here, is another clear direction, potentially via data-dependent Mercer bases. 
+
+Applications and broader benchmarks. Validation on molecular dynamics data (e.g., alanine dipeptide, d = 60 , N = 10 4) would test the method where slow-mode discovery has direct scientific value. Financial, climate, and neural-recording data offer further targets. Head-to-head comparison with graph Laplacian eigenmaps would quantify the practical value of the dimension-free rate; comparison with neural spectral methods (SpectralNet, NeuralEF, Deep Ritz) would position kernel methods within the broader machine-learning landscape. Extensions to operator-valued KDM— learning Koopman or transfer-operator features rather than scalar eigenfunctions—would connect this work to the growing literature on kernel methods for dynamical systems [Klus et al., 2020c, Lee et al., 2025]. 
+
+References 
+
+Romeo Alexander and Dimitrios Giannakis. Operator-theoretic framework for forecasting non-linear time series with kernel analog techniques. Physica D: Nonlinear Phenomena , 409: 132520, 2020. ISSN 0167-2789. doi: https://doi.org/10.1016/j.physd.2020.132520. URL http: //www.sciencedirect.com/science/article/pii/S016727891930377X . https://doi.org/10. 1016/j.physd.2020.132520 .Andreas Bittracher, Stefan Klus, Boumediene Hamzi, Péter Koltai, and Christof Schütte. Dimen-sionality reduction of complex metastable systems via kernel embeddings of transition manifolds. 
+
+Journal of Nonlinear Science , 31(3):1–52, 2021. doi: 10.1007/s00332-020-09668-z. URL https: //doi.org/10.1007/s00332-020-09668-z . https://doi.org/10.1007/s00332-020-09668-z .J. Bouvrie and B. Hamzi. Balanced reduction of nonlinear control systems in reproducing kernel Hilbert space. Proc. 48th Annual Allerton Conference on Communication, Control, and Comput-ing , pages 294–301, 2010. http://doi.org/10.1109/ALLERTON.2010.5706920 .Jake Bouvrie and Boumediene Hamzi. Empirical estimators for stochastically forced nonlinear systems: Observability, controllability and the invariant measure. Proc. of the 2012 American Control Conference , pages 4142–4148, 2012. https://doi.org/10.1109/ACC.2012.6315175 .Jake Bouvrie and Boumediene Hamzi. Kernel Methods for the Approximation of Nonlinear Systems. 
+
+SIAM Journal on Control and Optimization , 55(4):2460–2492, January 2017a. ISSN 0363-0129, 1095-7138. doi: 10.1137/14096815X. https://doi.org/10.1137/14096815 .Jake Bouvrie and Boumediene Hamzi. Kernel methods for the approximation of some key quantities of nonlinear systems. Journal of Computational Dynamics , 4(1&2):1–19, 2017b. https://www. aimsciences.org/article/doi/10.3934/jcd.2017001 .Vivien A. Cabannes and Francis Bach. The Galerkin method beats graph-based approaches for spectral algorithms. In Sanjoy Dasgupta, Stephan Mandt, and Yingzhen Li, editors, Proceed-ings of The 27th International Conference on Artificial Intelligence and Statistics , volume 238 of Proceedings of Machine Learning Research , pages 451–459. PMLR, 02–04 May 2024. URL 
+
+https://proceedings.mlr.press/v238/cabannes24a.html .27 Ronald R. Coifman and Stéphane Lafon. Diffusion maps. Applied and Computational Harmonic Analysis , 21(1):5–30, 2006. ISSN 1063-5203. doi: https://doi.org/10.1016/j.acha.2006.04.006. URL https://www.sciencedirect.com/science/article/pii/S1063520306000546 . Special Is-sue: Diffusion Maps and Wavelets. F. Cucker and S. Smale. On the mathematical foundations of learning. Bulletin of the American mathematical society , 39(1):1–49, 2002. https://www.ams.org/journals/bull/2002-39-01/ S0273-0979-01-00923-5 .Matthieu Darcy, Boumediene Hamzi, Jouni Susiluoto, Amy Braverman, and Houman Owhadi. Learning dynamical systems from data: a simple cross-validation perspective, part ii: nonpara-metric kernel flows. Physica D: Nonlinear Phenomena , 476:134641, 2025. Timothée Devergne, Vladimir R. Kostic, Michele Parrinello, and Massimiliano Pontil. From bi-ased to unbiased dynamics: An infinitesimal generator approach. In A. Globerson, L. Mackey, D. Belgrave, A. Fan, U. Paquet, J. Tomczak, and C. Zhang, editors, Advances in Neu-ral Information Processing Systems , volume 37, pages 75495–75521. Curran Associates, Inc., 2024. doi: 10.52202/079017-2404. URL https://proceedings.neurips.cc/paper_files/ paper/2024/file/89edef87915d31de3437b6b2ac5f79e7-Paper-Conference.pdf .P. Giesl, B. Hamzi, M. Rasmussen, and K. Webster. Approximation of Lyapunov functions from noisy data. Journal of Computational Dynamics , 7(1):57–81, 2020. doi: 10.3934/jcd.2020003. 
+
+https://doi.org/10.3934/jcd.2020003 .Mehmet Gönen and Ethem Alpaydın. Multiple kernel learning algorithms. Journal of Machine Learning Research , 12:2211–2268, 2011. Bernard Haasdonk, Boumediene Hamzi, Gabriele Santin, and Dominik Wittwar. Greedy ker-nel methods for center manifold approximation. Proc. of ICOSAHOM 2018, International Conference on Spectral and High Order Methods , 427(1), 2018. https://doi.org/10.1007/ 978-3-030-39647-3_6 .Bernard Haasdonk, Boumediene Hamzi, Gabriele Santin, and Dominik Wittwar. Kernel methods for center manifold approximation and a weak data-based version of the center manifold theorems. 
+
+Physica D: Nonlinear Phenomena , 427:133007, 2021. https://doi.org/10.1016/j.physd.2021. 133007 .B. Hamzi et al. Self-citation 6 (hmkf for attractors). Journal , 2022. [Replace with actual reference]. Boumediene Hamzi and Fritz Colonius. Kernel methods for the approximation of discrete-time linear autonomous and control systems. SN Applied Sciences , 1(7):1–12, 2019. https://doi. org/10.1007/s42452-019-0701-3 .Boumediene Hamzi and Houman Owhadi. Learning dynamical systems from data: A simple cross-validation perspective, Part I: Parametric Kernel Flows. Physica D: Nonlinear Phenomena , 421: 132817, 2021a. ISSN 0167-2789. doi: https://doi.org/10.1016/j.physd.2020.132817. URL https: //www.sciencedirect.com/science/article/pii/S0167278920308186 . https://doi.org/10. 1016/j.physd.2020.132817 .Boumediene Hamzi and Houman Owhadi. Learning dynamical systems from data: A simple cross-validation perspective, Part I: Parametric Kernel Flows. Physica D: Nonlinear Phenomena , 421: 132817, 2021b. ISSN 0167-2789. doi: https://doi.org/10.1016/j.physd.2020.132817. URL https: 
+
+28 //www.sciencedirect.com/science/article/pii/S0167278920308186 . https://doi.org/10. 1016/j.physd.2020.132817 .Boumediene Hamzi, Christian Kuehn, and Sameh Mohamed. A note on kernel methods for mul-tiscale systems with critical transitions. Mathematical Methods in the Applied Sciences , 42(3): 907–917, 2019. doi: https://doi.org/10.1002/mma.5394. URL https://onlinelibrary.wiley. com/doi/abs/10.1002/mma.5394 . https://onlinelibrary.wiley.com/doi/abs/10.1002/mma. 5394 .Boumediene Hamzi, Houman Owhadi, and Léo Paillet. A note on microlocal kernel design for some slow–fast stochastic differential equations with critical transitions and application to eeg signals. Physica A: Statistical Mechanics and its Applications , 616:128583, 2023. ISSN 0378-4371. doi: https://doi.org/10.1016/j.physa.2023.128583. https://doi.org/10.1016/j.physa. 2023.128583 .Boumediene Hamzi, Houman Owhadi, and Umesh Vaidya. Kernel methods for stochastic dynamical systems with application to Koopman eigenfunctions: Feynman–Kac representations and RKHS approximation. arXiv preprint arXiv:2603.01077 , 2025a. Boumediene Hamzi, Houman Owhadi, and Umesh Vaidya. Kernel methods for some transport equations with application to learning kernels for the approximation of Koopman eigenfunctions: A unified approach via variational methods, Green’s functions and the method of characteristics. 
+
+arXiv preprint arXiv:2603.06872 , 2025b. Boumediene Hamzi, Umesh G. Vaidya, and Houman Owhadi. Kernel methods for some trans-port equations with application to learning kernels for the approximation of Koopman eigen-functions: A unified approach via variational methods, Green’s functions, and RKHS. https: //www.researchgate.net/publication/391449679 , May 2025c. Preprint. John L. Hudson, M. Kube, Raymond A. Adomaitis, Ioannis G. Kevrekidis, Alan S. Lapedes, and R.M. Farber. Nonlinear signal processing and system identification: Applications to time series from electrochemical reactions. Chemical Engineering Science , 45(8):2075–2081, 1990. ISSN 0009-2509. doi: https://doi.org/10.1016/0009-2509(90)80079-T. URL https: //www.sciencedirect.com/science/article/pii/000925099080079T . https://doi.org/10. 1016/0009-2509(90)80079-T .Yasamin Jalalian, Boumediene Hamzi, Moustafa Ibrahim, Houman Owhadi, and Peyman Tavallali. Data-efficient kernel methods for learning Hamiltonian systems. Preprint and video presentation available at https://www.youtube.com/watch?v=Tj1j738HQy8 , February 2023. Presented at Differential Equations for Data Science 2023 (DEDS2023), https://scheme.hn/deds2023/ .S. Klus, F. Nüske, S. Peitz, J H. Niemann, C. Clementi, and C. Schütte. Data-driven approximation of the Koopman generator: Model reduction, system identification, and control. Physica D: Nonlinear Phenomena , 406:132416, 2020a. https://doi.org/10.1016/j.physd.2020.132416 .Stefan Klus, Feliks Nüske, and Boumediene Hamzi. Kernel-based approximation of the Koopman generator and Schrödinger operator. Entropy , 22(7):722, 2020b. https://doi.org/10.3390/ e22070722 .Stefan Klus, Feliks Nüske, and Boumediene Hamzi. Kernel-based approximation of the Koopman generator and Schrödinger operator. Entropy , 22(7):722, 2020c. https://doi.org/10.3390/ e22070722 .29 Vladimir R. Kostic, Karim Lounici, Hélène Halconruy, Timothée Devergne, and Massimiliano Pon-til. Learning the infinitesimal generator of stochastic diffusion processes. In A. Globerson, L. Mackey, D. Belgrave, A. Fan, U. Paquet, J. Tomczak, and C. Zhang, editors, Advances in Neural Information Processing Systems , volume 37, pages 137806–137846. Curran Associates, Inc., 2024. doi: 10.52202/079017-4377. URL https://proceedings.neurips.cc/paper_files/ paper/2024/file/f930c6e1292a1160189a0734f22b465b-Paper-Conference.pdf .Vladimir R. Kostic, Karim Lounici, Hélène Halconruy, Timothée Devergne, Pietro Novelli, and Massimiliano Pontil. Laplace transform based low-complexity learning of continuous markov semigroups, 2025. URL https://arxiv.org/abs/2410.14477 .Jonghyeon Lee, Houman Owhadi, Boumediene Hamzi, and Umesh G. Vaidya. A note on kernel methods for the construction of Lyapunov functions using Koopman eigenfunctions. https: //www.researchgate.net/publication/387344850 , December 2024. Preprint. Jonghyeon Lee, Boumediene Hamzi, Boya Hou, Houman Owhadi, Gabriele Santin, and Umesh Vaidya. Kernel methods for the approximation of the eigenfunctions of the Koopman operator. 
+
+Physica D: Nonlinear Phenomena , page 134662, 2025. Fengyi Li and Youssef Marzouk. Diffusion map particle systems for generative modeling. arXiv preprint arXiv:2304.00200 , 2023. Yang Lu, Boumediene Hamzi, Houman Owhadi, Sun Xiuwen, and Xie Naiming. Learning dynamical systems from data: A simple cross-validation perspective, Part V: Sparse kernel flows for 132 chaotic dynamical systems. Physica D: Nonlinear Phenomena , 460(134070), 2023. https://doi. org/10.1016/j.physd.2024.134070 .Houman Owhadi and Gene Ryan Yoo. Kernel flows: From learning kernels from data into the abyss. J. Comput. Phys. , 389:22–47, jul 2019. doi: 10.1016/J.JCP.2019.03.040. URL https: //doi.org/10.1016/j.jcp.2019.03.040 .Loucas Pillaud-Vivien and Francis Bach. Kernelized diffusion maps. In Gergely Neu and Lorenzo Rosasco, editors, Proceedings of Thirty Sixth Conference on Learning Theory , volume 195 of 
+
+Proceedings of Machine Learning Research , pages 5236–5259. PMLR, 12–15 Jul 2023. URL https: //proceedings.mlr.press/v195/pillaud-vivien23a.html .Ali Rahimi and Benjamin Recht. Random features for large-scale kernel machines. In Advances in Neural Information Processing Systems , pages 1177–1184, 2008. Jiwoo Song, Daning Huang, and John Harlim. Learning solution operator of dynamical systems with diffusion maps kernel ridge regression, 2025. URL https://arxiv.org/abs/2512.17203 .Ryan Vaughn, Tyrus Berry, and Harbir Antil. Diffusion maps for embedded manifolds with boundary with applications to pdes. Applied and Computational Harmonic Analysis , 68:101593, 2024. ISSN 1063-5203. doi: https://doi.org/10.1016/j.acha.2023.101593. URL https://www. sciencedirect.com/science/article/pii/S1063520323000805 .30 A Additional theory and derivations 
+
+A.1 Proof of Proposition 4.1 (positive definiteness of convex mixtures) 
+
+Proof. Fix any n ∈ N, points (xi)ni=1 ⊂ X and coefficients c ∈ Rn. Let (Kℓ)ij = kℓ(xi, x j ) and 
+
+Kβ = PLℓ=1 βℓKℓ. Since each Kℓ ⪰ 0 and βℓ ≥ 0,
+
+c⊤Kβ c =
+
+> L
+
+X
+
+> ℓ=1
+
+βℓ c⊤Kℓc ≥ 0.
+
+Hence Kβ ⪰ 0 for all finite sets, so kβ is positive definite. 
+
+A.2 Justification of Proposition 4.2 (RKHS norm of a convex mixture) 
+
+We give a standard construction that yields the infimal convolution identity stated in Proposi-tion 4.2. Let β ∈ ∆L and consider the Hilbert direct sum 
+
+H⊕ := Hk1 ⊕ · · · ⊕ H kL , ⟨(fℓ), (gℓ)⟩⊕,β := 
+
+> L
+
+X
+
+> ℓ=1
+
+1
+
+βℓ
+
+⟨fℓ, g ℓ⟩Hkℓ .
+
+Define the linear map S : H⊕ → RX by S(f1, . . . , f L) = PLℓ=1 fℓ. Then the image S(H⊕) is a RKHS with kernel kβ = PLℓ=1 βℓkℓ, and its norm is the quotient norm induced by S:
+
+∥f ∥2
+
+> Hkβ
+
+= inf 
+
+n
+
+∥(fℓ)∥2 
+
+> ⊕,β
+
+: f =
+
+> L
+
+X
+
+> ℓ=1
+
+fℓ, f ℓ ∈ H kℓ
+
+o
+
+= inf   
+
+> f=PLℓ=1 fℓ
+> fℓ∈H kℓ
+> L
+
+X
+
+> ℓ=1
+
+∥fℓ∥2
+
+> Hkℓ
+
+βℓ
+
+.
+
+This is exactly the identity in Proposition 4.2. 
+
+# B Nyström discretization of KDM operators and generalized eigen-problem 
+
+This appendix derives the finite-dimensional matrices used in the Nyström inner loop, i.e. the matrix surrogates in (24)–(26), starting from the empirical RKHS operators in (10) and the generalized eigenproblem (9). 
+
+B.1 Landmark space and coordinates 
+
+Fix a kernel k (in particular k = kβ ) with RKHS Hk and landmarks Z = {zm}pm=1 . Define the landmark subspace 
+
+Hp := span {Kzm (·) = k(zm, ·) : m = 1 , . . . , p } ⊂ H k.
+
+Any ψ ∈ H p can be written as 
+
+ψ(·) = 
+
+> p
+
+X
+
+> m=1
+
+am k(zm, ·), a ∈ Rp. (41) Define the landmark Gram matrix W ∈ Rp×p and the cross-kernel matrix C ∈ RN ×p by 
+
+Wmn = k(zm, z n), Cim = k(xi, z m). (42) Then the vector of sample evaluations is ψ(X) = Ca .31 B.2 Covariance operator matrix 
+
+Recall bΣ = 1
+
+> N
+
+PNi=1 Kxi ⊗ Kxi . Let em(·) = Kzm (·) = k(zm, ·). By reproducing, 
+
+em, bΣψ Hk = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+⟨em, K xi ⟩ ⟨ Kxi , ψ ⟩ = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+k(zm, x i) ψ(xi).
+
+Writing ψ(X) = Ca yields the coordinate form 
+
+b :=  ⟨em, bΣψ⟩pm=1 = 1
+
+N C⊤(Ca ) = 
+
+ 1
+
+N C⊤C
+
+
+
+a. 
+
+Hence the landmark matrix surrogate is 
+
+bΣ(p) := 1
+
+N C⊤C ∈ Rp×p. (43) For k = kβ , this matches (24). 
+
+B.3 Dirichlet/gradient operator matrix 
+
+Recall bL = 1
+
+> N
+
+PNi=1 
+
+Pdj=1 ∂j Kxi ⊗ ∂j Kxi . Define derivative cross-matrices J(j) ∈ RN ×p by 
+
+J(j) 
+
+> im
+
+= ∂xj k(xi, z m), i = 1 , . . . , N, m = 1 , . . . , p, (44) and stack them as J ∈ R(N d )×p so that J⊤J = Pdj=1 (J(j))⊤J(j).For ψ(·) = P 
+
+> m
+
+amk(zm, ·), we have (∂j ψ)( xi) = ( J(j)a)i. Using reproducing properties for derivatives, 
+
+em, bLψ Hk = 1
+
+N
+
+> N
+
+X
+
+> i=1
+> d
+
+X
+
+> j=1
+
+∂xj k(xi, z m) ( ∂j ψ)( xi),
+
+so in vector form bL =  ⟨em, bLψ⟩pm=1 = ( 1 
+
+> N
+
+J⊤J)a. Thus 
+
+bL(p) := 1
+
+N J⊤J ∈ Rp×p. (45) For k = kβ , this matches (24). 
+
+B.4 Regularization and generalized eigenproblem 
+
+KDM uses bLλ = bL + λId . In landmark coordinates, Id contributes W since 
+
+em, Id ψ Hk = ⟨em, ψ ⟩Hk =
+
+> p
+
+X
+
+> n=1
+
+Wmn an.
+
+Therefore, 
+
+bL(p) 
+
+> λ
+
+:= bL(p) + λW. (46) Restricting bΣψ = μ bLλψ to Hp and testing against {em} yields 
+
+bΣ(p)a = μ bL(p) 
+
+> λ
+
+a, a ∈ Rp, (47) which is (26) for k = kβ . Once a is computed, sample evaluations follow from (27). 32 Kernel mixtures. For kβ = PLℓ=1 βℓkℓ, the aggregated matrices Cβ , W β , J β are formed as in (22), with stabilization in (23), and the identities above apply verbatim with (C, W, J ) = ( Cβ , W β , J β ).
+
+# C Kernel derivative identities (Gaussian kernels) 
+
+C.1 Isotropic Gaussian 
+
+Let k(x, z ) = exp   − ∥ x − z∥2/(2 σ2) on Rd. Write r = x − z. Then 
+
+∇xk(x, z ) = − rσ2 k(x, z ), (48) 
+
+∂xj k(x, z ) = − rj
+
+σ2 k(x, z ), (49) 
+
+∂2  
+
+> xjxj
+
+k(x, z ) = 
+
+ r2
+
+> j
+
+σ4 − 1
+
+σ2
+
+
+
+k(x, z ), (50) 
+
+∆xk(x, z ) = 
+
+ ∥r∥2
+
+σ4 − dσ2
+
+
+
+k(x, z ). (51) 
+
+C.2 Diagonal anisotropic Gaussian 
+
+Let k(x, z ) = exp   − 12
+
+Pdj=1 r2 
+
+> j
+
+/σ 2
+
+> j
+
+ with r = x − z and diagonal bandwidths (σ1, . . . , σ d). Then 
+
+∂xj k(x, z ) = − rj
+
+σ2
+
+> j
+
+k(x, z ), (52) 
+
+∂2  
+
+> xjxj
+
+k(x, z ) = 
+
+ r2
+
+> j
+
+σ4
+
+> j
+
+− 1
+
+σ2
+
+> j
+
+
+
+k(x, z ), (53) 
+
+∆xk(x, z ) = 
+
+> d
+
+X
+
+> j=1
+
+ r2
+
+> j
+
+σ4
+
+> j
+
+− 1
+
+σ2
+
+> j
+
+
+
+k(x, z ). (54) For the 2D parametrization used in the anisotropic dictionary, (σx, σ y) = ( σr, σ/r ), substitute 
+
+σ1 = σx, σ2 = σy.
+
+C.3 Generator acting on kernel expansions (OU and 1D Langevin) 
+
+OU with dX t = −AX t dt +√2 dW t. The generator is (Gf )( x) = −(Ax )·∇ f (x)+∆ f (x). Applying 
+
+G to x 7 → k(x, z ) uses (48)–(54): 
+
+(Gxk)( x, z ) = −(Ax ) · ∇ xk(x, z ) + ∆ xk(x, z ). (55) For A = diag( α1, . . . , α d) and anisotropic diagonal Gaussian, this becomes 
+
+(Gxk)( x, z ) = 
+
+> d
+
+X
+
+> j=1
+
+
+
+αj xj
+
+rj
+
+σ2
+
+> j
+
++ r2
+
+> j
+
+σ4
+
+> j
+
+− 1
+
+σ2
+
+> j
+
+
+
+k(x, z ), rj = xj − zj .
+
+1D overdamped Langevin dX t = −V ′(Xt) dt +√2 dW t. The generator is (Gf )( x) = −V ′(x)f ′(x)+ 
+
+f ′′ (x). For a 1D Gaussian kernel k(x, z ) = exp( −(x − z)2/(2 σ2)) ,
+
+(Gxk)( x, z ) = −V ′(x) ∂xk(x, z ) + ∂2
+
+> xx
+
+k(x, z ),
+
+with ∂xk = −(x − z)σ−2k and ∂2
+
+> xx
+
+k = (( x − z)2σ−4 − σ−2)k.33 D Rayleigh estimate used in the PDE residual loss 
+
+This appendix justifies the closed-form estimate of bλ used in (32). Let ϕ ∈ RN be a learned eigenfunction evaluated on samples, and let g := Ghϕ ∈ RN . Consider the (empirical) least-squares fit of the eigen-relation g ≈ − λϕ :
+
+bλ ∈ arg min 
+
+> λ∈R
+
+1
+
+N ∥g + λϕ ∥22. (56) Expanding and differentiating w.r.t. λ yields the minimizer 
+
+bλ = − ⟨ϕ, G hϕ⟩⟨ϕ, ϕ ⟩ . (57) 
+
+# E Eigenfunction gauge fixing and alignment for evaluation 
+
+Gauge fixing (recall). We enforce centering/orthonormality constraints in (28) (implemented by centering and a QR/Gram–Schmidt step under ⟨u, v ⟩N = 1 
+
+> N
+
+u⊤v). This stabilizes the outer-loop differentiation through eigen-solves. 
+
+E.1 Alignment when references are available 
+
+When reference eigenfunctions are available, we align learned modes to references by maximizing absolute correlations via a Hungarian assignment and correcting signs by multiplying each learned mode by sign(corr) . This produces consistent plots and summary metrics such as AvgAbsCorr. 
+
+# F Reproducibility and implementation details 
+
+This appendix complements the experimental protocol in Section 5.1 with a concise checklist. 
+
+F.1 What we save per run 
+
+For each seed and each regime, we save learned weights β, eigenfunction visualizations, per-mode correlation tables and AvgAbsCorr and aggregated summaries across seeds (mean ±std). 
+
+F.2 Default numerical stabilizers 
+
+Across all experiments we use: 
+
+• Landmark jitter: Wβ ← 12 (Wβ + W ⊤ 
+
+> β
+
+) + εW Ip (cf. (23)). 
+
+• PSD flooring: inverse square-roots of PSD matrices via eigendecomposition with eigenvalue floor εpsd .
+
+• Mixture floor: β ← (1 − τ )β + τ 1/L to prevent collapse. 
+
+• Gradient clipping: optional clipping on u-gradients in the outer loop. 34

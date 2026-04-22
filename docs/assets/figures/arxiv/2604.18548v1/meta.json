@@ -1,0 +1,70 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.18548v1/fig-001.webp",
+      "caption": "Fig. 4. Growth and diffusion predictions across five training-validation (TV) splits for each biological replicate. (a) Histograms of densities used to define the central 90% range per replicate. (b) Diffusion predictions over the central 90% density range. Solid lines and shaded regions denote the mean and one standard deviation across TV splits, respectively. (c) Growth predictions, formatted as in (b).",
+      "page": 6,
+      "index": 1,
+      "width": 1076,
+      "height": 252
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18548v1/fig-002.webp",
+      "caption": "Fig. 5. Total cell count trajectories. Observed counts Ndata are compared with total counts from the density surrogate (Nu), forward solutions using D̂ and Ĝ (Nfwd), and forward solutions using DSR and GSR (NSR). Solid lines show the mean, and shaded regions indicate ±1 standard deviation across training-validation splits.",
+      "page": 6,
+      "index": 2,
+      "width": 434,
+      "height": 308
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18548v1/fig-003.webp",
+      "caption": "Fig. 6. BINN training curves for replicate 1. (a) Data loss history. Trained architectures for each considered early stopping (ES) patience is indicated by markers. (b) As in (a) for PDE loss history. (c) Diffusion-function predictions across training epochs shown over the central 90% of the density support. Although ES=500 performs best overall, training-validation (TV) split 3 and ES=1000 here illustrates the transition to non-physical diffusion and growth predictions at later epochs. Over epochs, orange curves darken toward the learned model (black), while purple curves become progressively lighter beyond the epoch when training is stopped. (d) As in (c), but for the growth function, with green curves replacing orange.",
+      "page": 7,
+      "index": 3,
+      "width": 529,
+      "height": 368
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18548v1/fig-004.webp",
+      "caption": "Fig. 1. PINN framework developed in this work (top) with the BINN architecture highlighted (bottom).",
+      "page": 3,
+      "index": 4,
+      "width": 516,
+      "height": 773
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18548v1/fig-005.webp",
+      "caption": "TABLE IV ALL DIFFUSION AND GROWTH EXPRESSIONS WITH BOLDED ENTRIES INDICATING THE DOMINANT TEMPLATE PER REPLICATE",
+      "page": 8,
+      "index": 5,
+      "width": 548,
+      "height": 529
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18548v1/fig-006.webp",
+      "caption": "Fig. 7. Microscopy images at times τ and τ + 24h for all replicates.",
+      "page": 8,
+      "index": 6,
+      "width": 490,
+      "height": 551
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18548v1/fig-007.webp",
+      "caption": "Fig. 2. Pipeline for applying the PINN framework on experimental microscopy data.",
+      "page": 5,
+      "index": 7,
+      "width": 1076,
+      "height": 275
+    },
+    {
+      "url": "assets/figures/arxiv/2604.18548v1/fig-008.webp",
+      "caption": "Fig. 3. Binned density data udata,1 and density predictions û1 for replicate 1. (a) Density data across both spatial dimensions at t0 = 0. (b) Comparison of data and predictions at fixed x2 = x̃2 = 0.143 mm for t0 and tf = 52 hours. The solid line indicates the mean across five training–validation splits, with the shaded region showing the min-max range.",
+      "page": 5,
+      "index": 8,
+      "width": 529,
+      "height": 236
+    }
+  ]
+}
