@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.20141v1/fig-001.webp",
+      "caption": "Figure 3: Equation learning results of four different SINDy and weak SINDy methods for (a) LotkaVolterra equations, (b) hyperchaotic Lorenz system, and (c) hyperchaotic Jha system.",
+      "page": 10,
+      "index": 1,
+      "width": 898,
+      "height": 407
+    },
+    {
+      "url": "assets/figures/arxiv/2604.20141v1/fig-002.webp",
+      "caption": "Figure 1: Graphical summary of proposed Fourier Weak SINDy method for sparse equation learning described in detail in Section 3. First, multitaper spectral density estimation is used to identify dominant temporal frequencies in the observed noisy signals. Second, spectral sparse regression problem is solved to learn model coefficients in a selected function dictionary, leveraging the identified dominant Fourier frequencies as test functions in a weak-form system identification problem.",
+      "page": 3,
+      "index": 2,
+      "width": 952,
+      "height": 432
+    },
+    {
+      "url": "assets/figures/arxiv/2604.20141v1/fig-003.webp",
+      "caption": "Figure 2: Trajectory error comparisons for regular SINDy, bump-function weak SINDy, and Fourier weak SINDy.",
+      "page": 17,
+      "index": 3,
+      "width": 899,
+      "height": 408
+    }
+  ]
+}

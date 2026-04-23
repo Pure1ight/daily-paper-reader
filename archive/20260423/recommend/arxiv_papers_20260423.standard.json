@@ -1,0 +1,711 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-04-23T20:31:05.283151+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 9,
+    "deep_cap": 6,
+    "deep_selected": 7,
+    "quick_candidates": 12,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2604.18414v1",
+      "source": "arxiv",
+      "title": "Balance-Guided Sparse Identification of Multiscale Nonlinear PDEs with Small-coefficient Terms",
+      "abstract": "Data-driven discovery of governing equations has advanced significantly in recent years; however, existing methods often struggle in multiscale systems where dynamically significant terms may have small coefficients. Therefore, we propose Balance-Guided SINDy (BG-SINDy) inspired by the principle of dominant balance, which reformulates $\\ell_0$-constrained sparse regression as a term-level $\\ell_{2,0}$-regularized problem and solves it using a progressive pruning strategy. Terms are ranked according to their relative contributions to the governing equation balance rather than their absolute coefficient magnitudes. Based on this criterion, BG-SINDy alternates between least-squares regression and elimination of negligible terms, thereby preserving dynamically significant terms even when their coefficients are small. Numerical experiments on the Korteweg--de Vries equation with a small dispersion coefficient, a modified Burgers equation with vanishing hyperviscosity, a modified Kuramoto--Sivashinsky equation with multiple small-coefficient terms, and a two-dimensional reaction--diffusion system demonstrate the validity of BG-SINDy in discovering small-coefficient terms. The proposed method thus provides an efficient approach for discovering governing equations that contain small-coefficient terms.",
+      "authors": [
+        "Zhenhua Dang",
+        "Lei Zhang",
+        "Long Wang",
+        "Guowei He"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "math.NA"
+      ],
+      "published": "2026-04-20T15:31:47+00:00",
+      "link": "https://arxiv.org/pdf/2604.18414v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Proposes BG-SINDy for data-driven discovery of multiscale nonlinear PDEs using sparse identification.",
+      "llm_evidence_cn": "提出BG-SINDy算法，通过稀疏识别从数据中发现多尺度非线性偏微分方程。",
+      "llm_evidence": "提出BG-SINDy算法，通过稀疏识别从数据中发现多尺度非线性偏微分方程。",
+      "canonical_evidence": "提出BG-SINDy算法，通过稀疏识别从数据中发现多尺度非线性偏微分方程。",
+      "llm_tldr_en": "Introduces BG-SINDy to identify multiscale PDEs by ranking terms based on balance rather than coefficient magnitude.",
+      "llm_tldr_cn": "提出BG-SINDy算法，通过主导平衡原则识别具有小系数项的多尺度非线性偏微分方程。",
+      "llm_tldr": "提出BG-SINDy算法，通过主导平衡原则识别具有小系数项的多尺度非线性偏微分方程。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.20141v1",
+      "source": "arxiv",
+      "title": "Fourier Weak SINDy: Spectral Test Function Selection for Robust Model Identification",
+      "abstract": "We introduce Fourier Weak SINDy, a minimal noise-robust and interpretable derivative-free equation learning method that combines weak-form sparse equation learning with spectral density estimation for data-driven test function selection. By using orthogonal sinusoidal test functions inspired by their prevalence in Modulating Function-based system identification, the weak-form sparse regression problem reduces to a regression over Fourier coefficients. Dominant frequencies are then selected via multitaper estimation of the frequency spectrum of the data. This formulation unifies weak-form learning and spectral estimation within a compact and flexible framework. We illustrate the effectiveness of this approach in numerical experiments across multiple chaotic and hyperchaotic ODE benchmarks.",
+      "authors": [
+        "Zhiheng Chen",
+        "Urban Fasel",
+        "Anastasia Bizyaeva"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "math.DS"
+      ],
+      "published": "2026-04-22T03:09:56+00:00",
+      "link": "https://arxiv.org/pdf/2604.20141v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "weak-form sparse equation learning for data-driven model identification",
+      "llm_evidence_cn": "用于数据驱动模型识别的弱形式稀疏方程学习",
+      "llm_evidence": "用于数据驱动模型识别的弱形式稀疏方程学习",
+      "canonical_evidence": "用于数据驱动模型识别的弱形式稀疏方程学习",
+      "llm_tldr_en": "Introduces Fourier Weak SINDy for robust, interpretable, and derivative-free PDE discovery from noisy data.",
+      "llm_tldr_cn": "提出Fourier Weak SINDy，一种鲁棒且可解释的无导数数据驱动偏微分方程发现方法。",
+      "llm_tldr": "提出Fourier Weak SINDy，一种鲁棒且可解释的无导数数据驱动偏微分方程发现方法。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "state of the art algorithms for data driven PDE discovery",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.16232v1",
+      "source": "arxiv",
+      "title": "Neuro-Symbolic ODE Discovery with Latent Grammar Flow",
+      "abstract": "Understanding natural and engineered systems often relies on symbolic formulations, such as differential equations, which provide interpretability and transferability beyond black-box models.   We introduce Latent Grammar Flow (LGF), a neuro-symbolic generative framework for discovering ordinary differential equations from data. LGF embeds equations as grammar-based representations into a discrete latent space and forces semantically similar equations to be positioned closer together with a behavioural loss. Then, a discrete flow model guides the sampling process to recursively generate candidate equations that best fit the observed data. Domain knowledge and constraints, such as stability, can be either embedded into the rules or used as conditional predictors.",
+      "authors": [
+        "Karin Yu",
+        "Eleni Chatzi",
+        "Georgios Kissas"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CE",
+        "cs.SC"
+      ],
+      "published": "2026-04-17T16:46:23+00:00",
+      "link": "https://arxiv.org/pdf/2604.16232v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Neuro-symbolic framework for discovering differential equations from data using grammar-based representations",
+      "llm_evidence_cn": "利用基于语法的表示从数据中发现微分方程的神经符号框架",
+      "llm_evidence": "利用基于语法的表示从数据中发现微分方程的神经符号框架",
+      "canonical_evidence": "利用基于语法的表示从数据中发现微分方程的神经符号框架",
+      "llm_tldr_en": "Introduces Latent Grammar Flow for neuro-symbolic discovery of ODEs from data using discrete latent spaces.",
+      "llm_tldr_cn": "引入潜语法流框架，利用离散潜空间从数据中进行常微分方程的神经符号发现。",
+      "llm_tldr": "引入潜语法流框架，利用离散潜空间从数据中进行常微分方程的神经符号发现。",
+      "llm_tags": [
+        "query:pde-discovery:composite"
+      ],
+      "matched_query_tag": "query:pde-discovery:composite",
+      "matched_query_text": "Papers central to 偏微分方程发现, especially work that connects or combines: G; D; y; methods and algorithms for partial differential equation discovery from data; PDE Discovery based on genetic programming; state of the art algorithms for data driven PDE discovery.",
+      "matched_requirement_id": "req-composite-pde-discovery",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.17402v1",
+      "source": "arxiv",
+      "title": "On the Generalization Bounds of Symbolic Regression with Genetic Programming",
+      "abstract": "Symbolic regression (SR) with genetic programming (GP) aims to discover interpretable mathematical expressions directly from data. Despite its strong empirical success, the theoretical understanding of why GP-based SR generalizes beyond the training data remains limited. In this work, we provide a learning-theoretic analysis of SR models represented as expression trees. We derive a generalization bound for GP-style SR under constraints on tree size, depth, and learnable constants. Our result decomposes the generalization gap into two interpretable components: a structure-selection term, reflecting the combinatorial complexity of choosing an expression-tree structure, and a constant-fitting term, capturing the complexity of optimizing numerical constants within a fixed structure. This decomposition provides a theoretical perspective on several widely used practices in GP, including parsimony pressure, depth limits, numerically stable operators, and interval arithmetic. In particular, our analysis shows how structural restrictions reduce hypothesis-class growth while stability mechanisms control the sensitivity of predictions to parameter perturbations. By linking these practical design choices to explicit complexity terms in the generalization bound, our work offers a principled explanation for commonly observed empirical behaviors in GP-based SR and contributes towards a more rigorous understanding of its generalization properties.",
+      "authors": [
+        "Masahiro Nomura",
+        "Ryoki Hamano",
+        "Isao Ono"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.NE"
+      ],
+      "published": "2026-04-19T12:12:11+00:00",
+      "link": "https://arxiv.org/pdf/2604.17402v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "symbolic regression with genetic programming to discover mathematical expressions from data",
+      "llm_evidence_cn": "利用遗传规划进行符号回归，从数据中发现数学表达式",
+      "llm_evidence": "利用遗传规划进行符号回归，从数据中发现数学表达式",
+      "canonical_evidence": "利用遗传规划进行符号回归，从数据中发现数学表达式",
+      "llm_tldr_en": "Provides a learning-theoretic analysis of generalization bounds for symbolic regression using genetic programming.",
+      "llm_tldr_cn": "对基于遗传规划的符号回归的泛化界限进行了学习理论分析。",
+      "llm_tldr": "对基于遗传规划的符号回归的泛化界限进行了学习理论分析。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "PDE Discovery based on genetic programming",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.18548v1",
+      "source": "arxiv",
+      "title": "Physics-Informed Neural Networks for Biological $2\\mathrm{D}{+}t$ Reaction-Diffusion Systems",
+      "abstract": "Physics-informed neural networks (PINNs) provide a powerful framework for learning governing equations of dynamical systems from data. Biologically-informed neural networks (BINNs) are a variant of PINNs that preserve the known differential operator structure (e.g., reaction-diffusion) while learning constitutive terms via trainable neural subnetworks, enforced through soft residual penalties. Existing BINN studies are limited to $1\\mathrm{D}{+}t$ reaction-diffusion systems and focus on forward prediction, using the governing partial differential equation as a regulariser rather than an explicit identification target. Here, we extend BINNs to $2\\mathrm{D}{+}t$ systems within a PINN framework that combines data preprocessing, BINN-based equation learning, and symbolic regression post-processing for closed-form equation discovery. We demonstrate the framework's real-world applicability by learning the governing equations of lung cancer cell population dynamics from time-lapse microscopy data, recovering $2\\mathrm{D}{+}t$ reaction-diffusion models from experimental observations. The proposed framework is readily applicable to other spatio-temporal systems, providing a practical and interpretable tool for fast analytic equation discovery from data.",
+      "authors": [
+        "William Lavery",
+        "Jodie A. Cochrane",
+        "Christian Olesen",
+        "Dagim S. Tadele",
+        "John T. Nardini",
+        "Sara Hamis"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "q-bio.QM"
+      ],
+      "published": "2026-04-20T17:40:45+00:00",
+      "link": "https://arxiv.org/pdf/2604.18548v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "learning governing equations of 2D+t reaction-diffusion systems from data",
+      "llm_evidence_cn": "从数据中学习2D+t反应扩散系统的控制方程",
+      "llm_evidence": "从数据中学习2D+t反应扩散系统的控制方程",
+      "canonical_evidence": "从数据中学习2D+t反应扩散系统的控制方程",
+      "llm_tldr_en": "Extends Biologically-informed neural networks to identify governing PDEs in 2D reaction-diffusion systems.",
+      "llm_tldr_cn": "扩展生物信息神经网络，用于识别二维反应扩散系统中的控制偏微分方程。",
+      "llm_tldr": "扩展生物信息神经网络，用于识别二维反应扩散系统中的控制偏微分方程。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.18889v1",
+      "source": "arxiv",
+      "title": "AC-SINDy: Compositional Sparse Identification of Nonlinear Dynamics",
+      "abstract": "We present AC-SINDy, a compositional extension of the Sparse Identification of Nonlinear Dynamics (SINDy) framework that replaces explicit feature libraries with a structured representation based on arithmetic circuits. Rather than enumerating candidate basis functions, the proposed approach constructs nonlinear features through compositions of linear functions and multiplicative interactions, yielding a compact and scalable parameterization and enabling sparsity to be enforced directly over the computational graph. We also introduce a formulation that separates state estimation from dynamics identification by combining latent state inference with shared dynamics and multi-step supervision, improving robustness to noise while preserving interpretability. Experiments on nonlinear and chaotic systems demonstrate that the method recovers accurate and interpretable governing equations while scaling more favorably than standard SINDy.",
+      "authors": [
+        "Peter Racioppo"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-20T22:14:12+00:00",
+      "link": "https://arxiv.org/pdf/2604.18889v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "compositional extension of SINDy for sparse identification of nonlinear dynamics",
+      "llm_evidence_cn": "SINDy的组合扩展，用于非线性动力学的稀疏识别",
+      "llm_evidence": "SINDy的组合扩展，用于非线性动力学的稀疏识别",
+      "canonical_evidence": "SINDy的组合扩展，用于非线性动力学的稀疏识别",
+      "llm_tldr_en": "Presents AC-SINDy, using arithmetic circuits for scalable and interpretable identification of nonlinear dynamics.",
+      "llm_tldr_cn": "提出AC-SINDy，利用算术电路实现可扩展且可解释的非线性动力学识别。",
+      "llm_tldr": "提出AC-SINDy，利用算术电路实现可扩展且可解释的非线性动力学识别。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2604.20188v1",
+      "source": "arxiv",
+      "title": "Structure-Aware Variational Learning of a Class of Generalized Diffusions",
+      "abstract": "Learning the underlying potential energy of stochastic gradient systems from partial and noisy observations is a fundamental problem arising in physics, chemistry, and data-driven modeling. Classical approaches often rely on direct regression of governing equations or velocity fields, which can be sensitive to noise and external perturbations and may fail when observations are incomplete. In this work, we propose a structure-aware, energy-based learning framework for inferring unknown potential functions in generalized diffusion processes, grounded in the energetic variational approach. Starting from the energy-dissipation law associated with the Fokker-Planck equation, we construct loss functions based on the De Giorgi dissipation functional, which consistently couple the free energy and the dissipation mechanism of the system. This formulation avoids explicit enforcement of the governing partial differential equation and preserves the underlying variational structure of the dynamics. Through numerical experiments in one, two, and three dimensions, we demonstrate that the proposed energy-based loss exhibits enhanced robustness with respect to observation time, noise level, and the diversity and amount of available training data. These results highlight the effectiveness of energy-dissipation principles as a reliable foundation for learning stochastic diffusion dynamics from data.",
+      "authors": [
+        "Yubin Lu",
+        "Xiaofan Li",
+        "Chun Liu",
+        "Qi Tang",
+        "Yiwei Wang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "math.DS"
+      ],
+      "published": "2026-04-22T05:05:54+00:00",
+      "link": "https://arxiv.org/pdf/2604.20188v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Inferring unknown potential functions in generalized diffusion processes from noisy observations",
+      "llm_evidence_cn": "从噪声观测中推断广义扩散过程中的未知势函数",
+      "llm_evidence": "从噪声观测中推断广义扩散过程中的未知势函数",
+      "canonical_evidence": "从噪声观测中推断广义扩散过程中的未知势函数",
+      "llm_tldr_en": "Develops a variational framework to learn governing potential functions of diffusion processes from data.",
+      "llm_tldr_cn": "开发了一个变分框架，用于从数据中学习扩散过程的主导势函数。",
+      "llm_tldr": "开发了一个变分框架，用于从数据中学习扩散过程的主导势函数。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2604.17470v1",
+      "source": "arxiv",
+      "title": "Machine Learning Hamiltonian Dynamical Systems with Sparse and Noisy Data",
+      "abstract": "Machine learning has become a powerful tool for discovering governing laws of dynamical systems from data. However, most existing approaches degrade severely when observations are sparse, noisy, or irregularly sampled. In this work, we address the problem of learning symbolic representations of nonlinear Hamiltonian dynamical systems under extreme data scarcity by explicitly incorporating physical structure into the learning architecture. We introduce Adaptable Symplectic Recurrent Neural Networks (ASRNNs), a parameter-cognizant, structure-preserving model that combines Hamiltonian learning with symplectic recurrent integration, avoiding time derivative estimation, and enabling stable learning under noise. We demonstrate that ASRNNs can accurately predict long-term dynamics even when each training trajectory consists of only two irregularly spaced time points, possibly corrupted by correlated noise. Leveraging ASRNNs as structure-preserving data generators, we further enable symbolic discovery using independent regression methods (SINDy and PySR), recovering exact symbolic equations for polynomial systems and consistent polynomial approximations for non-polynomial Hamiltonians. Our results show that such architectures can provide a robust pathway to interpretable discovery of Hamiltonian dynamics from sparse and noisy data.",
+      "authors": [
+        "Vedanta Thapar",
+        "Abhinav Gupta"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-19T14:51:43+00:00",
+      "link": "https://arxiv.org/pdf/2604.17470v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "discovering governing laws of dynamical systems from sparse and noisy data",
+      "llm_evidence_cn": "从稀疏和噪声数据中发现动力系统的控制规律",
+      "llm_evidence": "从稀疏和噪声数据中发现动力系统的控制规律",
+      "canonical_evidence": "从稀疏和噪声数据中发现动力系统的控制规律",
+      "llm_tldr_en": "Introduces ASRNNs to learn symbolic representations of Hamiltonian dynamical systems from scarce data.",
+      "llm_tldr_cn": "引入ASRNNs，从极度稀疏的数据中学习哈密顿动力系统的符号表示。",
+      "llm_tldr": "引入ASRNNs，从极度稀疏的数据中学习哈密顿动力系统的符号表示。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.13506v1",
+      "source": "arxiv",
+      "title": "A monotone iterative reconstruction method for an inverse drift problem in a two-dimensional parabolic equation",
+      "abstract": "We study an inverse drift problem for a two-dimensional parabolic equation on the unit square with mixed boundary conditions, where the drift coefficient is recovered from terminal observation data $g=u(\\cdot,T)$. A monotone operator is constructed whose fixed point coincides with the unknown drift, yielding uniqueness in an admissible class and a constructive iterative reconstruction scheme. Numerical experiments illustrate the monotone convergence and the effectiveness of the proposed method, and show that it remains effective for noisy terminal data under the denoising strategy.",
+      "authors": [
+        "Liuying Zhang",
+        "Wenlong Zhang",
+        "Zhidong Zhang"
+      ],
+      "primary_category": "math.NA",
+      "categories": [
+        "math.NA"
+      ],
+      "published": "2026-04-15T05:50:07+00:00",
+      "link": "https://arxiv.org/pdf/2604.13506v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "inverse drift problem to recover coefficients from observation data",
+      "llm_evidence_cn": "从观测数据中恢复系数的反向漂移问题",
+      "llm_evidence": "从观测数据中恢复系数的反向漂移问题",
+      "canonical_evidence": "从观测数据中恢复系数的反向漂移问题",
+      "llm_tldr_en": "Develops a monotone iterative method to reconstruct drift coefficients in parabolic PDEs from data.",
+      "llm_tldr_cn": "开发了一种单调迭代方法，用于从观测数据中重建抛物型方程的漂移系数。",
+      "llm_tldr": "开发了一种单调迭代方法，用于从观测数据中重建抛物型方程的漂移系数。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.15392v1",
+      "source": "arxiv",
+      "title": "Lightweight Geometric Adaptation for Training Physics-Informed Neural Networks",
+      "abstract": "Physics-Informed Neural Networks (PINNs) often suffer from slow convergence, training instability, and reduced accuracy on challenging partial differential equations due to the anisotropic and rapidly varying geometry of their loss landscapes. We propose a lightweight curvature-aware optimization framework that augments existing first-order optimizers with an adaptive predictive correction based on secant information. Consecutive gradient differences are used as a cheap proxy for local geometric change, together with a step-normalized secant curvature indicator to control the correction strength. The framework is plug-and-play, computationally efficient, and broadly compatible with existing optimizers, without explicitly forming second-order matrices. Experiments on diverse PDE benchmarks show consistent improvements in convergence speed, training stability, and solution accuracy over standard optimizers and strong baselines, including on the high-dimensional heat equation, Gray--Scott system, Belousov--Zhabotinsky system, and 2D Kuramoto--Sivashinsky system.",
+      "authors": [
+        "Kang An",
+        "Chenhao Si",
+        "Shiqian Ma",
+        "Ming Yan"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "stat.ML"
+      ],
+      "published": "2026-04-16T07:44:52+00:00",
+      "link": "https://arxiv.org/pdf/2604.15392v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "optimization framework for training PINNs on challenging partial differential equations",
+      "llm_evidence_cn": "用于在挑战性偏微分方程上训练PINN的优化框架",
+      "llm_evidence": "用于在挑战性偏微分方程上训练PINN的优化框架",
+      "canonical_evidence": "用于在挑战性偏微分方程上训练PINN的优化框架",
+      "llm_tldr_en": "Proposes a lightweight curvature-aware optimization framework to improve PINN training on complex PDEs.",
+      "llm_tldr_cn": "提出了一种轻量级曲率感知优化框架，以改进复杂PDE上的PINN训练。",
+      "llm_tldr": "提出了一种轻量级曲率感知优化框架，以改进复杂PDE上的PINN训练。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.17566v1",
+      "source": "arxiv",
+      "title": "Target Parameterization in Diffusion Models for Nonlinear Spatiotemporal System Identification",
+      "abstract": "Machine learning is becoming increasingly important for nonlinear system identification, including dynamical systems with spatially distributed outputs. However, classical identification and forecasting approaches become markedly less reliable in turbulent-flow regimes, where the dynamics are high-dimensional, strongly nonlinear, and highly sensitive to compounding rollout errors. Diffusion-based models have recently shown improved robustness in this setting and offer probabilistic inference capabilities, but many current implementations inherit target parameterizations from image generation, most commonly noise or velocity prediction. In this work, we revisit this design choice in the context of nonlinear spatiotemporal system identification. We consider a simple, self-contained patch-based transformer that operates directly on physical fields and use turbulent flow simulation as a representative testbed. Our results show that clean-state prediction consistently improves rollout stability and reduces long-horizon error relative to velocity- and noise-based objectives, with the advantage becoming more pronounced as the per-token dimensionality increases. These findings identify target parameterization as a key modeling choice in diffusion-based identification of nonlinear systems with spatial outputs in turbulent regimes.",
+      "authors": [
+        "Achraf El Messaoudi",
+        "Noureddine Khaous",
+        "Karim Cherifi"
+      ],
+      "primary_category": "eess.SY",
+      "categories": [
+        "eess.SY",
+        "cs.LG",
+        "physics.flu-dyn"
+      ],
+      "published": "2026-04-19T18:11:14+00:00",
+      "link": "https://arxiv.org/pdf/2604.17566v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "nonlinear spatiotemporal system identification and diffusion models",
+      "llm_evidence_cn": "非线性时空系统辨识与扩散模型",
+      "llm_evidence": "非线性时空系统辨识与扩散模型",
+      "canonical_evidence": "非线性时空系统辨识与扩散模型",
+      "llm_tldr_en": "Investigates diffusion models for identifying nonlinear spatiotemporal systems, highly relevant to PDE discovery.",
+      "llm_tldr_cn": "研究用于识别非线性时空系统的扩散模型，与偏微分方程发现高度相关。",
+      "llm_tldr": "研究用于识别非线性时空系统的扩散模型，与偏微分方程发现高度相关。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2604.17922v1",
+      "source": "arxiv",
+      "title": "Optimal Linear Interpolation under Differential Information: application to the prediction of perfect flows",
+      "abstract": "Approximation of functions satisfying partial differential equations (PDEs) is paramount for simulation of physical fluid flows and other problems in physics. Recently, physics-informed machine learning approaches have proven useful as a data-driven complement to numerical models for partial differential equations, bringing faster responses and allowing us to capitalize on past observations. However, their efficiency and convergence depend on the availability of vast training datasets. For sparse observations, Gaussian process regression or Kriging has emerged as a powerful interpolation model, offering principled estimates and uncertainty quantification. Several attempts have been made to condition Gaussian processes on linear PDEs via artificial or collocation observations and kernel design.These methods suffer from scalability issues in higher dimensions and limited generalizability. The aim of this study is to explore the extension of the Kriging predictor in the presence of linear PDE information at a finite number of collocation points. Two approaches are proposed: 1) A collocated co-Kriging with primary observations of the physical field and auxiliary differential observations; 2) A constrained Kriging optimization problem strongly satisfying linear PDE constraints at the points of prediction through a Lagrangian formulation. Numerical experiments are given for ordinary differential equations, 2D harmonic PDEs and an application to perfect flows around a cylinder. This work highlights a trade-off between the computational efficiency of the Lagrange multipliers approach and the strict interpolation of observations.",
+      "authors": [
+        "Soumyodeep Mukhopadhyay",
+        "Didier Rullière",
+        "Rodolphe Le Riche",
+        "David Gaudrie",
+        "Xavier Bay",
+        "Laurent Genest",
+        "David Gaudrie"
+      ],
+      "primary_category": "math.NA",
+      "categories": [
+        "math.NA"
+      ],
+      "published": "2026-04-20T07:59:22+00:00",
+      "link": "https://arxiv.org/pdf/2604.17922v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Approximation of functions satisfying PDEs using physics-informed machine learning and Gaussian processes",
+      "llm_evidence_cn": "利用物理信息机器学习和高斯过程逼近满足偏微分方程的函数",
+      "llm_evidence": "利用物理信息机器学习和高斯过程逼近满足偏微分方程的函数",
+      "canonical_evidence": "利用物理信息机器学习和高斯过程逼近满足偏微分方程的函数",
+      "llm_tldr_en": "Explores data-driven interpolation for PDE-constrained flows using physics-informed ML and Gaussian processes.",
+      "llm_tldr_cn": "探讨了利用物理信息机器学习和高斯过程对受偏微分方程约束的流场进行数据驱动插值的方法。",
+      "llm_tldr": "探讨了利用物理信息机器学习和高斯过程对受偏微分方程约束的流场进行数据驱动插值的方法。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.15398v1",
+      "source": "arxiv",
+      "title": "Python library supporting Discrete Variational Formulations and training solutions with Collocation-based Robust Variational Physics Informed Neural Networks (DVF-CRVPINN)",
+      "abstract": "We explore the possibility of solving Partial Differential Equations (PDEs) using discrete weak formulations. We propose a programming environment for defining a discrete computational domain, introducing discrete functions defined over a set of points, constructing discrete inner products, and introducing discrete weak formulations employing Kronecker delta test functions. Building on this setup, we propose a discrete neural network representation, training the solution function defined over a discrete set of points and employing discrete finite difference derivatives in the automatic differentiation procedures. As a challenging computational model example, we focus on Stokes equations in two-dimensions, defined over a discrete set of points. We train the solution using the discrete weak residual and the Adamax algorithm with discrete automatic differentiation of the discrete gradients. Despite introducing the python environment, we also provide a rigorous mathematical formulation based on discrete weak formulations, proving the well-posedness and robustness of the loss function. The solution of the discrete weak formulations is based on neural network training employing a robust loss function that is related to the true error. In this way, we have a robust control of the numerical error during the training of the neural networks. Besides the Stokes formulation, we also explain the functionality of the proposed library using the Laplace problem formulation.",
+      "authors": [
+        "Tomasz Służalec",
+        "Marcin Łoś",
+        "Askold Vilkha",
+        "Maciej Paszyński"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "math.NA"
+      ],
+      "published": "2026-04-16T12:08:09+00:00",
+      "link": "https://arxiv.org/pdf/2604.15398v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "solving and training solutions for PDEs using discrete variational formulations",
+      "llm_evidence_cn": "使用离散变分公式求解和训练偏微分方程的解",
+      "llm_evidence": "使用离散变分公式求解和训练偏微分方程的解",
+      "canonical_evidence": "使用离散变分公式求解和训练偏微分方程的解",
+      "llm_tldr_en": "Introduces a Python library for solving PDEs using discrete weak formulations and neural networks.",
+      "llm_tldr_cn": "介绍了一个使用离散弱形式和神经网络求解偏微分方程的Python库。",
+      "llm_tldr": "介绍了一个使用离散弱形式和神经网络求解偏微分方程的Python库。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.18953v1",
+      "source": "arxiv",
+      "title": "FlowForge: A Staged Local Rollout Engine for Flow-Field Prediction",
+      "abstract": "Deep learning surrogates for CFD flow-field prediction often rely on large, complex models, which can be slow and fragile when data are noisy or incomplete. We introduce FlowForge, a staged local rollout engine that predicts future flow fields by compiling a locality-preserving update schedule and executing it with a shared lightweight local predictor. Rather than producing the next frame in a single global pass, FlowForge rewrites spatial sites stage by stage so that each update conditions only on bounded local context exposed by earlier stages. This compile-execute design aligns inference with short-range physical dependence, keeps latency predictable, and limits error amplification from global mixing. Across PDEBench, CFDBench, and BubbleML, FlowForge matches or improves upon strong baselines in pointwise accuracy, delivers consistently better robustness to noise and missing observations, and maintains stable multi-step rollout behavior while reducing per-step latency.",
+      "authors": [
+        "Xiaowen Zhang",
+        "Ziming Zhou",
+        "Fengnian Zhao",
+        "David L. S. Hung"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-21T01:04:26+00:00",
+      "link": "https://arxiv.org/pdf/2604.18953v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Data-driven flow-field prediction evaluated on PDEBench and CFDBench",
+      "llm_evidence_cn": "在 PDEBench 和 CFDBench 上评估的数据驱动流场预测",
+      "llm_evidence": "在 PDEBench 和 CFDBench 上评估的数据驱动流场预测",
+      "canonical_evidence": "在 PDEBench 和 CFDBench 上评估的数据驱动流场预测",
+      "llm_tldr_en": "Introduces a local rollout engine for flow-field prediction, evaluated on standard PDE discovery benchmarks.",
+      "llm_tldr_cn": "引入了一种用于流场预测的局部滚动引擎，并在标准的偏微分方程发现基准数据集上进行了评估。",
+      "llm_tldr": "引入了一种用于流场预测的局部滚动引擎，并在标准的偏微分方程发现基准数据集上进行了评估。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "state of the art algorithms for data driven PDE discovery",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2604.16801v1",
+      "source": "arxiv",
+      "title": "Continuous Limits of Coupled Flows in Representation Learning",
+      "abstract": "While modern representation learning relies heavily on global error signals, decentralized algorithms driven by local interactions offer a fundamental distributed alternative. However, the macroscopic convergence properties of these discrete dynamics on continuous data manifolds remain theoretically unresolved, notoriously suffering from parameter explosion. We bridge this gap by formalizing decentralized learning as a coupled slow-fast dynamical system on Riemannian manifolds. First, using measure-theoretic limits, we prove that the discrete spatial transitions converge uniformly to an overdamped Langevin stochastic differential equation. Second, via the Itô-Poisson resolvent and a stochastic extension of LaSalle's Invariance Principle, we establish that the representation weights unconditionally avoid divergence and align strictly with the principal eigenspace of the spatial measure. Finally, we construct a joint Lyapunov functional for the fully coupled spatial-parametric flow. This proves global dissipativity and demonstrates that orthogonally disentangled, linearly separable features emerge spontaneously at the stationary limit. Our framework bridges discrete algorithms with continuous stochastic analysis, providing a formal theoretical baseline for decentralized representation learning.",
+      "authors": [
+        "Zilin Li",
+        "Weiwei Xu",
+        "Xuchun Tong",
+        "Xuanbo Lu",
+        "Xuanqi Zhao"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-04-18T03:19:54+00:00",
+      "link": "https://arxiv.org/pdf/2604.16801v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "formalizing learning as a dynamical system and stochastic differential equation",
+      "llm_evidence_cn": "将学习过程形式化为动力系统和随机微分方程",
+      "llm_evidence": "将学习过程形式化为动力系统和随机微分方程",
+      "canonical_evidence": "将学习过程形式化为动力系统和随机微分方程",
+      "llm_tldr_en": "Connects discrete learning dynamics to continuous stochastic differential equations on manifolds.",
+      "llm_tldr_cn": "将离散学习动力学与流形上的连续随机微分方程联系起来，具有方法论参考价值。",
+      "llm_tldr": "将离散学习动力学与流形上的连续随机微分方程联系起来，具有方法论参考价值。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.17149v1",
+      "source": "arxiv",
+      "title": "FlowRefiner: Flow Matching-Based Iterative Refinement for 3D Turbulent Flow Simulation",
+      "abstract": "Accurate autoregressive prediction of 3D turbulent flows remains challenging for neural PDE solvers, as small errors in fine-scale structures can accumulate rapidly over rollout. In this paper, we propose FlowRefiner, a flow matching-based iterative refinement framework for 3D turbulent flow simulation. The method replaces stochastic denoising refinement with deterministic ODE-based correction, uses a unified velocity-field regression objective across all refinement stages, and introduces a decoupled sigma schedule that fixes the noise range independently of refinement depth. These design choices yield stable and effective refinement in the small-noise regime. Experiments on large-scale 3D turbulence with rich multi-scale structures show that FlowRefiner achieves state-of-the-art autoregressive prediction accuracy and strong physical consistency. Although developed for turbulent flow simulation, the proposed framework is broadly applicable to iterative refinement problems in scientific modeling.",
+      "authors": [
+        "Yilong Dai",
+        "Yiming Sun",
+        "Yiheng Chen",
+        "Shengyu Chen",
+        "Xiaowei Jia",
+        "Runlong Yu"
+      ],
+      "primary_category": "physics.flu-dyn",
+      "categories": [
+        "physics.flu-dyn",
+        "cs.LG"
+      ],
+      "published": "2026-04-18T21:17:00+00:00",
+      "link": "https://arxiv.org/pdf/2604.17149v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Iterative refinement for neural PDE solvers using ODE-based correction for turbulent flow simulation",
+      "llm_evidence_cn": "使用基于常微分方程校正的神经偏微分方程求解器迭代优化方法",
+      "llm_evidence": "使用基于常微分方程校正的神经偏微分方程求解器迭代优化方法",
+      "canonical_evidence": "使用基于常微分方程校正的神经偏微分方程求解器迭代优化方法",
+      "llm_tldr_en": "Proposes FlowRefiner, an iterative refinement framework for improving neural PDE solver accuracy in 3D turbulence.",
+      "llm_tldr_cn": "提出 FlowRefiner 框架，通过迭代优化提高神经 PDE 求解器在三维湍流模拟中的精度。",
+      "llm_tldr": "提出 FlowRefiner 框架，通过迭代优化提高神经 PDE 求解器在三维湍流模拟中的精度。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "methods and algorithms for partial differential equation discovery from data",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.17342v1",
+      "source": "arxiv",
+      "title": "Monotone but Exciting: On Evolving Monotone Boolean Functions with High Nonlinearity",
+      "abstract": "Monotone Boolean functions are a structurally important class of Boolean functions, but their restricted form imposes strong limitations on achievable nonlinearity. In this paper, we investigate whether evolutionary computation can evolve monotone Boolean functions with high nonlinearity, both in the balanced and imbalanced settings. We consider three solution encodings: the standard truth table representation, a balanced truth table encoding that preserves Hamming weight, and a symbolic tree-based genetic programming representation. To guide the search toward monotone increasing functions, we introduce a non-monotonicity penalty and combine it with fitness functions targeting balancedness and nonlinearity. Experimental results are reported for dimensions from $n=5$ to $n=14$. The results show that evolutionary search can discover monotone Boolean functions with nonlinearities clearly exceeding those of majority functions, and in several cases approaching the best currently known values for monotone functions. At the same time, the experiments reveal substantial differences between encodings: the balanced truth table encoding performs poorly for larger dimensions, while the standard truth table and genetic programming encodings remain competitive, with genetic programming becoming especially relevant in the largest tested dimensions.",
+      "authors": [
+        "Claude Carlet",
+        "Marko Čupić",
+        "Marko Ðurasevic",
+        "Domagoj Jakobovic",
+        "Luca Mariot",
+        "Stjepan Picek"
+      ],
+      "primary_category": "cs.NE",
+      "categories": [
+        "cs.NE",
+        "cs.CR"
+      ],
+      "published": "2026-04-19T09:30:40+00:00",
+      "link": "https://arxiv.org/pdf/2604.17342v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Symbolic tree-based genetic programming representation for evolving functions",
+      "llm_evidence_cn": "用于演化函数的基于符号树的遗传编程表示",
+      "llm_evidence": "用于演化函数的基于符号树的遗传编程表示",
+      "canonical_evidence": "用于演化函数的基于符号树的遗传编程表示",
+      "llm_tldr_en": "Investigates genetic programming for evolving specific function classes, sharing methods with GP-based PDE discovery.",
+      "llm_tldr_cn": "研究了用于演化特定函数类的遗传编程，与基于遗传编程的偏微分方程发现方法相通。",
+      "llm_tldr": "研究了用于演化特定函数类的遗传编程，与基于遗传编程的偏微分方程发现方法相通。",
+      "llm_tags": [
+        "query:pde-discovery"
+      ],
+      "matched_query_tag": "query:pde-discovery",
+      "matched_query_text": "PDE Discovery based on genetic programming",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2604.18059v1",
+      "source": "arxiv",
+      "title": "Information decomposition for disentangled and interpretable manifold learning of fluid flows via variational autoencoders",
+      "abstract": "We introduce an information-theoretic framework that uses variational autoencoders (VAEs) to extract compact, physically interpretable manifolds from high-dimensional flow-field data. To this end, the Kullback--Leibler (KL) divergence in the variational objective is decomposed into three complementary information-theoretic terms: the index-code mutual information, the total correlation, and the dimension-wise KL divergence. These terms explicitly regulate data compression, latent disentanglement, and geometric regularization. This establishes a principled basis for targeted latent-space design, allowing enhanced interpretability without sacrificing information capacity, a common drawback of heavily regularized VAE variants. The approach is evaluated on two synthetic unsteady flow datasets. First, we consider a flow around a cylinder in a channel with variable cylinder position, diameter, and Reynolds number. Later, we also consider the flow around a NACA 0012 airfoil at varying angles of attack and subjected to strong vortex gusts with variable intensity, position, and length scale. Comparisons with Principal Component Analysis, Isometric Feature Mapping, and $β$-VAE demonstrate clear advantages in disentanglement and physical interpretability. The learned latent coordinates successfully separate distinct physical effects. Moreover, the proposed method demonstrates strong robustness to variations in the loss-weighting parameters, despite involving a larger number of such parameters.",
+      "authors": [
+        "Zhiyuan Wang",
+        "Iacopo Tirelli",
+        "Stefano Discetti",
+        "Andrea Ianiro"
+      ],
+      "primary_category": "physics.flu-dyn",
+      "categories": [
+        "physics.flu-dyn"
+      ],
+      "published": "2026-04-20T10:28:38+00:00",
+      "link": "https://arxiv.org/pdf/2604.18059v1",
+      "tags": [
+        "keyword:PDE Discovery",
+        "query:PDE Discovery"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "interpretable manifold learning of fluid flows via variational autoencoders for physical interpretability",
+      "llm_evidence_cn": "通过变分自编码器对流体流动进行可解释流形学习，以实现物理可解释性",
+      "llm_evidence": "通过变分自编码器对流体流动进行可解释流形学习，以实现物理可解释性",
+      "canonical_evidence": "通过变分自编码器对流体流动进行可解释流形学习，以实现物理可解释性",
+      "llm_tldr_en": "Uses VAEs to extract physically interpretable manifolds from fluid flow data, supporting data-driven physics discovery.",
+      "llm_tldr_cn": "利用VAE从流体数据中提取物理可解释流形，支持数据驱动的物理发现。",
+      "llm_tldr": "利用VAE从流体数据中提取物理可解释流形，支持数据驱动的物理发现。",
+      "llm_tags": [
+        "query:pde-discovery:composite"
+      ],
+      "matched_query_tag": "query:pde-discovery:composite",
+      "matched_query_text": "Papers central to 偏微分方程发现, especially work that connects or combines: G; D; y; methods and algorithms for partial differential equation discovery from data; PDE Discovery based on genetic programming; state of the art algorithms for data driven PDE discovery.",
+      "matched_requirement_id": "req-composite-pde-discovery",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

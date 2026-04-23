@@ -1,0 +1,110 @@
+{
+  "version": 2,
+  "extractor": "pdffigures2",
+  "figures": [
+    {
+      "url": "assets/figures/arxiv/2604.16801v1/fig-001.webp",
+      "caption": "Table 1: Quantitative Convergence Bounds. Multi-seed empirical validation (Nseed = 20) of structural limits and subspace alignment precision.",
+      "page": 6,
+      "index": 1,
+      "width": 826,
+      "height": 194
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16801v1/fig-002.webp",
+      "caption": "Figure A.3: Geometric Distortion of the Local Volume Measure. The integration of the discrete transition kernel relies on the continuous neighborhood volume. On a curved manifold, the intrinsic Riemannian volume of the εN -ball (dark blue) deviates from the flat Euclidean volume VdεdN (red tangent disk). As established in Lemma 4, this deterministic distortion is strictly quantified by the local scalar curvature R(x), providing the fundamental geometric bias that drives the macroscopic Langevin dynamics.",
+      "page": 25,
+      "index": 2,
+      "width": 804,
+      "height": 235
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16801v1/fig-003.webp",
+      "caption": "Figure B.2: Mechanisms of Spectral Competition and Principal Subspace Alignment. Numerically computed across 30 independent stochastic trajectories mapping Eq. B.28. (Left) Global Dissipativity: The macroscopic free energy E[V (W )] monotonically dissipates to zero, anchoring the system capacity to ∥W∥F = 1. (Middle) Saturation Dynamics (Linear Scale): The principal topological projection (E[|c1|]) undergoes logistic growth to saturate the capacity constraint, while noise components are competitively suppressed. (Right) Spectral Decoupling (Log Scale): The logarithmic ratio ln(|c3|/|c1|) evaluated with ±1σ empirical variance. The empirical mean tightly bounds to the analytical limit (black dashed line), strongly corroborating the exponential annihilation rate ∝ e−γ(λ1−λk)τ established in Theorem 11.",
+      "page": 38,
+      "index": 3,
+      "width": 808,
+      "height": 260
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16801v1/fig-004.webp",
+      "caption": "Table D.3: Full Ablation Matrix on Coupled Dynamics. Results averaged over 5 random seeds. Eortho denotes normalized off-diagonal energy; rkeff denotes the effective rank of the latent covariance. Evaluated over classical manifolds, extreme structures, and manifolds calibrated to empirical foundation spectra.",
+      "page": 53,
+      "index": 4,
+      "width": 622,
+      "height": 1062
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16801v1/fig-005.webp",
+      "caption": "Table D.5: Extensive Empirical Evaluation of DCRL Stability. Results are averaged over 5 random seeds per manifold (± std). The metrics confirm absolute parameter conservation and successful orthogonal disentanglement across extreme topological substrates.",
+      "page": 54,
+      "index": 5,
+      "width": 818,
+      "height": 789
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16801v1/fig-006.webp",
+      "caption": "Table D.4: Phase Transition of Timescale Separation. Probing the Itô-Poisson limit. The scale ratio mathematically governs the bifurcation between explosive Markovian divergence and absolute geometric dissipativity.",
+      "page": 54,
+      "index": 6,
+      "width": 606,
+      "height": 260
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16801v1/fig-007.webp",
+      "caption": "Figure D.2: Extensive Visual Evidence of Topological Flattening and Linear Separability. The monotonic expansion of the linear SVM class-separation margin provides strong empirical evidence that localized plasticity, when coupled with continuous spatial exploration, autonomously resolves downstream classification tasks.",
+      "page": 55,
+      "index": 7,
+      "width": 817,
+      "height": 766
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16801v1/fig-008.webp",
+      "caption": "Figure 3: Macroscopic Spectral Evolution and Phase Transitions. Temporal trajectories of the latent eigenspectrum over 1.5× 104 steps. Red markers denote principal structures isolated by the Algebraic Sieve; gray lines indicate suppressed noise. In heavily over-parameterized spaces (e.g., VGG-4096, BERT-768), the flow collapses uninformative dimensions into the null space (y = 0), providing empirical evidence for the geometric information bottleneck. The dotted blue line marks the phase transition where the continuous graph flow converges to its 95% steady-state attractor, separating spatial exploration from topological alignment.",
+      "page": 8,
+      "index": 8,
+      "width": 827,
+      "height": 272
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16801v1/fig-009.webp",
+      "caption": "Figure 2: Empirical Validation of the Macroscopic Limit. (Left) The fundamental bias-variance tradeoff in local graph operators. While the deterministic geometric bias decays as O(ε2N ), the stochastic variance diverges for infinitesimally small neighborhoods. (Middle) The fundamental topological necessity of the asymptotic scaling law (Eq. 1). Violating the spectral regime triggers severe numerical divergence of the uniform bound due to graph shattering, whereas satisfying it guarantees the uniform convergence of LN to L. (Right) Real stochastic realizations of the fast kinematics on the manifold (Eq. 4). The system potential U(Xt) performs exact Langevin diffusion, exhibiting consistent macroscopic energy dissipation parameterized by the inverse temperature β.",
+      "page": 4,
+      "index": 9,
+      "width": 816,
+      "height": 227
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16801v1/fig-010.webp",
+      "caption": "Figure B.1: Phase Space Convergence and Structural Stabilization. Representation alignment mapped onto a 2D parameter subspace (w1, w2). (Left) Macroscopic Flow: Deterministic vector field exhibiting global dissipativity. Streamlines irreversibly funnel into the invariant limit set I(M) : ∥W∥F = 1 (red dashed circle). (Middle) Langevin Dynamics: Coupled SDE realizations. Despite continuous martingale fluctuations, trajectories asymptotically converge to the invariant manifold and anchor along the principal axis. (Right) Temporal Dynamics: Evolution of parameter magnitudes. System capacity anchors to the unit hypersphere (∥W∥F → 1), while the orthogonal noise projection undergoes exponential annihilation (|w2| → 0), validating Theorem 11.",
+      "page": 36,
+      "index": 10,
+      "width": 808,
+      "height": 265
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16801v1/fig-011.webp",
+      "caption": "Figure A.1: Geometric Complexity Evolution of the Riemannian Substrate. The localized graph flow is formulated on a smooth manifold M capable of exhibiting varying degrees of intrinsic curvature, governed by a geometric perturbation parameter σ. (Left) A base manifold with low curvature (σ = 0.1) where local Euclidean approximations are highly stable. (Middle & Right) As σ increases to 1.0 and 2.0, the manifold develops high-frequency localized ripples, severely distorting the local volume measure and metric tensor (indicated by the increasingly complex bottom contour projections). Our asymptotic framework natively accommodates these extreme geometric distortions without relying on heuristic flat-space approximations.",
+      "page": 19,
+      "index": 11,
+      "width": 766,
+      "height": 198
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16801v1/fig-012.webp",
+      "caption": "Table D.6: Downstream Linear Separability and Geometric Margins. Evaluated via Linear SVM (5-Fold CV Acc %). DCRL seamlessly unrolls non-linear topologies and prevents high-dimensional overfitting, whereas classical Euclidean baselines (PCA, Static Oja) suffer from severe overlap or ambient noise. Results are strictly averaged over 5 random seeds.",
+      "page": 56,
+      "index": 12,
+      "width": 740,
+      "height": 205
+    },
+    {
+      "url": "assets/figures/arxiv/2604.16801v1/fig-013.webp",
+      "caption": "Figure D.1: Visual Profiling of the Ambient Topologies via t-SNE. To establish the structural prerequisites for the evaluations, we visualize the raw ambient observations (X0 ∈ Rn) mapped onto 2D projections. Top Row: Continuous classical manifolds manifesting severe non-linear spatial entanglement and heterogeneous curvature. Bottom Row: High-dimensional discrete structures and foundation model spectra, exhibiting severe spatial fragmentation and cluster overlap. The observed macroscopic entanglement identifies the strict geometrical limitations of uncoupled Euclidean heuristics (e.g., Static Oja, PCA) and establishes the functional necessity for the active Riemannian sampling formalism proposed in DCRL.",
+      "page": 52,
+      "index": 13,
+      "width": 822,
+      "height": 268
+    }
+  ]
+}
